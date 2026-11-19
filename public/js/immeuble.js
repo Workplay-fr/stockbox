@@ -1,6 +1,6 @@
 // Étape 3 : l'immeuble en grand. Pile des trois niveaux, ascenseur pour changer d'étage, zoom et déplacement dans l'étage,
 // boxes allumés selon leur état réel dans Nexudus, box conseillé mis en avant.
-import { $, $$, el, NS, G, esc, eur, S, NOMS, COURT, TAILLES, LIBELLE, IDEAL, boxes, libres, libresTotal, prix, volumeTaille, preavis, boxParId, boxConseille, reduit } from "./commun.js?v=20261119175145";
+import { $, $$, el, NS, G, esc, eur, S, NOMS, COURT, TAILLES, LIBELLE, IDEAL, boxes, libres, libresTotal, prix, volumeTaille, preavis, boxParId, boxConseille, reduit } from "./commun.js?v=20261119180027";
 
 let zone, scene, pileIn, bulle, onReserver = () => {};
 const V = { mode: "pile", etage: null, z: 1, x: 0, y: 0 };
@@ -9,7 +9,7 @@ let geo = { lw: 800, lh: 533, sp: .7, gap: 160 };
 export function initImmeuble(reserver) {
   onReserver = reserver;
   zone = $("#scene-zone"); scene = $("#scene"); pileIn = $("#pile-in"); bulle = $("#bulle");
-  if (!$("#defs-sb")) document.body.insertAdjacentHTML("afterbegin", `<svg id="defs-sb" width="0" height="0" style="position:absolute" aria-hidden="true"><defs><pattern id="hachures" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="rgba(120,130,125,.3)"/><line x1="0" y1="0" x2="0" y2="7" stroke="rgba(60,70,66,.5)" stroke-width="2.5"/></pattern></defs></svg>`);
+  if (!$("#defs-sb")) document.body.insertAdjacentHTML("afterbegin", `<svg id="defs-sb" width="0" height="0" style="position:absolute" aria-hidden="true"><defs><pattern id="hachures" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="rgba(215,70,55,.28)"/><line x1="0" y1="0" x2="0" y2="7" stroke="rgba(190,52,40,.6)" stroke-width="2.5"/></pattern></defs></svg>`);
   for (const n of ["2", "1", "0"]) {
     const niv = el("div", { class: "niveau", "data-n": n });
     niv.append(el("img", { src: `/img/etage-${n}.webp`, alt: "", width: 1536, height: 1024, decoding: "async", draggable: "false" }));
@@ -160,7 +160,7 @@ function ecouter() {
     if (bouge) { bouge = false; return; }
     const p = e.target.closest?.(".box"); if (V.mode !== "etage" || !p) return;
     const b = boxParId(p.dataset.id);
-    if (!b.libre) { bulle.innerHTML = `<b>Box ${esc(b.nom)}</b><small>Déjà loué</small>`; return; }
+    if (!b.libre) { bulle.innerHTML = `<b>Box ${esc(b.nom)}</b><small>Loué, contrat actif dans Nexudus</small>`; return; }
     if (S.filtre && b.taille !== S.filtre) { S.filtre = null; peindre(); }
     choisir(b, true);
   });
@@ -175,7 +175,7 @@ function survol(p, e) {
   if (b.libre && !(S.filtre && b.taille !== S.filtre)) p.classList.add("survol");
   const r = zone.getBoundingClientRect();
   bulle.style.left = e.clientX - r.left + "px"; bulle.style.top = e.clientY - r.top + "px";
-  bulle.innerHTML = `<b>Box ${esc(b.nom)}</b> ${LIBELLE[b.taille]}<small>${b.libre ? eur(prix(b.taille)) + " par mois" : "Déjà loué"}</small>`;
+  bulle.innerHTML = `<b>Box ${esc(b.nom)}</b> ${LIBELLE[b.taille]}<small>${b.libre ? eur(prix(b.taille)) + " par mois, libre" : "Loué, contrat actif dans Nexudus"}</small>`;
   bulle.classList.add("on");
   prisme(b.libre ? b : null);
 }

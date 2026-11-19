@@ -1,8 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119175145";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119175145";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119175145";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261119175145";
+import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119180027";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119180027";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119180027";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261119180027";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: "14 passage des Malles, Les Puces", ouvert: true },
@@ -71,7 +71,7 @@ function dock() {
   }
   dockEl.classList.toggle("vu", !heroVu && !$("#choix").open && $("#reserver").hidden);
 }
-new IntersectionObserver(([e]) => { heroVu = e.isIntersecting; abtn.classList.toggle("cache", heroVu); dock(); }, { threshold: .15 }).observe($(".hero"));
+new IntersectionObserver(([e]) => { heroVu = e.isIntersecting; abtn.classList.toggle("sur-hero", heroVu); abtn.classList.toggle("compact", !heroVu); dock(); }, { threshold: .15 }).observe($(".hero"));
 
 // ---------------------------------------------------------------- petite fenêtre : le centre, puis la taille
 const choix = $("#choix");
@@ -166,11 +166,43 @@ async function reserver() {
 
 // ---------------------------------------------------------------- assistant
 const H = [], filAg = $("#fil"), agent = $("#agent");
+let memoAg = { devis: null };
 const bulleIA = (txt, qui = "ia") => { const m = el("div", { class: "m " + qui }); m.innerHTML = esc(txt).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>"); filAg.append(m); filAg.scrollTop = filAg.scrollHeight; return m; };
-abtn.onclick = () => { agent.classList.remove("ferme"); agent.setAttribute("aria-hidden", "false"); abtn.classList.add("cache"); if (!filAg.children.length) bulleIA("Bonjour. Dites-moi ce que vous voulez stocker, je vous trouve la bonne taille et un box libre."); setTimeout(() => $("#agent-champ").focus(), 200); };
+function ouvrirAgent() {
+  agent.classList.remove("ferme"); agent.setAttribute("aria-hidden", "false"); abtn.classList.add("cache"); $("#agent-bulle").hidden = true;
+  if (!filAg.children.length) bulleIA("Bonjour. Que souhaitez-vous stocker ? Je vous trouve la bonne taille, un box libre, et je peux vous préparer un devis.");
+  setTimeout(() => $("#agent-champ").focus(), 200);
+}
+abtn.onclick = ouvrirAgent;
+$("#ab-ouvrir").onclick = ouvrirAgent;
+$("#ab-fermer").onclick = () => { $("#agent-bulle").hidden = true; try { sessionStorage.setItem("sb-bulle", "1"); } catch {} };
 $("#agent-fermer").onclick = () => { agent.classList.add("ferme"); agent.setAttribute("aria-hidden", "true"); abtn.classList.remove("cache"); };
 $$("#suggestions button").forEach(b => (b.onclick = () => envoyer(b.textContent)));
 $("#agent-form").addEventListener("submit", e => { e.preventDefault(); const v = $("#agent-champ").value.trim(); if (v) envoyer(v); });
+// Petite bulle d'accueil, une fois par visite.
+setTimeout(() => { let vu = false; try { vu = !!sessionStorage.getItem("sb-bulle"); } catch {} if (!vu && agent.classList.contains("ferme") && !$("#choix").open) { $("#agent-bulle").hidden = false; try { sessionStorage.setItem("sb-bulle", "1"); } catch {} } }, 7000);
+
+async function montrerBox(b, resa) {
+  agent.classList.add("ferme"); agent.setAttribute("aria-hidden", "true"); abtn.classList.remove("cache");
+  cacherResa(); await defiler($("#immeuble")); S.choix = b; rappel(b.taille); entrerImmeuble(b.taille);
+  if (resa) setTimeout(reserver, 2800);
+}
+function offres(list) {
+  const z = el("div", { class: "offres-ag" });
+  for (const o of list) {
+    const c = el("div", { class: "offre-ag" }, `<span><b>Box ${esc(o.nom)}</b><small>${o.taille === "C" ? "Casier" : LIBELLE[o.taille]}, ${esc(o.etage_nom)}, ${eur(o.prix_mensuel)} par mois</small></span><span class="act"><button class="voir" type="button">Voir</button><button class="resa-ag" type="button">Réserver</button></span>`);
+    const b = () => boxParId(o.id);
+    c.querySelector(".voir").onclick = () => b() && montrerBox(b(), false);
+    c.querySelector(".resa-ag").onclick = () => b() && montrerBox(b(), true);
+    z.append(c);
+  }
+  filAg.append(z); filAg.scrollTop = filAg.scrollHeight;
+}
+function carteDevis(d) {
+  const z = el("div", { class: "devis-ag" }, `<small>Devis enregistré</small><b>Box ${esc(d.box)}, ${eur(d.mensuel)} par mois</b><p>Référence ${esc(d.reference)}. Entrée le ${new Date(d.jour + "T12:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}. Vous le recevrez à ${esc(d.email)} après relecture par l'équipe.</p><button type="button">Réserver maintenant en ligne</button>`);
+  z.querySelector("button").onclick = () => { const b = boxParId(d.id); if (b) montrerBox(b, true); };
+  filAg.append(z); filAg.scrollTop = filAg.scrollHeight;
+}
 let occupe = false;
 async function envoyer(txt) {
   if (occupe) return; occupe = true;
@@ -178,15 +210,15 @@ async function envoyer(txt) {
   bulleIA(txt, "moi"); H.push({ role: "user", content: txt });
   const att = bulleIA("", "ia ecrit"); att.innerHTML = "<i></i><i></i><i></i>";
   try {
-    const d = await fetch("/api/agent", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ historique: H }) }).then(r => r.json()).catch(() => ({}));
+    const d = await fetch("/api/agent", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ historique: H, memo: memoAg }) }).then(r => r.json()).catch(() => ({}));
     att.remove();
     if (!d.ok) { bulleIA(d.erreur || "L'assistant ne répond pas pour le moment."); H.pop(); }
     else {
+      if (d.memo) memoAg = d.memo;
       bulleIA(d.texte || "C'est noté."); H.push({ role: "assistant", content: d.texte || "C'est noté." });
-      for (const a of d.actions || []) {
-        if (a.type === "box") { const b = boxParId(a.id); if (b) { $("#agent-fermer").click(); cacherResa(); await defiler($("#immeuble")); S.choix = b; rappel(b.taille); entrerImmeuble(b.taille); if (a.reserver) setTimeout(reserver, 2800); } }
-        if (a.type === "simulateur") { $("#agent-fermer").click(); ouvrirChoix("taille"); }
-      }
+      if (d.offres && d.offres.length) offres(d.offres);
+      if (d.devis) { carteDevis(d.devis); actualiser().then(ok => ok && (accueil(), rafraichir())); }
+      for (const a of d.actions || []) if (a.type === "box" && a.reserver) { const b = boxParId(a.id); if (b) montrerBox(b, true); }
     }
   } catch { att.remove(); bulleIA("Connexion impossible. Réessayez dans un instant."); H.pop(); }
   occupe = false;

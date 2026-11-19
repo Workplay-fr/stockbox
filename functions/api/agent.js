@@ -9,8 +9,10 @@ export async function onRequestPost({ request, env }) {
   const h = (Array.isArray(d.historique) ? d.historique : []).filter(m => m && typeof m.content === "string" && m.content.trim());
   if (!h.length) return json(400, { ok: false, erreur: "Message vide." });
   if (h.filter(m => m.role === "user").length > 30) return json(429, { ok: false, erreur: "Cette conversation est longue : rechargez la page pour en commencer une nouvelle." });
+  const m0 = d.memo && typeof d.memo === "object" ? d.memo : {};
+  const memo = { devis: m0.devis && m0.devis.reference ? m0.devis : null, peutCreer: () => !limite(request, "devis", 3, 60 * 60e3) };
   try {
-    const r = await repondre(env, h.slice(-14));
+    const r = await repondre(env, h.slice(-16), memo);
     return json(200, { ok: true, ...r });
   } catch (e) {
     console.error("agent", String(e.message).slice(0, 200));

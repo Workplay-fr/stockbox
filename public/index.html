@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
 <link rel="preload" as="image" href="/img/facade.webp" fetchpriority="high">
-<link rel="stylesheet" href="/css/site.css?v=20261119175145">
+<link rel="stylesheet" href="/css/site.css?v=20261119180027">
 </head>
 <body>
 
@@ -167,15 +167,16 @@
 </dialog>
 
 <!-- Assistant -->
-<button class="agent-btn cache" id="agent-btn" type="button" aria-controls="agent" aria-expanded="false" aria-label="Poser une question à l'assistant"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 5h16v11H9l-5 4z"/></svg></button>
+<button class="agent-btn" id="agent-btn" type="button" aria-controls="agent" aria-expanded="false" aria-label="Poser une question à l'assistant"><span class="av"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 5h16v11H9l-5 4z"/></svg></span><span class="txt">Une question ? Un devis ?</span></button>
+<div class="agent-bulle" id="agent-bulle" hidden><button type="button" class="ab-ouvrir" id="ab-ouvrir">Bonjour. Je vous aide à trouver la bonne taille et je vous prépare un devis en une minute.</button><button type="button" class="ab-fermer" id="ab-fermer" aria-label="Fermer">×</button></div>
 <section class="agent ferme" id="agent" aria-label="Assistant StockBox" aria-hidden="true">
-  <div class="agent-tete"><div><b>L'assistant StockBox</b><small>Il trouve la bonne taille et un box libre.</small></div><button class="fermer" type="button" id="agent-fermer" aria-label="Fermer l'assistant">×</button></div>
+  <div class="agent-tete"><span class="av-tete" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 32 32"><path d="M16 3 28 9.5v13L16 29 4 22.5v-13Z" fill="#F28C28"/><path d="M16 3 28 9.5 16 16 4 9.5Z" fill="#FFB061"/><path d="M16 16v13L4 22.5v-13Z" fill="#D9741A"/></svg></span><div><b>L'assistant StockBox</b><small><span class="point" style="display:inline-block;width:7px;height:7px;margin-right:6px;vertical-align:middle"></span>Taille, disponibilités, devis</small></div><button class="fermer" type="button" id="agent-fermer" aria-label="Fermer l'assistant">×</button></div>
   <div class="fil" id="fil" aria-live="polite"></div>
-  <div class="suggestions" id="suggestions"><button type="button">Je déménage un 2 pièces</button><button type="button">Un box au rez-de-chaussée</button><button type="button">Je stocke du matériel pro</button></div>
+  <div class="suggestions" id="suggestions"><button type="button">Je déménage un 2 pièces</button><button type="button">Je veux un devis pour mon entreprise</button><button type="button">Que peut-on stocker ?</button><button type="button">Puis-je venir le dimanche ?</button></div>
   <form id="agent-form"><input id="agent-champ" autocomplete="off" placeholder="Votre question" aria-label="Votre question" maxlength="600"><button class="btn btn-em" type="submit">Envoyer</button></form>
 </section>
 
-<script src="/js/gsap.min.js?v=20261119175145"></script>
-<script type="module" src="/js/app.js?v=20261119175145"></script>
+<script src="/js/gsap.min.js?v=20261119180027"></script>
+<script type="module" src="/js/app.js?v=20261119180027"></script>
 </body>
 </html>

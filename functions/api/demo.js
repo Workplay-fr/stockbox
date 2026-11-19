@@ -3,7 +3,7 @@
 // (notes du contrat) et ses clients ont une adresse stockbox.demo+…@workplay.fr : « vider » ne touche qu'à ces fiches-là.
 import { catalogue, oublier, nx, pret, json, isoZ, CFG } from "../../lib/nexudus.js";
 
-const CIBLE = 40, PAR_APPEL = 6;
+const CIBLE = 62, PAR_APPEL = 6;   // la moitié des 124 boxes
 const MARQUE = "[DÉMO]";
 const PRENOMS = ["Camille","Léa","Hugo","Inès","Thomas","Chloé","Lucas","Manon","Nathan","Sarah","Julien","Emma","Karim","Alice","Maxime","Jade","Antoine","Yasmine","Paul","Louise","Mehdi","Clara","Romain","Zoé","Bastien","Nina","Samuel","Lina","Victor","Anaïs","Adrien","Margaux","Rayan","Elsa","Quentin","Mila","Florian","Salomé","Théo","Agathe"];
 const NOMS = ["Moreau","Laurent","Girard","Benali","Fontaine","Rousseau","Lefèvre","Mercier","Garnier","Chevalier","Perrin","Blanc","Haddad","Faure","Robin","Dumas","Lemoine","Martel","Roux","Gauthier","Bouchard","Marchand","Colin","Vidal","Renaud","Arnaud","Picard","Lacroix","Brunet","Caron","Guerin","Masson","Aubert","Barbier","Noël","Leroy","Rolland","Meyer","Morel","Baron"];
@@ -27,9 +27,9 @@ export async function onRequestPost({ request, env }) {
       if (existants.length >= CIBLE) return json(200, { ok: true, demo: existants.length, fini: true });
       oublier();
       const c = await catalogue(env);
-      // Un box sur trois, réparti sur les trois niveaux et toutes les tailles.
+      // Un box sur deux dans chaque taille et chaque étage, pour un immeuble rempli à moitié, de façon régulière.
       const tous = Object.entries(c.etages).flatMap(([n, l]) => l.map(b => ({ ...b, n })));
-      const candidats = tous.filter((b, i) => i % 3 === 1 && b.libre);
+      const rang = {}; const candidats = tous.filter(b => { const k = b.n + b.taille; rang[k] = (rang[k] || 0) + 1; return rang[k] % 2 === 0 && b.libre; });
       const aFaire = candidats.slice(0, Math.min(PAR_APPEL, CIBLE - existants.length));
       const faits = [];
       for (const [k, b] of aFaire.entries()) {
