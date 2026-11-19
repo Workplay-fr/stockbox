@@ -94,7 +94,7 @@ export async function onRequestPost({ request, env }) {
     return json(400, { ok: false, erreur: "Action inconnue." });
   } catch (e) {
     console.error("demo", e.message);
-    return json(502, { ok: false, erreur: e.message.slice(0, 300) });
+    return json(200, { ok: false, erreur: e.message.slice(0, 400) });
   }
 }
 export const onRequest = () => json(405, { ok: false, erreur: "Méthode non autorisée." });
