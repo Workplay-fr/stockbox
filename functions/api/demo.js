@@ -3,7 +3,7 @@
 // (notes du contrat) et ses clients ont une adresse stockbox.demo+…@workplay.fr : « vider » ne touche qu'à ces fiches-là.
 import { catalogue, oublier, nx, pret, json, isoZ, CFG } from "../../lib/nexudus.js";
 
-const CIBLE = 62, PAR_APPEL = 5;   // la moitié des 124 boxes
+const CIBLE = 62, PAR_APPEL = 2;   // la moitié des 124 boxes
 const MARQUE = "[DÉMO]";
 const PRENOMS = ["Camille","Léa","Hugo","Inès","Thomas","Chloé","Lucas","Manon","Nathan","Sarah","Julien","Emma","Karim","Alice","Maxime","Jade","Antoine","Yasmine","Paul","Louise","Mehdi","Clara","Romain","Zoé","Bastien","Nina","Samuel","Lina","Victor","Anaïs","Adrien","Margaux","Rayan","Elsa","Quentin","Mila","Florian","Salomé","Théo","Agathe"];
 const NOMS = ["Moreau","Laurent","Girard","Benali","Fontaine","Rousseau","Lefèvre","Mercier","Garnier","Chevalier","Perrin","Blanc","Haddad","Faure","Robin","Dumas","Lemoine","Martel","Roux","Gauthier","Bouchard","Marchand","Colin","Vidal","Renaud","Arnaud","Picard","Lacroix","Brunet","Caron","Guerin","Masson","Aubert","Barbier","Noël","Leroy","Rolland","Meyer","Morel","Baron"];

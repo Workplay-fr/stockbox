@@ -11,13 +11,13 @@ const log=t=>{document.getElementById("log").textContent+=t+"\n"};
 document.querySelectorAll("button").forEach(b=>b.onclick=async()=>{
   const a=b.dataset.a,cle=document.getElementById("cle").value;document.getElementById("log").textContent="";
   if(a==="vider"&&!confirm("Retirer tous les contrats et clients de démo de Nexudus ?"))return;
-  for(let i=0;i<40;i++){
-    const r=await fetch("/api/demo",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({action:a,cle})}).then(r=>r.json()).catch(e=>({ok:false,erreur:String(e)}));
+  for(let i=0;i<80;i++){
+    const r=await fetch("/api/demo",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({action:a,cle})}).then(async r=>{const t=await r.text();try{return JSON.parse(t)}catch{return{ok:false,erreur:"réponse "+r.status+" : "+t.replace(/<[^>]+>/g," ").replace(/\s+/g," ").slice(0,300)}}}).catch(e=>({ok:false,erreur:String(e)}));
     if(!r.ok){log("Erreur : "+r.erreur);return}
     if(a==="etat"){log(r.demo+" contrats de démo sur "+r.cible);return}
     log(a==="remplir"?`+${(r.faits||[]).length} (${(r.faits||[]).join(", ")}) · total ${r.demo}`:`${r.retires} retirés · reste ${r.reste}`);
     if(r.fini){log("Terminé.");return}
-    await new Promise(s=>setTimeout(s,12000));
+    await new Promise(s=>setTimeout(s,2500));
   }
 });
 </script></body></html>
