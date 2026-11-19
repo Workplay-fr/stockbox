@@ -1,9 +1,9 @@
 // StockBox : page d'accueil, orchestration de l'expérience « Trouver mon box » (4 étapes) et assistant.
-import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js";
-import { initCarte, entrerCarte, CENTRES } from "./carte.js";
-import { initVolume, calcul } from "./volume.js";
-import { initImmeuble, entrer as entrerImmeuble, choisir, rafraichir } from "./immeuble.js";
-import { initResa, entrerResa, finale } from "./resa.js";
+import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119171907";
+import { initCarte, entrerCarte, CENTRES } from "./carte.js?v=20261119171907";
+import { initVolume, calcul } from "./volume.js?v=20261119171907";
+import { initImmeuble, entrer as entrerImmeuble, choisir, rafraichir } from "./immeuble.js?v=20261119171907";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261119171907";
 
 const xp = $("#xp");
 let etape = -1, atteinte = 0;
