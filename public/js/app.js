@@ -1,8 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119203422";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119203422";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119203422";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261119203422";
+import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119214746";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119214746";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119214746";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261119214746";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: "14 passage des Malles, Les Puces", ouvert: true },
@@ -33,8 +33,8 @@ function accueil() {
   const rec = S.data.activite?.recents || [];
   const cols = ["#0F5C45", "#F28C28", "#3B7A66", "#C9681A", "#13241E"];
   $("#visages").innerHTML = rec.slice(0, 3).map((r, i) => `<span style="background:${cols[i % cols.length]}">${esc((r.prenom || "?")[0])}</span>`).join("");
-  $("#preuve-txt").textContent = K.semaine ? `${K.semaine} réservations cette semaine` : `${K.loues} boxes loués`;
-  const vals = [[K.loues, "boxes loués"], [K.semaine, "réservés cette semaine"], [K.libres, "libres en ce moment"]];
+  $("#preuve-txt").textContent = `${K.loues} boxes loués`;
+  const vals = [[K.loues, "boxes loués"], [K.libres, "libres en ce moment"]];
   const z = $("#chiffres");
   if (z.children.length === vals.length) vals.forEach(([n], i) => { const b = z.children[i].querySelector("b"); b.dataset.compte = n; if (comptes) { G.killTweensOf?.(b); b.textContent = n; } });
   else z.innerHTML = vals.map(([n, t]) => `<div><b data-compte="${n}">${comptes ? n : 0}</b><span>${t}</span></div>`).join("");
