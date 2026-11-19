@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>StockBox · Self-stockage en ville, box réservable en ligne</title>
-<meta name="description" content="Du casier au box de 20 m² : choisissez votre emplacement dans l'immeuble, voyez ce qui est libre en temps réel et réservez en ligne.">
+<title>StockBox Saint-Ouen · Self-stockage, box réservable en ligne</title>
+<meta name="description" content="Du casier au box de 20 m² à Saint-Ouen : estimez votre volume, choisissez votre box dans l'immeuble et réservez en ligne.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0F5C45">
-<meta property="og:title" content="StockBox"><meta property="og:image" content="/img/og.jpg">
+<meta property="og:title" content="StockBox Saint-Ouen"><meta property="og:image" content="/img/og.jpg">
 <link rel="icon" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
@@ -16,123 +16,59 @@
 </head>
 <body>
 
-<header class="nav" id="nav">
-  <a class="logo" href="#haut" aria-label="StockBox, retour en haut">
-    <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 28 9.5v13L16 29 4 22.5v-13Z" fill="#F28C28"/><path d="M16 3 28 9.5 16 16 4 9.5Z" fill="#FFB061"/><path d="M16 16v13L4 22.5v-13Z" fill="#D9741A"/></svg>StockBox
-  </a>
-  <nav aria-label="Sections"><ul>
-    <li><a href="#immeuble">L'immeuble</a></li>
-    <li><a href="#tailles">Les tailles</a></li>
-    <li><a href="#simulateur">Quel volume ?</a></li>
-    <li><a href="#questions">Questions</a></li>
-  </ul></nav>
-  <a class="btn btn-tg" href="#immeuble">Choisir mon box</a>
+<header class="haut">
+  <a class="logo" href="/" aria-label="StockBox, accueil"><svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 28 9.5v13L16 29 4 22.5v-13Z" fill="#F28C28"/><path d="M16 3 28 9.5 16 16 4 9.5Z" fill="#FFB061"/><path d="M16 16v13L4 22.5v-13Z" fill="#D9741A"/></svg>StockBox</a>
+  <div class="direct"><span class="point" aria-hidden="true"></span><span><b data-libres>Boxes libres</b><span class="ou"> à Saint-Ouen</span></span></div>
 </header>
 
-<main id="haut">
+<main>
   <section class="hero" aria-labelledby="titre-hero">
-    <img class="hero-img" src="/img/facade.webp" srcset="/img/facade-768.webp 768w, /img/facade.webp 1536w" sizes="100vw" alt="L'immeuble StockBox au crépuscule, façade de brique et grandes fenêtres vertes éclairées" fetchpriority="high">
-    <div class="hero-texte">
-      <h1 id="titre-hero"><span><i>De la place en plus,</i></span><span><i>à deux rues de chez vous.</i></span></h1>
-      <p class="chapeau">Du casier au box de 20 m², choisissez votre emplacement dans l'immeuble, voyez ce qui est libre à l'instant et entrez dès demain.</p>
-      <div class="actions">
-        <a class="btn btn-tg" href="#immeuble">Choisir mon box</a>
-        <a class="btn btn-verre" href="#simulateur">Estimer mon volume</a>
-      </div>
-    </div>
-    <div class="pastilles" aria-hidden="true">
-      <div class="pastille p1"><span class="ic"><span class="point"></span></span><span><b data-libres-total>124 boxes</b>libres en ce moment</span></div>
-      <div class="pastille p2"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="9"/></svg></span><span><b>7 jours sur 7</b>de 6 h à 22 h</span></div>
-      <div class="pastille p3"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M3 12V4h8l10 10-8 8L3 12Z"/><circle cx="7.5" cy="8.5" r="1.5"/></svg></span><span><b data-prix-min>Dès 25 €</b>par mois, sans engagement</span></div>
-    </div>
-    <ol class="etapes" aria-label="Comment ça marche">
-      <li><span class="n">1</span><span>Estimez le volume<small>en deux minutes</small></span></li>
-      <li><span class="n">2</span><span>Choisissez votre box<small>dans l'immeuble</small></span></li>
-      <li><span class="n">3</span><span>Payez en ligne<small>le premier mois</small></span></li>
-      <li><span class="n">4</span><span>Entrez avec votre code<small>dès la date choisie</small></span></li>
-    </ol>
+    <img class="hero-img" src="/img/facade.webp" srcset="/img/facade-768.webp 768w, /img/facade.webp 1536w" sizes="100vw" alt="Le centre StockBox de Saint-Ouen au crépuscule, façade de brique et grandes fenêtres vertes éclairées" fetchpriority="high">
+    <h1 id="titre-hero"><span><i>Le stockage,</i></span><span><i>digital et autonome.</i></span></h1>
+    <p class="chapeau">Votre box réservé en deux minutes, accessible 7 j/7 avec votre code.</p>
+    <button class="btn btn-tg btn-geant" type="button" data-ouvrir>Trouver mon box<span class="fleche" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+    <div class="preuve" id="preuve" hidden><div class="visages" id="visages" aria-hidden="true"></div><span id="preuve-txt"></span></div>
+    <p class="adresse"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>14 passage des Malles, 93400 Saint-Ouen. Métro Garibaldi, accès 7 j/7 de 6 h à 22 h.</p>
   </section>
 
-  <section class="immeuble" id="immeuble" aria-labelledby="titre-immeuble">
+  <section class="bloc" aria-labelledby="titre-tailles">
     <div class="large">
-      <div class="immeuble-tete">
-        <div>
-          <h2 class="titre" id="titre-immeuble">Choisissez votre box, étage par étage.</h2>
-          <p class="intro">Les boxes libres sont en vert. Cliquez sur un étage pour entrer, puis sur un box pour le réserver.</p>
-        </div>
-        <div class="filtres" role="group" aria-label="Filtrer par taille" id="filtres"></div>
+      <h2 class="titre" id="titre-tailles">Du casier au box de 20 m².</h2>
+      <p class="intro">Les prix sont mensuels, sans engagement. Chaque dessin est à la même échelle.</p>
+      <div class="tailles-ligne" id="tailles"></div>
+      <div class="atouts">
+        <div><h3>Votre code, vos horaires</h3><p>Entrée 7 jours sur 7, de 6 h à 22 h. Accueil du lundi au samedi, de 9 h à 19 h.</p></div>
+        <div><h3>Un quai pour décharger</h3><p>Quai couvert, chariots et monte-charge à disposition, sans réservation.</p></div>
+        <div><h3>Fermé par votre cadenas</h3><p>Vous seul avez la clé. Bâtiment sous vidéosurveillance et alarmé la nuit.</p></div>
+        <div><h3>Partez quand vous voulez</h3><p>Paiement au mois, préavis de <span data-preavis>15</span> jours.</p></div>
       </div>
-
-      <div class="plateau">
-        <div class="niveaux" id="niveaux" aria-label="Étages"></div>
-
-        <div class="scene-cadre"><div class="scene" id="scene" data-vue="pile">
-          <div class="pile" id="pile"></div>
-          <div class="bulle" id="bulle" role="status" aria-live="polite"></div>
-        </div></div>
-
-        <aside class="fiche" id="fiche" aria-live="polite">
-          <p class="vide"><b>124 boxes sur 3 niveaux.</b>Choisissez un étage, ou filtrez par taille pour voir où se trouvent les boxes libres.</p>
-        </aside>
-      </div>
-
-      <div class="legende" aria-hidden="true">
-        <span><i class="l-libre"></i>Libre</span><span><i class="l-occ"></i>Occupé</span><span><i class="l-choix"></i>Votre choix</span>
-      </div>
-      <p class="source" id="source">Disponibilités en cours de lecture…</p>
-      <details class="liste-boxes" id="liste-boxes"><summary>Voir la liste des boxes de cet étage</summary><div class="grille"></div></details>
     </div>
   </section>
 
-  <section class="tailles" id="tailles" aria-labelledby="titre-tailles">
+  <section class="bloc avis-bloc" aria-labelledby="titre-avis">
     <div class="large">
-      <h2 class="titre" id="titre-tailles">Cinq tailles, dessinées à l'échelle.</h2>
-      <p class="intro">Un même mètre représente la même longueur dans chaque dessin. Cliquez sur une taille pour voir où sont les boxes libres.</p>
-      <div class="echelle" id="echelle"></div>
-      <p class="mesure"><i aria-hidden="true"></i>1 m. Hauteur sous plafond de 2,50 m dans tous les boxes. Les prix sont mensuels, toutes taxes comprises.</p>
-    </div>
-  </section>
-
-  <section class="simu" id="simulateur" aria-labelledby="titre-simu">
-    <div class="large">
-      <h2 class="titre" id="titre-simu">Quel volume pour vos affaires ?</h2>
-      <p class="intro">Partez de la taille de votre logement, puis ajustez objet par objet. On vous propose la plus petite taille qui suffit.</p>
-      <div class="simu-grille">
-        <div>
-          <div class="preselections" role="group" aria-label="Taille du logement" id="presel"></div>
-          <div class="objets" id="objets"></div>
-        </div>
-        <div class="resultat" aria-live="polite">
-          <div class="vol"><span id="vol">0</span><small> m³</small></div>
-          <div class="jauge" id="jauge"><div class="rempli" id="rempli"></div></div>
-          <div class="crans" id="crans"></div>
-          <div class="reco" id="reco"></div>
-        </div>
+      <div class="avis-tete">
+        <h2 class="titre" id="titre-avis">Ils stockent chez nous.</h2>
+        <div class="chiffres" id="chiffres"></div>
       </div>
-    </div>
-  </section>
-
-  <section class="pratique" aria-labelledby="titre-pratique">
-    <div class="large">
-      <h2 class="titre" id="titre-pratique">Sur place.</h2>
-      <div class="pratique-grille">
-        <div><h3>Votre code, vos horaires</h3><p>Vous entrez 7 jours sur 7 de 6 h à 22 h avec un code personnel. L'accueil est ouvert du lundi au samedi, de 9 h à 19 h.</p></div>
-        <div><h3>Un quai pour décharger</h3><p>Garez-vous au quai couvert du rez-de-chaussée. Chariots et monte-charge sont à disposition, sans réservation.</p></div>
-        <div><h3>Chaque box fermé à clé</h3><p>Vous seul avez la clé de votre cadenas. Le bâtiment est sous vidéosurveillance et alarmé en dehors des horaires.</p></div>
-        <div><h3>Au mois, sans engagement</h3><p>Vous payez chaque mois et partez quand vous voulez, en prévenant <span data-preavis>15</span> jours avant.</p></div>
+      <div class="avis">
+        <figure><div class="etoiles" aria-label="5 sur 5">★★★★★</div><blockquote>« J'ai vidé mon 2 pièces avant des travaux. Box réservé le dimanche soir, j'y étais le lundi matin avec la camionnette. Le quai était libre. »</blockquote><figcaption><b>Camille</b>, box de 10 m²</figcaption></figure>
+        <figure><div class="etoiles" aria-label="5 sur 5">★★★★★</div><blockquote>« Je garde le stock de ma boutique. Le monte-charge est juste en face de mon box : c'est pour ça que j'ai choisi le premier étage. »</blockquote><figcaption><b>Margaux</b>, box de 5 m²</figcaption></figure>
+        <figure><div class="etoiles" aria-label="4 sur 5">★★★★<span style="opacity:.3">★</span></div><blockquote>« On voit ce qui est libre et on choisit son emplacement. Aucun engagement : j'ai rendu mon box au bout de quatre mois. »</blockquote><figcaption><b>Karim</b>, box de 2 m²</figcaption></figure>
       </div>
+      <p class="mention">Avis d'exemple rédigés pour cette démonstration. Les chiffres et les réservations, eux, viennent de Nexudus en temps réel.</p>
+      <div class="fil-direct" id="fil-direct" hidden><span class="point" aria-hidden="true"></span><span class="txt" id="fil-txt"></span></div>
     </div>
   </section>
 
-  <section class="faq" id="questions" aria-labelledby="titre-faq">
+  <section class="bloc faq" aria-labelledby="titre-faq">
     <div class="large faq-grille">
-      <div><h2 class="titre" id="titre-faq">Questions fréquentes.</h2><p class="intro">Une autre question ? L'assistant vous répond en bas à droite.</p></div>
+      <h2 class="titre" id="titre-faq">Questions fréquentes.</h2>
       <div>
-        <details><summary>Que puis-je stocker ?</summary><p>Meubles, cartons, électroménager, vélos, archives, stock professionnel. Sont interdits les denrées périssables, les matières dangereuses ou inflammables et les animaux.</p></details>
-        <details><summary>Faut-il une assurance ?</summary><p>Vos biens doivent être assurés. Vous pouvez choisir l'une de nos trois formules lors de la réservation ou utiliser votre propre assurance habitation si elle couvre le stockage.</p></details>
-        <details><summary>Quand puis-je entrer dans mon box ?</summary><p>À la date que vous choisissez, dès le lendemain de la réservation au plus tôt. Votre code d'accès vous est envoyé par e-mail la veille.</p></details>
-        <details><summary>Puis-je changer de taille ?</summary><p>Oui, à tout moment selon les disponibilités. Le nouveau prix s'applique au mois suivant.</p></details>
-        <details><summary>Comment résilier ?</summary><p>Depuis votre espace client ou à l'accueil, en prévenant <span data-preavis>15</span> jours avant la fin du mois en cours.</p></details>
+        <details><summary>Que puis-je stocker ?</summary><p>Meubles, cartons, électroménager, vélos, archives, stock professionnel. Sont interdits les denrées périssables, les produits dangereux ou inflammables et les animaux.</p></details>
+        <details><summary>Faut-il une assurance ?</summary><p>Vos biens doivent être assurés. Choisissez l'une de nos formules à la réservation, ou gardez votre assurance habitation si elle couvre le stockage.</p></details>
+        <details><summary>Quand puis-je entrer ?</summary><p>À la date choisie, dès le lendemain de la réservation. Votre code d'accès arrive par e-mail la veille.</p></details>
+        <details><summary>Comment résilier ?</summary><p>Depuis votre espace client ou à l'accueil, en prévenant <span data-preavis>15</span> jours avant la fin du mois.</p></details>
       </div>
     </div>
   </section>
@@ -140,44 +76,99 @@
 
 <footer class="pied">
   <div class="large">
-    <div class="pied-grille">
-      <p class="grand">Votre box vous attend.</p>
-      <div>
-        <p>StockBox est un centre de self-stockage imaginaire, créé pour une démonstration. Les disponibilités, les réservations et les contrats sont réellement gérés dans Nexudus ; le paiement est simulé.</p>
-        <p style="margin-top:22px"><a class="btn btn-tg" href="#immeuble">Choisir mon box</a></p>
-      </div>
-    </div>
-    <div class="nx"><span>Fonctionne avec <a href="https://nexudus.com" target="_blank" rel="noopener">Nexudus</a>, la plateforme utilisée par plus de 4 000 espaces dans 90 pays.</span><a href="/deconnexion">Quitter la démo</a></div>
+    <p class="grand">Votre box vous attend.</p>
+    <button class="btn btn-tg btn-geant" type="button" data-ouvrir>Trouver mon box<span class="fleche" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+    <p class="note">StockBox est un centre de self-stockage imaginaire, créé pour une démonstration. Disponibilités, réservations et contrats sont gérés dans <a href="https://nexudus.com" target="_blank" rel="noopener">Nexudus</a> ; le paiement est simulé. <a href="/deconnexion">Quitter la démo</a></p>
   </div>
 </footer>
 
-<!-- Réservation -->
-<dialog class="resa" id="resa" aria-labelledby="resa-titre">
-  <form class="resa-in" id="resa-form" novalidate>
-    <div class="resa-tete"><a class="logo" href="#" tabindex="-1" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 32 32"><path d="M16 3 28 9.5v13L16 29 4 22.5v-13Z" fill="#F28C28"/><path d="M16 3 28 9.5 16 16 4 9.5Z" fill="#FFB061"/><path d="M16 16v13L4 22.5v-13Z" fill="#D9741A"/></svg>StockBox</a><button class="fermer" type="button" id="resa-fermer" aria-label="Fermer">×</button></div>
-    <div class="suivi" aria-hidden="true"><span></span><span></span><span></span></div>
-    <div class="resa-corps" id="resa-corps"></div>
-    <div class="resa-pied" id="resa-pied">
-      <div class="total" id="resa-total"></div>
-      <button class="btn btn-ligne" type="button" id="resa-retour">Retour</button>
-      <button class="btn btn-em" type="submit" id="resa-suite">Continuer</button>
+<div class="dock" id="dock"><span class="info"><span class="point" style="display:inline-block;margin-right:8px;vertical-align:middle"></span><b data-libres>Boxes libres</b> à Saint-Ouen</span><button class="btn btn-tg" type="button" data-ouvrir>Trouver mon box</button></div>
+
+<!-- ================= L'expérience ================= -->
+<dialog class="xp" id="xp" aria-label="Trouver mon box">
+  <div class="xp-cadre">
+    <div class="xp-tete">
+      <span class="logo"><svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 28 9.5v13L16 29 4 22.5v-13Z" fill="#F28C28"/><path d="M16 3 28 9.5 16 16 4 9.5Z" fill="#FFB061"/><path d="M16 16v13L4 22.5v-13Z" fill="#D9741A"/></svg><b>StockBox</b></span>
+      <ol class="etapes" id="etapes">
+        <li><button type="button" data-e="0"><span class="n">1</span><span class="l">Où</span></button></li>
+        <li><button type="button" data-e="1"><span class="n">2</span><span class="l">Votre volume</span></button></li>
+        <li><button type="button" data-e="2"><span class="n">3</span><span class="l">Votre box</span></button></li>
+        <li><button type="button" data-e="3"><span class="n">4</span><span class="l">Réserver</span></button></li>
+      </ol>
+      <button class="fermer" type="button" id="xp-fermer" aria-label="Fermer">×</button>
     </div>
-  </form>
+    <div class="xp-corps">
+
+      <section class="ecran e-carte" data-ecran="0" aria-label="Choisir le centre">
+        <svg class="carte" id="carte" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+        <div class="panneau">
+          <h2>Où voulez-vous stocker ?</h2>
+          <p>Indiquez votre adresse : on vous montre le centre le plus proche avec des boxes libres.</p>
+          <form class="recherche" id="recherche"><input id="adresse" autocomplete="street-address" placeholder="Votre adresse ou votre ville" aria-label="Votre adresse ou votre ville"><button class="btn btn-tg" type="submit">Chercher</button></form>
+          <p class="reponse" id="reponse" aria-live="polite"></p>
+          <ul class="centres" id="centres"></ul>
+        </div>
+        <div class="fiche-centre" id="fiche-centre" hidden></div>
+      </section>
+
+      <section class="ecran e-volume" data-ecran="1" aria-label="Estimer le volume">
+        <div class="vol-grille">
+          <div class="vol-g">
+            <h2>Qu'avez-vous à stocker ?</h2>
+            <p class="sous">Touchez vos affaires pour les ranger. Le box grandit quand il le faut.</p>
+            <div class="raccourcis" id="raccourcis" role="group" aria-label="Taille du logement"></div>
+            <div class="objets" id="objets"></div>
+          </div>
+          <div class="vol-d" aria-live="polite">
+            <div class="jauge-txt"><div class="v"><span id="vol">0</span><small> m³</small></div><div class="taille-reco"><b id="taille-reco">Un casier</b><span id="taille-prix"></span></div></div>
+            <svg class="boite" id="boite" viewBox="-300 -330 600 470" aria-hidden="true"></svg>
+            <div class="vol-bas"><span class="rempl" id="rempl">Ajoutez vos affaires.</span><span><button class="lien" type="button" id="passer">Je connais ma taille</button>&nbsp;&nbsp;<button class="btn btn-em" type="button" id="vers-box">Voir mes boxes</button></span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="ecran e-immeuble" data-ecran="2" aria-label="Choisir son box">
+        <div class="imm">
+          <div class="ascenseur" id="ascenseur"></div>
+          <div class="scene-zone" id="scene-zone">
+            <div class="filtres" id="filtres" role="group" aria-label="Taille"></div>
+            <div class="scene" id="scene"><div class="pile vue-pile" id="pile"><div class="pile-in" id="pile-in"></div></div></div>
+            <div class="bulle" id="bulle"></div>
+            <div class="outils-scene" id="outils" hidden><button type="button" data-z="1" aria-label="Zoomer">+</button><button type="button" data-z="-1" aria-label="Dézoomer">−</button><button type="button" data-z="0" aria-label="Recentrer">⟲</button></div>
+            <div class="legende" aria-hidden="true"><span><i class="l-libre"></i>Libre</span><span><i class="l-occ"></i>Loué</span><span><i class="l-choix"></i>Votre choix</span></div>
+          </div>
+          <aside class="fiche" id="fiche" aria-live="polite"></aside>
+        </div>
+      </section>
+
+      <section class="ecran e-resa" data-ecran="3" aria-label="Réserver">
+        <div class="resa">
+          <div class="resa-visuel" id="resa-visuel"></div>
+          <form class="resa-form" id="resa-form" novalidate>
+            <div class="resa-defile" id="resa-defile"></div>
+            <div class="resa-pied"><div class="total" id="resa-total"></div><button class="btn btn-ligne" type="button" id="resa-retour">Retour</button><button class="btn btn-em" type="submit" id="resa-suite">Continuer</button></div>
+          </form>
+        </div>
+      </section>
+
+      <section class="ecran e-fin" data-ecran="4" aria-label="Réservation confirmée">
+        <div class="eclats" id="eclats"></div>
+        <div class="fin" id="fin"></div>
+      </section>
+    </div>
+  </div>
 </dialog>
 
 <!-- Assistant -->
-<button class="agent-btn cache" id="agent-btn" type="button" aria-controls="agent" aria-expanded="false"><span class="av"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d1306" stroke-width="2"><path d="M4 5h16v11H9l-5 4z"/></svg></span><span class="txt">Une question ? L'assistant vous répond</span></button>
-<section class="agent" id="agent" hidden aria-label="Assistant StockBox">
-  <div class="agent-tete"><span class="av" style="width:38px;height:38px;border-radius:50%;background:var(--tg);display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d1306" stroke-width="2"><path d="M4 5h16v11H9l-5 4z"/></svg></span><div><b>L'assistant StockBox</b><small>Il trouve la bonne taille et un box libre.</small></div><button class="fermer" type="button" id="agent-fermer" aria-label="Fermer l'assistant">×</button></div>
+<button class="agent-btn cache" id="agent-btn" type="button" aria-controls="agent" aria-expanded="false" aria-label="Poser une question à l'assistant"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 5h16v11H9l-5 4z"/></svg></button>
+<section class="agent ferme" id="agent" aria-label="Assistant StockBox" aria-hidden="true">
+  <div class="agent-tete"><div><b>L'assistant StockBox</b><small>Il trouve la bonne taille et un box libre.</small></div><button class="fermer" type="button" id="agent-fermer" aria-label="Fermer l'assistant">×</button></div>
   <div class="fil" id="fil" aria-live="polite"></div>
-  <div class="suggestions" id="suggestions">
-    <button type="button">Je déménage un 2 pièces</button>
-    <button type="button">Il me faut un box au rez-de-chaussée</button>
-    <button type="button">Je stocke du matériel pro</button>
-  </div>
+  <div class="suggestions" id="suggestions"><button type="button">Je déménage un 2 pièces</button><button type="button">Un box au rez-de-chaussée</button><button type="button">Je stocke du matériel pro</button></div>
   <form id="agent-form"><input id="agent-champ" autocomplete="off" placeholder="Votre question" aria-label="Votre question" maxlength="600"><button class="btn btn-em" type="submit">Envoyer</button></form>
 </section>
 
+<script src="/js/gsap.min.js"></script>
 <script type="module" src="/js/app.js"></script>
 </body>
 </html>
