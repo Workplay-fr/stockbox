@@ -5,12 +5,14 @@ Centre de self-stockage fictif relié à la localisation Nexudus **StockBox** (1
 ## Ce que fait le site
 
 La page d'accueil est volontairement courte : la façade, une phrase, un bouton « Trouver mon box ». Pas de menu.
-Le bouton ouvre une expérience presque plein écran en quatre étapes :
+Le parcours :
 
-1. **Où** : carte stylisée de Paris et de la petite couronne (`public/js/carte.js`), dix centres StockBox fictifs ; l'adresse saisie est localisée par l'API Adresse (data.gouv.fr). Seul Saint-Ouen (14 passage des Malles, adresse inventée) est réservable.
-2. **Votre volume** : on touche ses affaires, le box se remplit et grandit jusqu'à la bonne taille (`public/js/volume.js`).
-3. **Votre box** : l'immeuble en grand, ascenseur, zoom, box conseillé (`public/js/immeuble.js`).
-4. **Réserver** : paiement simulé, contrat réel, puis la porte du box s'ouvre (`public/js/resa.js`).
+1. **Où** : une petite fenêtre propose les centres ; seul Saint-Ouen (14 passage des Malles, adresse inventée) a des boxes libres.
+2. **Quelle taille** : les cinq tailles avec prix et disponibilités, ou quatre choix rapides (« je ne sais pas »).
+3. La fenêtre se ferme, la page descend jusqu'à l'immeuble, les disponibilités sont relues et le box conseillé s'allume (`public/js/immeuble.js`).
+4. **Réserver** se déplie sous l'immeuble, dans la page : paiement simulé, contrat réel, puis la porte du box s'ouvre (`public/js/resa.js`).
+
+Avant chaque commit : `sh outils/version.sh` (numéro de version des styles et scripts, contre les anciennes copies en cache).
 
 Preuve sociale : boxes loués, réservations de la semaine et dernières réservations viennent de Nexudus. Les trois avis sont des exemples, signalés comme tels.
 

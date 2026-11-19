@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
 <link rel="preload" as="image" href="/img/facade.webp" fetchpriority="high">
-<link rel="stylesheet" href="/css/site.css?v=20261119172147">
+<link rel="stylesheet" href="/css/site.css?v=20261119172954">
 </head>
 <body>
 
@@ -37,6 +37,35 @@
       <figure class="b-avis" id="b-avis"><blockquote id="b-avis-txt">« Box réservé le dimanche soir, j'y étais le lundi matin avec la camionnette. »</blockquote><figcaption id="b-avis-qui">Camille, box de 10 m²</figcaption></figure>
       <div class="b-direct" id="preuve"><div class="visages" id="visages" aria-hidden="true"></div><span><b id="preuve-txt">Réservations en direct</b><small>lues dans Nexudus</small></span></div>
     </div>
+  </section>
+
+  <section class="immeuble" id="immeuble" aria-labelledby="titre-imm">
+    <div class="imm-tete">
+      <h2 id="titre-imm">Choisissez votre box.</h2>
+      <div class="rappel" id="rappel"><button class="cta cta-petit" type="button" data-ouvrir><span class="cta-txt">Choisir mon centre et ma taille</span><span class="cta-rond" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+    </div>
+    <div class="imm">
+      <div class="ascenseur" id="ascenseur"></div>
+      <div class="scene-zone" id="scene-zone">
+        <div class="filtres" id="filtres" role="group" aria-label="Taille"></div>
+        <div class="scene" id="scene"><div class="pile vue-pile" id="pile"><div class="pile-in" id="pile-in"></div></div></div>
+        <div class="bulle" id="bulle"></div>
+        <div class="outils-scene" id="outils" hidden><button type="button" data-z="1" aria-label="Zoomer">+</button><button type="button" data-z="-1" aria-label="Dézoomer">−</button><button type="button" data-z="0" aria-label="Recentrer">⟲</button></div>
+        <div class="legende" aria-hidden="true"><span><i class="l-libre"></i>Libre</span><span><i class="l-occ"></i>Loué</span><span><i class="l-choix"></i>Votre choix</span></div>
+      </div>
+      <aside class="fiche" id="fiche" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section class="reserver" id="reserver" aria-label="Réserver votre box" hidden>
+    <div class="resa" id="resa">
+      <div class="resa-visuel" id="resa-visuel"></div>
+      <form class="resa-form" id="resa-form" novalidate>
+        <div class="resa-defile" id="resa-defile"></div>
+        <div class="resa-pied"><div class="total" id="resa-total"></div><button class="btn btn-ligne" type="button" id="resa-retour">Retour</button><button class="btn btn-em" type="submit" id="resa-suite">Continuer</button></div>
+      </form>
+    </div>
+    <div class="e-fin" id="e-fin" hidden><div class="eclats" id="eclats"></div><div class="fin" id="fin"></div></div>
   </section>
 
   <section class="bloc" aria-labelledby="titre-tailles">
@@ -90,79 +119,23 @@
   </div>
 </footer>
 
-<div class="dock" id="dock"><span class="info"><span class="point" style="display:inline-block;margin-right:8px;vertical-align:middle"></span><b data-libres>Boxes libres</b> à Saint-Ouen</span><button class="btn btn-tg" type="button" data-ouvrir>Trouver mon box</button></div>
+<div class="dock" id="dock"><span class="info" id="dock-info"><span class="point" style="display:inline-block;margin-right:8px;vertical-align:middle"></span><b data-libres>Boxes libres</b> à Saint-Ouen</span><button class="btn btn-tg" type="button" id="dock-btn">Trouver mon box</button></div>
 
-<!-- ================= L'expérience ================= -->
-<dialog class="xp" id="xp" aria-label="Trouver mon box">
-  <div class="xp-cadre">
-    <div class="xp-tete">
-      <span class="logo"><svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 28 9.5v13L16 29 4 22.5v-13Z" fill="#F28C28"/><path d="M16 3 28 9.5 16 16 4 9.5Z" fill="#FFB061"/><path d="M16 16v13L4 22.5v-13Z" fill="#D9741A"/></svg><b>StockBox</b></span>
-      <ol class="etapes" id="etapes">
-        <li><button type="button" data-e="0"><span class="n">1</span><span class="l">Où</span></button></li>
-        <li><button type="button" data-e="1"><span class="n">2</span><span class="l">Votre volume</span></button></li>
-        <li><button type="button" data-e="2"><span class="n">3</span><span class="l">Votre box</span></button></li>
-        <li><button type="button" data-e="3"><span class="n">4</span><span class="l">Réserver</span></button></li>
-      </ol>
-      <button class="fermer" type="button" id="xp-fermer" aria-label="Fermer">×</button>
+<!-- Petite fenêtre : le centre, puis la taille -->
+<dialog class="fen" id="choix" aria-labelledby="choix-titre">
+  <div class="choix-in">
+    <div class="choix-tete"><div class="choix-pas" aria-hidden="true"><i class="on"></i><i></i></div><button class="fermer" type="button" id="choix-fermer" aria-label="Fermer">×</button></div>
+    <div class="vue on" data-vue="centre">
+      <h2 id="choix-titre">Où voulez-vous stocker ?</h2>
+      <p class="sous">Choisissez votre centre StockBox.</p>
+      <ul class="centres" id="centres"></ul>
     </div>
-    <div class="xp-corps">
-
-      <section class="ecran e-carte" data-ecran="0" aria-label="Choisir le centre">
-        <svg class="carte" id="carte" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
-        <div class="panneau">
-          <h2>Où voulez-vous stocker ?</h2>
-          <p>Indiquez votre adresse : on vous montre le centre le plus proche avec des boxes libres.</p>
-          <form class="recherche" id="recherche"><input id="adresse" autocomplete="street-address" placeholder="Votre adresse ou votre ville" aria-label="Votre adresse ou votre ville"><button class="btn btn-tg" type="submit">Chercher</button></form>
-          <p class="reponse" id="reponse" aria-live="polite"></p>
-          <ul class="centres" id="centres"></ul>
-        </div>
-        <div class="fiche-centre" id="fiche-centre" hidden></div>
-      </section>
-
-      <section class="ecran e-volume" data-ecran="1" aria-label="Estimer le volume">
-        <div class="vol-grille">
-          <div class="vol-g">
-            <h2>Qu'avez-vous à stocker ?</h2>
-            <p class="sous">Touchez vos affaires pour les ranger. Le box grandit quand il le faut.</p>
-            <div class="raccourcis" id="raccourcis" role="group" aria-label="Taille du logement"></div>
-            <div class="objets" id="objets"></div>
-          </div>
-          <div class="vol-d" aria-live="polite">
-            <div class="jauge-txt"><div class="v"><span id="vol">0</span><small> m³</small></div><div class="taille-reco"><b id="taille-reco">Un casier</b><span id="taille-prix"></span></div></div>
-            <svg class="boite" id="boite" viewBox="-300 -330 600 470" aria-hidden="true"></svg>
-            <div class="vol-bas"><span class="rempl" id="rempl">Ajoutez vos affaires.</span><span><button class="lien" type="button" id="passer">Je connais ma taille</button>&nbsp;&nbsp;<button class="btn btn-em" type="button" id="vers-box">Voir mes boxes</button></span></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="ecran e-immeuble" data-ecran="2" aria-label="Choisir son box">
-        <div class="imm">
-          <div class="ascenseur" id="ascenseur"></div>
-          <div class="scene-zone" id="scene-zone">
-            <div class="filtres" id="filtres" role="group" aria-label="Taille"></div>
-            <div class="scene" id="scene"><div class="pile vue-pile" id="pile"><div class="pile-in" id="pile-in"></div></div></div>
-            <div class="bulle" id="bulle"></div>
-            <div class="outils-scene" id="outils" hidden><button type="button" data-z="1" aria-label="Zoomer">+</button><button type="button" data-z="-1" aria-label="Dézoomer">−</button><button type="button" data-z="0" aria-label="Recentrer">⟲</button></div>
-            <div class="legende" aria-hidden="true"><span><i class="l-libre"></i>Libre</span><span><i class="l-occ"></i>Loué</span><span><i class="l-choix"></i>Votre choix</span></div>
-          </div>
-          <aside class="fiche" id="fiche" aria-live="polite"></aside>
-        </div>
-      </section>
-
-      <section class="ecran e-resa" data-ecran="3" aria-label="Réserver">
-        <div class="resa">
-          <div class="resa-visuel" id="resa-visuel"></div>
-          <form class="resa-form" id="resa-form" novalidate>
-            <div class="resa-defile" id="resa-defile"></div>
-            <div class="resa-pied"><div class="total" id="resa-total"></div><button class="btn btn-ligne" type="button" id="resa-retour">Retour</button><button class="btn btn-em" type="submit" id="resa-suite">Continuer</button></div>
-          </form>
-        </div>
-      </section>
-
-      <section class="ecran e-fin" data-ecran="4" aria-label="Réservation confirmée">
-        <div class="eclats" id="eclats"></div>
-        <div class="fin" id="fin"></div>
-      </section>
+    <div class="vue" data-vue="taille">
+      <h2>Quelle taille ?</h2>
+      <p class="sous" id="sous-taille">StockBox Saint-Ouen. Prix par mois, sans engagement.</p>
+      <div class="tailles-choix" id="tailles-choix"></div>
+      <div class="sais-pas"><p>Je ne sais pas, j'ai…</p><div id="sais-pas"></div></div>
+      <button class="lien retour-choix" type="button" id="retour-centre">Changer de centre</button>
     </div>
   </div>
 </dialog>
@@ -176,7 +149,7 @@
   <form id="agent-form"><input id="agent-champ" autocomplete="off" placeholder="Votre question" aria-label="Votre question" maxlength="600"><button class="btn btn-em" type="submit">Envoyer</button></form>
 </section>
 
-<script src="/js/gsap.min.js?v=20261119172147"></script>
-<script type="module" src="/js/app.js?v=20261119172147"></script>
+<script src="/js/gsap.min.js?v=20261119172954"></script>
+<script type="module" src="/js/app.js?v=20261119172954"></script>
 </body>
 </html>

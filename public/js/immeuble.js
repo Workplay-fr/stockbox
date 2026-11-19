@@ -1,6 +1,6 @@
 // Étape 3 : l'immeuble en grand. Pile des trois niveaux, ascenseur pour changer d'étage, zoom et déplacement dans l'étage,
 // boxes allumés selon leur état réel dans Nexudus, box conseillé mis en avant.
-import { $, $$, el, NS, G, esc, eur, S, NOMS, COURT, TAILLES, LIBELLE, IDEAL, boxes, libres, libresTotal, prix, volumeTaille, preavis, boxParId, boxConseille, reduit } from "./commun.js?v=20261119172147";
+import { $, $$, el, NS, G, esc, eur, S, NOMS, COURT, TAILLES, LIBELLE, IDEAL, boxes, libres, libresTotal, prix, volumeTaille, preavis, boxParId, boxConseille, reduit } from "./commun.js?v=20261119172954";
 
 let zone, scene, pileIn, bulle, onReserver = () => {};
 const V = { mode: "pile", etage: null, z: 1, x: 0, y: 0 };
@@ -32,7 +32,7 @@ export function initImmeuble(reserver) {
 
 // Taille des calques selon la place disponible : l'étage ouvert remplit la zone ; la pile tient en hauteur.
 function mesurer() {
-  const W = zone.clientWidth, H = zone.clientHeight;
+  const W = zone.clientWidth, H = zone.clientHeight - 52;
   const lw = Math.min(W * 1.04, H / .9 * 1536 / 1024), lh = lw * 1024 / 1536;
   const sp = Math.min(.92, (H * .98) / (lh * 1.42), W / lw);
   geo = { lw, lh, sp, gap: lh * sp * .29 };
@@ -56,7 +56,7 @@ function placer(anime = true) {
   zone.classList.toggle("zoom", V.mode === "etage" && V.z > 1.01);
 }
 
-export function entrer(taille) {
+export function entrer(taille, anime = true) {
   S.filtre = taille || null;
   if (S.choix && S.filtre && S.choix.taille !== S.filtre) S.choix = null;
   S.reco = S.filtre ? boxConseille(S.filtre) : null;
@@ -64,8 +64,8 @@ export function entrer(taille) {
   peindre(); fiche();
   // Les trois niveaux tombent l'un après l'autre, puis l'ascenseur file vers l'étage du box conseillé.
   const nivs = $$(".niveau", pileIn).reverse();
-  G.fromTo(nivs, { opacity: 0, translate: "0 -120px" }, { opacity: 1, translate: "0 0px", duration: .9, ease: "power3.out", stagger: .14 });
-  const cible = S.choix || S.reco;
+  if (anime) G.fromTo(nivs, { opacity: 0, translate: "0 -120px" }, { opacity: 1, translate: "0 0px", duration: .9, ease: "power3.out", stagger: .14 });
+  const cible = anime ? (S.choix || S.reco) : null;
   if (cible) setTimeout(() => { ouvrir(cible.etage); setTimeout(() => choisir(cible, false), 700); }, 1300);
   else setTimeout(vague, 800);
 }
@@ -209,7 +209,7 @@ function fiche(anime) {
   if (b) {
     const estReco = S.reco && S.reco.id === b.id, vol = volumeTaille(b.taille);
     const pres = b.etage === "0" ? "à deux pas du quai de chargement" : "près du monte-charge";
-    f.innerHTML = `${estReco ? `<span class="reco">★ Notre suggestion pour vos ${String(S.volume.toFixed(1)).replace(".", ",").replace(",0", "")} m³</span>` : `<span class="reco" style="background:var(--em-clair);color:var(--em)">Libre</span>`}
+    f.innerHTML = `${estReco ? `<span class="reco">★ Notre suggestion en ${LIBELLE[b.taille]}</span>` : `<span class="reco" style="background:var(--em-clair);color:var(--em)">Libre</span>`}
       <div><h3>Box ${esc(b.nom)}</h3><div class="ou">${NOMS[b.etage]}, ${pres}</div></div>
       <div class="prix"><b>${eur(prix(b.taille))}</b><span>par mois</span></div>
       <dl><dt>Surface</dt><dd>${b.taille === "C" ? "Casier de 1 m³" : `${LIBELLE[b.taille]}, ${vol} m³ environ`}</dd><dt>Idéal pour</dt><dd>${IDEAL[b.taille]}</dd><dt>Engagement</dt><dd>Aucun, préavis de ${preavis()} jours</dd></dl>
