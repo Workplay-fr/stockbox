@@ -701,3 +701,15 @@ dialog.fen::backdrop{background:rgba(5,22,17,.45);backdrop-filter:blur(8px)}
 @keyframes eleve{0%{transform:translateY(0) scale(1)}45%{transform:translateY(-7px) scale(1.06);fill:rgba(242,140,40,.85)}100%{transform:translateY(0) scale(1)}}
 /* FAQ : l'animation de hauteur est faite en JS ; le contenu ne déborde pas pendant le mouvement. */
 .faq details p{overflow:hidden}
+/* ===== Premier écran allégé ===== */
+.reassure{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 6px}
+.reassure .hero-atlas{margin:0;padding:2px 4px;font-size:inherit;animation:none;text-shadow:inherit;color:inherit;gap:5px}
+.reassure .hero-atlas svg{width:13px;height:13px}
+.tarif small{font-size:.82em;opacity:.8;margin-left:1px}
+.barre{grid-template-columns:auto auto!important;justify-content:space-between}
+.b-direct{border-left:0!important;padding-left:0!important}
+@media (max-width:700px){.reassure{font-size:12.5px;max-width:330px}.tarif small{display:none}}
+.reassure .sep{font-style:normal;opacity:.7}
+.b-note{border-right:0!important;padding-right:0!important}
+@media (min-width:901px){.barre{width:fit-content;min-width:min(560px,calc(100vw - 40px));gap:48px;padding:12px 26px}}
+@media (max-width:700px){.reassure .sep-atlas{display:none}.reassure .hero-atlas{flex-basis:100%;justify-content:center}}

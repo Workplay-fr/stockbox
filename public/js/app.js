@@ -1,8 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119202332";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119202332";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119202332";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261119202332";
+import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119203422";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119203422";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119203422";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261119203422";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: "14 passage des Malles, Les Puces", ouvert: true },
@@ -28,7 +28,7 @@ function accueil() {
   const K = compteurs();   // une seule source pour tous les chiffres de la page
   $$("[data-libres]").forEach(e => (e.textContent = `${K.libres} boxes libres`));
   $$("[data-preavis]").forEach(e => (e.textContent = preavis()));
-  $("#tarifs").innerHTML = TAILLES.map(t => `<li><button type="button" class="tarif" data-taille="${t}" aria-label="Voir les ${t === "C" ? "casiers" : "boxes de " + LIBELLE[t]} dans l'immeuble, ${eur(prix(t))} par mois"><b>${t === "C" ? "Casier" : LIBELLE[t]}</b><span>${eur(prix(t))}</span></button></li>`).join("");
+  $("#tarifs").innerHTML = TAILLES.map(t => `<li><button type="button" class="tarif" data-taille="${t}" aria-label="Voir les ${t === "C" ? "casiers" : "boxes de " + LIBELLE[t]} dans l'immeuble, ${eur(prix(t))} par mois"><b>${t === "C" ? "Casier" : LIBELLE[t]}</b><span>${eur(prix(t))}<small>/mois</small></span></button></li>`).join("");
   $$("#tarifs .tarif").forEach(b => (b.onclick = () => montrer(b.dataset.taille)));
   const rec = S.data.activite?.recents || [];
   const cols = ["#0F5C45", "#F28C28", "#3B7A66", "#C9681A", "#13241E"];
@@ -64,7 +64,7 @@ const AVIS = [
   ["« Propre, éclairé, accessible tôt le matin. Exactement ce qu'il me fallait. »", "Thomas, box de 20 m²"],
 ];
 let ai = 0;
-setInterval(() => { const f = $("#b-avis"); f.classList.add("sort"); setTimeout(() => { ai = (ai + 1) % AVIS.length; $("#b-avis-txt").textContent = AVIS[ai][0]; $("#b-avis-qui").textContent = AVIS[ai][1]; f.classList.remove("sort"); }, 450); }, 5200);
+setInterval(() => { const f = $("#b-avis"); if (!f) return; f.classList.add("sort"); setTimeout(() => { ai = (ai + 1) % AVIS.length; $("#b-avis-txt").textContent = AVIS[ai][0]; $("#b-avis-qui").textContent = AVIS[ai][1]; f.classList.remove("sort"); }, 450); }, 5200);
 
 // ---------------------------------------------------------------- barre du bas : toujours l'action suivante
 const dockEl = $("#dock"), abtn = $("#agent-btn");
