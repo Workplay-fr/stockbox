@@ -1,8 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119195300";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119195300";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119195300";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261119195300";
+import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119200438";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119200438";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119200438";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261119200438";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: "14 passage des Malles, Les Puces", ouvert: true },
@@ -34,7 +34,7 @@ function accueil() {
   $("#preuve-txt").textContent = a.semaine ? `${a.semaine} réservations cette semaine` : a.loues ? `${a.loues} boxes loués` : `${libresTotal()} boxes libres`;
   $("#chiffres").innerHTML = [[a.loues ?? 0, "boxes loués"], [a.semaine ?? 0, "réservés cette semaine"], [libresTotal(), "libres en ce moment"]].map(([n, t]) => `<div><b data-compte="${n}">${comptes ? n : 0}</b><span>${t}</span></div>`).join("");
   const min = Math.min(...TAILLES.map(prix));
-  $("#cta-sous-txt").textContent = `${libresTotal()} libres à Saint-Ouen, dès ${eur(min)} par mois`;
+  const sousCta = $("#cta-sous-txt"); if (sousCta) sousCta.textContent = `${libresTotal()} libres à Saint-Ouen, dès ${eur(min)} par mois`;
   if (document.querySelector(".onglet")) majTailles();
   fil(); dock();
 }
