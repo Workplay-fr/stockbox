@@ -22,8 +22,8 @@ a{color:inherit}
 .btn:active{transform:scale(.97)}
 .btn-tg{background:var(--tg);color:#1d1306;box-shadow:0 12px 34px rgba(242,140,40,.38)}
 .btn-tg:hover{background:#F69A3E;transform:translateY(-2px);box-shadow:0 18px 44px rgba(242,140,40,.45)}
-.btn-em{background:var(--em);color:#fff}
-.btn-em:hover{background:#127052;transform:translateY(-2px)}
+.btn-em{background:var(--tg);color:#1d1306;box-shadow:0 10px 28px rgba(242,140,40,.3)}
+.btn-em:hover{background:#F69A3E;transform:translateY(-2px)}
 .btn-ligne{background:transparent;color:var(--encre);border:1.5px solid var(--ligne)}
 .btn-ligne:hover{border-color:var(--encre)}
 .btn-blanc{background:#fff;color:var(--encre)}
@@ -396,10 +396,10 @@ dialog.xp::backdrop{background:rgba(5,22,17,.6);backdrop-filter:blur(6px)}
 @media (max-width:860px){.jauge-txt{top:14px;left:16px;right:16px}.jauge-txt .v{font-size:40px}.jauge-txt .v small{font-size:16px}.jauge-txt .taille-reco b{font-size:21px}.jauge-txt .taille-reco span{font-size:12.5px}.vol-d{padding:84px 12px 12px;justify-content:flex-start}.vol-d svg.boite{width:min(100%,330px)}.vol-bas{position:static;margin-top:6px;width:100%}.vol-bas .rempl{font-size:14px}.vol-g h2{font-size:28px}.etiq{display:none}.fin p{font-size:15px}.code span{width:50px;height:62px;font-size:32px}}
 
 /* ---------- Accueil : bouton principal, prix, barre de preuve ---------- */
-.cta{position:relative;display:inline-flex;align-items:center;gap:22px;border:0;border-radius:999px;padding:9px 9px 9px 32px;background:#fff;color:var(--encre);font:600 18px/1 var(--f);letter-spacing:-.005em;cursor:pointer;overflow:hidden;isolation:isolate;box-shadow:0 18px 50px rgba(5,20,28,.35);transition:transform .4s var(--ease),box-shadow .4s var(--ease),color .45s var(--ease);animation:apparait 1s .55s var(--ease) both}
-.cta::before{content:"";position:absolute;z-index:-1;right:9px;top:50%;width:52px;height:52px;margin-top:-26px;border-radius:50%;background:var(--em);transform:scale(1);transition:transform .6s var(--ease)}
+.cta{position:relative;display:inline-flex;align-items:center;gap:22px;border:0;border-radius:999px;padding:9px 9px 9px 32px;background:var(--tg);color:#1d1306;font:600 18px/1 var(--f);letter-spacing:-.005em;cursor:pointer;overflow:hidden;isolation:isolate;box-shadow:0 18px 50px rgba(242,140,40,.38);transition:transform .4s var(--ease),box-shadow .4s var(--ease),color .45s var(--ease);animation:apparait 1s .55s var(--ease) both}
+.cta::before{content:"";position:absolute;z-index:-1;right:9px;top:50%;width:52px;height:52px;margin-top:-26px;border-radius:50%;background:var(--encre);transform:scale(1);transition:transform .6s var(--ease)}
 .cta-rond{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:#fff;transition:transform .45s var(--ease)}
-.cta:hover{transform:translateY(-2px);box-shadow:0 24px 60px rgba(5,20,28,.45);color:#fff}
+.cta:hover{transform:translateY(-2px);box-shadow:0 24px 60px rgba(242,140,40,.5);color:#fff}
 .cta:hover::before{transform:scale(7)}
 .cta:hover .cta-rond{transform:translateX(3px)}
 .cta:active{transform:scale(.98)}
@@ -424,7 +424,7 @@ dialog.xp::backdrop{background:rgba(5,22,17,.6);backdrop-filter:blur(6px)}
 @media (max-width:900px){.barre{grid-template-columns:1fr 1fr;gap:14px;padding:12px 16px;bottom:14px}.b-avis{display:none}.b-note{padding-right:0;border-right:0}.b-direct{padding-left:14px}.b-chiffre{font-size:30px}.hero{padding-bottom:130px}.tarifs li{font-size:13px;padding:7px 12px}.cta{font-size:17px;padding-left:26px}}
 @media (max-width:420px){.tarifs li:nth-child(1){display:none}}
 .haut-d{display:flex;align-items:center;gap:10px}
-.connexion{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:#fff;color:var(--encre);font-weight:600;font-size:14px;text-decoration:none;transition:transform .3s var(--ease),background .3s}
-.connexion:hover{transform:translateY(-1px);background:var(--em-clair)}
+.connexion{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:var(--tg);color:#1d1306;font-weight:600;font-size:14px;text-decoration:none;transition:transform .3s var(--ease),background .3s}
+.connexion:hover{transform:translateY(-1px);background:#F69A3E}
 @media (max-width:560px){.direct{display:none}}
 @media (max-width:560px){.b-direct .visages,.barre small{display:none}.b-direct{font-size:13.5px;line-height:1.25}.b-note .etoiles{font-size:13px}.b-chiffre{font-size:26px}}

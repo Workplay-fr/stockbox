@@ -1,5 +1,5 @@
 // Étape 2 : on range ses affaires d'un toucher, le box se remplit et grandit jusqu'à la bonne taille.
-import { $, $$, el, G, S, TAILLES, LIBELLE, EMPRISE, eur, prix, volumeTaille, libresTotal, reduit } from "./commun.js?v=20261119171907";
+import { $, $$, el, G, S, TAILLES, LIBELLE, EMPRISE, eur, prix, volumeTaille, libresTotal, reduit } from "./commun.js?v=20261119172147";
 
 const I = { // icônes au trait (viewBox 40)
   carton: '<path d="M6 14 20 7l14 7v14l-14 7-14-7Z"/><path d="M6 14l14 7 14-7M20 21v14M13 10.5l14 7"/>',

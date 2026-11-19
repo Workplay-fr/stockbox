@@ -1,6 +1,6 @@
 // Étape 1 : carte stylisée de Paris et de la petite couronne, réseau de centres StockBox (fictifs).
 // Seul Saint-Ouen est relié à Nexudus ; les autres centres servent le décor (complets, liste d'attente, ouverture prochaine).
-import { $, el, NS, esc, G, S, libresTotal, reduit } from "./commun.js?v=20261119171907";
+import { $, el, NS, esc, G, S, libresTotal, reduit } from "./commun.js?v=20261119172147";
 
 export const CENTRES = [
   { id: "saint-ouen", nom: "Saint-Ouen", sous: "Les Puces", adresse: "14 passage des Malles, 93400 Saint-Ouen", lat: 48.9030, lon: 2.3405, statut: "ouvert" },
