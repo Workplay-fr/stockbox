@@ -1,7 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119173322";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119173322";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261119173322";
+import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119174135";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119174135";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119174135";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261119174135";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: "14 passage des Malles, Les Puces", ouvert: true },
@@ -32,13 +33,9 @@ function accueil() {
   $("#visages").innerHTML = rec.slice(0, 3).map((r, i) => `<span style="background:${cols[i % cols.length]}">${esc((r.prenom || "?")[0])}</span>`).join("");
   $("#preuve-txt").textContent = a.semaine ? `${a.semaine} réservations cette semaine` : a.loues ? `${a.loues} boxes loués` : `${libresTotal()} boxes libres`;
   $("#chiffres").innerHTML = [[a.loues ?? 0, "boxes loués"], [a.semaine ?? 0, "réservés cette semaine"], [libresTotal(), "libres en ce moment"]].map(([n, t]) => `<div><b data-compte="${n}">${comptes ? n : 0}</b><span>${t}</span></div>`).join("");
-  const c = $("#tailles"); c.innerHTML = "";
-  for (const t of TAILLES) {
-    const [w, d] = EMPRISE[t], n = libresTotal(t);
-    const b = el("button", { class: "t-carte", type: "button" }, `<span class="emp"><i style="width:${w * 14}px;height:${d * 14}px"></i></span><b>${LIBELLE[t]}</b><span class="p">${eur(prix(t))} par mois</span><small>${IDEAL[t]}</small><span class="d">${n ? `${n} libres` : "Complet"}</span>`);
-    b.onclick = () => montrer(t);
-    c.append(b);
-  }
+  const min = Math.min(...TAILLES.map(prix));
+  $("#cta-sous-txt").textContent = `${libresTotal()} libres à Saint-Ouen, dès ${eur(min)} par mois`;
+  if (document.querySelector(".onglet")) majTailles();
   fil(); dock();
 }
 new IntersectionObserver((es, io) => { if (!es.some(e => e.isIntersecting)) return; comptes = true; $$("[data-compte]").forEach(e => { const o = { v: 0 }; G.to(o, { v: Number(e.dataset.compte), duration: 1.4, ease: "power2.out", onUpdate: () => (e.textContent = Math.round(o.v)) }); }); io.disconnect(); }, { threshold: .4 }).observe($("#chiffres"));
@@ -70,7 +67,7 @@ function dock() {
     bt.textContent = "Réserver"; bt.onclick = () => reserver();
   } else {
     info.innerHTML = `<span class="point" style="display:inline-block;margin-right:8px;vertical-align:middle"></span><b>${libresTotal()} boxes libres</b> à Saint-Ouen`;
-    bt.textContent = "Trouver mon box"; bt.onclick = () => ouvrirChoix();
+    bt.textContent = "Choisir mon box"; bt.onclick = () => ouvrirChoix();
   }
   dockEl.classList.toggle("vu", !heroVu && !$("#choix").open && $("#reserver").hidden);
 }
@@ -118,6 +115,25 @@ function remplirChoix() {
   const sp = $("#sais-pas"); sp.innerHTML = "";
   for (const [txt, t] of RAPIDE) { const b = el("button", { type: "button" }, `${txt} <small>· ${t === "C" ? "casier" : LIBELLE[t]}</small>`); b.onclick = () => choisirTaille(t); sp.append(b); }
 }
+
+// Temps de trajet entre l'adresse du visiteur et le centre (API Adresse de data.gouv.fr, estimation à vol d'oiseau corrigée).
+const CENTRE_SO = { lat: 48.9030, lon: 2.3405 };
+const km = (a, b) => { const R = 6371, r = Math.PI / 180, dl = (b.lat - a.lat) * r, dn = (b.lon - a.lon) * r; const x = Math.sin(dl / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dn / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(x)); };
+$("#trajet-ouvrir").onclick = () => { const f = $("#trajet-form"), o = f.hidden; f.hidden = !o; $("#trajet-ouvrir").setAttribute("aria-expanded", String(o)); if (o) { G.fromTo(f, { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: .35, ease: "power3.out" }); $("#trajet-adresse").focus(); } };
+$("#trajet-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const q = $("#trajet-adresse").value.trim(), rep = $("#trajet-rep"); if (q.length < 3) return;
+  rep.textContent = "Calcul en cours…";
+  try {
+    const r = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(q)}&limit=1`).then(r => r.json());
+    const f = r.features && r.features[0];
+    if (!f) { rep.textContent = "Adresse introuvable. Essayez avec la ville ou le code postal."; return; }
+    const p = { lat: f.geometry.coordinates[1], lon: f.geometry.coordinates[0] }, d = km(p, CENTRE_SO) * 1.3;
+    const voiture = Math.max(5, Math.round(d / 22 * 60 + 4)), velo = Math.round(d / 15 * 60), tc = Math.max(8, Math.round(d / 16 * 60 + 9));
+    rep.innerHTML = `Depuis ${esc(f.properties.city || f.properties.label)} : <b>${voiture} min en voiture</b>${d < 12 ? `, ${velo} min à vélo` : ""}, environ ${tc} min en transports.`;
+    G.fromTo(rep, { opacity: 0 }, { opacity: 1, duration: .4 });
+  } catch { rep.textContent = "Le calcul n'est pas disponible pour le moment."; }
+});
 
 // La fenêtre se ferme, la page descend jusqu'à l'immeuble, les données sont relues et l'immeuble se met en place.
 async function choisirTaille(t) {
@@ -188,6 +204,7 @@ if (ctaH && !reduit && matchMedia("(hover:hover)").matches) {
 charger().then(() => {
   accueil();
   initImmeuble(() => reserver());
+  initTailles(t => montrer(t)); initSimu();
   initResa(async d => {
     $("#resa").hidden = true; $("#e-fin").hidden = false;
     finale(d, async () => { await actualiser(); accueil(); cacherResa(); await defiler($("#immeuble")); S.choix = boxParId(S.choix?.id) || null; rappel(S.filtre || S.choix?.taille || "5"); entrerImmeuble(S.filtre); }, async () => { cacherResa(); await defiler($(".hero")); });

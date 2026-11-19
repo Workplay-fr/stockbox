@@ -1,5 +1,5 @@
 // Étape 4 : réservation (paiement simulé, contrat réel dans Nexudus), puis la porte du box qui s'ouvre.
-import { $, $$, el, G, esc, eur, S, NOMS, LIBELLE, prix, preavis, reduit } from "./commun.js?v=20261119173322";
+import { $, $$, el, G, esc, eur, S, NOMS, LIBELLE, prix, preavis, reduit } from "./commun.js?v=20261119174135";
 
 const R = { etape: 0, debut: null, assurance: undefined, accessoires: new Set(), code: "", prenom: "", nom: "", email: "", tel: "", cgv: false };
 let surFin = () => {}, surRetour = () => {};

@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
 <link rel="preload" as="image" href="/img/facade.webp" fetchpriority="high">
-<link rel="stylesheet" href="/css/site.css?v=20261119173322">
+<link rel="stylesheet" href="/css/site.css?v=20261119174135">
 </head>
 <body>
 
@@ -31,7 +31,7 @@
     <p class="chapeau">Votre box réservé en deux minutes, accessible 7 j/7 avec votre code.</p>
     <button class="cta cta-hero" type="button" data-ouvrir aria-describedby="cta-sous">
       <span class="cta-lum" aria-hidden="true"></span>
-      <span class="cta-txt"><b>Trouver mon box</b><small id="cta-sous"><span class="point" aria-hidden="true"></span><span><span data-libres>Boxes libres</span> à Saint-Ouen</span></small></span>
+      <span class="cta-txt"><b>Choisir mon box</b><small id="cta-sous"><span class="point" aria-hidden="true"></span><span id="cta-sous-txt">Boxes libres à Saint-Ouen</span></small></span>
       <span class="cta-rond" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
     </button>
     <div class="tarifs-bas"><ul class="tarifs" id="tarifs" aria-label="Prix par mois"></ul><p class="tarifs-note">Prix par mois, sans engagement. 14 passage des Malles, Saint-Ouen.</p></div>
@@ -71,16 +71,28 @@
     <div class="e-fin" id="e-fin" hidden><div class="eclats" id="eclats"></div><div class="fin" id="fin"></div></div>
   </section>
 
-  <section class="bloc" aria-labelledby="titre-tailles">
+  <section class="bloc tailles-bloc" id="tailles-bloc" aria-labelledby="titre-tailles">
     <div class="large">
-      <h2 class="titre" id="titre-tailles">Du casier au box de 20 m².</h2>
-      <p class="intro">Les prix sont mensuels, sans engagement. Chaque dessin est à la même échelle.</p>
-      <div class="tailles-ligne" id="tailles"></div>
-      <div class="atouts">
-        <div><h3>Votre code, vos horaires</h3><p>Entrée 7 jours sur 7, de 6 h à 22 h. Accueil du lundi au samedi, de 9 h à 19 h.</p></div>
-        <div><h3>Un quai pour décharger</h3><p>Quai couvert, chariots et monte-charge à disposition, sans réservation.</p></div>
-        <div><h3>Fermé par votre cadenas</h3><p>Vous seul avez la clé. Bâtiment sous vidéosurveillance et alarmé la nuit.</p></div>
-        <div><h3>Partez quand vous voulez</h3><p>Paiement au mois, préavis de <span data-preavis>15</span> jours.</p></div>
+      <h2 class="titre" id="titre-tailles">Quelle taille pour vos affaires ?</h2>
+      <p class="intro">Chaque box est dessiné à l'échelle, à côté d'une silhouette de 1,75 m.</p>
+      <div class="comparateur">
+        <div class="onglets" id="onglets" role="tablist" aria-label="Tailles"></div>
+        <div class="comp-scene"><svg id="comp-svg" viewBox="-340 -360 680 520" aria-hidden="true"></svg><span class="comp-echelle" id="comp-dim"></span></div>
+        <div class="comp-info" id="comp-info" aria-live="polite"></div>
+        <div class="simu-zone">
+          <button class="lien simu-lien" type="button" id="simu-ouvrir" aria-expanded="false" aria-controls="simu">Je ne connais pas ma taille : estimer mon volume</button>
+          <div class="simu" id="simu" hidden>
+            <div class="simu-tete"><div class="simu-racc" id="simu-racc" role="group" aria-label="Taille du logement"></div><button class="lien" type="button" id="simu-vider">Tout retirer</button></div>
+            <div class="simu-objets" id="simu-objets"></div>
+            <p class="simu-total" id="simu-total" aria-live="polite">Ajoutez vos affaires ou choisissez la taille de votre logement.</p>
+          </div>
+        </div>
+      </div>
+      <div class="preuves">
+        <div class="preuve-c"><div class="pv-vis pv-chiffre"><b>6 h – 22 h</b></div><h3>Votre code, vos horaires</h3><p>7 jours sur 7. Accueil du lundi au samedi, de 9 h à 19 h.</p></div>
+        <div class="preuve-c"><div class="pv-vis pv-quai" role="img" aria-label="Le quai de chargement du rez-de-chaussée, avec chariots et transpalette"></div><h3>Un quai pour décharger</h3><p>Couvert, avec chariots et monte-charge, sans réservation.</p></div>
+        <div class="preuve-c"><div class="pv-vis pv-cadenas"><svg viewBox="0 0 120 90" aria-hidden="true"><rect x="22" y="8" width="76" height="74" rx="4" fill="#fff" stroke="#13241E" stroke-width="2"/><path d="M22 20h76M22 32h76M22 44h76M22 56h76M22 68h76" stroke="#C9CDC6" stroke-width="2"/><rect x="50" y="56" width="20" height="17" rx="3" fill="#F28C28"/><path d="M54 56v-6a6 6 0 0 1 12 0v6" fill="none" stroke="#13241E" stroke-width="2.5"/></svg></div><h3>Fermé par votre cadenas</h3><p>Vous seul avez la clé. Vidéosurveillance et alarme la nuit.</p></div>
+        <div class="preuve-c"><div class="pv-vis pv-chiffre"><b>0 engagement</b></div><h3>Partez quand vous voulez</h3><p>Paiement au mois, préavis de <span data-preavis>15</span> jours.</p></div>
       </div>
     </div>
   </section>
@@ -117,12 +129,12 @@
 <footer class="pied">
   <div class="large">
     <p class="grand">Votre box vous attend.</p>
-    <button class="cta" type="button" data-ouvrir><span class="cta-txt">Trouver mon box</span><span class="cta-rond" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+    <button class="cta" type="button" data-ouvrir><span class="cta-txt">Choisir mon box</span><span class="cta-rond" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
     <p class="note">StockBox est un centre de self-stockage imaginaire, créé pour une démonstration. Disponibilités, réservations et contrats sont gérés dans <a href="https://nexudus.com" target="_blank" rel="noopener">Nexudus</a> ; le paiement est simulé. <a href="/deconnexion">Quitter la démo</a></p>
   </div>
 </footer>
 
-<div class="dock" id="dock"><span class="info" id="dock-info"><span class="point" style="display:inline-block;margin-right:8px;vertical-align:middle"></span><b data-libres>Boxes libres</b> à Saint-Ouen</span><button class="btn btn-tg" type="button" id="dock-btn">Trouver mon box</button></div>
+<div class="dock" id="dock"><span class="info" id="dock-info"><span class="point" style="display:inline-block;margin-right:8px;vertical-align:middle"></span><b data-libres>Boxes libres</b> à Saint-Ouen</span><button class="btn btn-tg" type="button" id="dock-btn">Choisir mon box</button></div>
 
 <!-- Petite fenêtre : le centre, puis la taille -->
 <dialog class="fen" id="choix" aria-labelledby="choix-titre">
@@ -132,6 +144,11 @@
       <h2 id="choix-titre">Où voulez-vous stocker ?</h2>
       <p class="sous">Choisissez votre centre StockBox.</p>
       <ul class="centres" id="centres"></ul>
+      <div class="trajet">
+        <button class="lien" type="button" id="trajet-ouvrir" aria-expanded="false">Combien de temps depuis chez moi ou mon bureau ?</button>
+        <form class="trajet-form" id="trajet-form" hidden><input id="trajet-adresse" autocomplete="street-address" placeholder="Votre adresse, domicile ou bureau" aria-label="Votre adresse, domicile ou bureau"><button class="btn btn-em" type="submit">Calculer</button></form>
+        <p class="trajet-rep" id="trajet-rep" aria-live="polite"></p>
+      </div>
     </div>
     <div class="vue" data-vue="taille">
       <h2>Quelle taille ?</h2>
@@ -152,7 +169,7 @@
   <form id="agent-form"><input id="agent-champ" autocomplete="off" placeholder="Votre question" aria-label="Votre question" maxlength="600"><button class="btn btn-em" type="submit">Envoyer</button></form>
 </section>
 
-<script src="/js/gsap.min.js?v=20261119173322"></script>
-<script type="module" src="/js/app.js?v=20261119173322"></script>
+<script src="/js/gsap.min.js?v=20261119174135"></script>
+<script type="module" src="/js/app.js?v=20261119174135"></script>
 </body>
 </html>
