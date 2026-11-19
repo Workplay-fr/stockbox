@@ -1,7 +1,7 @@
 // POST /api/demo { action: "etat" | "remplir" | "vider", cle } : contrats de démonstration, pour que l'immeuble ne soit pas vide.
 // Réservé à l'administrateur : la clé est le mot de passe du site (SITE_PASSWORD). Tout ce qui est créé ici est marqué « [DÉMO] »
 // (notes du contrat) et ses clients ont une adresse stockbox.demo+…@workplay.fr : « vider » ne touche qu'à ces fiches-là.
-import { catalogue, oublier, nx, pret, json, isoZ, CFG } from "../../lib/nexudus.js";
+import { catalogue, oublier, nx, pret, json, isoZ, CFG, contratsDuLieu } from "../../lib/nexudus.js";
 
 const CIBLE = 62, PAR_APPEL = 2;   // la moitié des 124 boxes
 const MARQUE = "[DÉMO]";
@@ -12,8 +12,7 @@ const slug = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().repla
 
 const enCours = l => l.filter(c => !/Ancien contrat/.test(c.Notes || ""));
 async function contratsDemo(env) {
-  const d = await nx(env, "GET", `/billing/coworkercontracts?CoworkerContract_IssuedBy=${CFG.business}&CoworkerContract_Notes=${encodeURIComponent(MARQUE)}&size=200`);
-  return (d.Records || []).filter(c => String(c.Notes || "").startsWith(MARQUE));
+  return (await contratsDuLieu(env)).filter(c => String(c.Notes || "").startsWith(MARQUE));
 }
 
 export async function onRequestPost({ request, env }) {
@@ -25,7 +24,7 @@ export async function onRequestPost({ request, env }) {
     if (d.action === "etat") {
       oublier(); const c = await catalogue(env);
       const boxes = Object.values(c.etages).flat();
-      const brut = await nx(env, "GET", `/sys/floorplandesks?FloorPlanDesk_FloorPlan=1415061712&size=5`);
+      const brut = await nx(env, "GET", `/sys/floorplandesks?FloorPlanDesk_FloorPlan_Business=${CFG.business}&size=5`);
       return json(200, { ok: true, demo: existants.length, cible: CIBLE, boxes: boxes.length, libres: boxes.filter(b => b.libre).length,
         exemple: (brut.Records || []).slice(0, 2).map(u => ({ Name: u.Name, ItemType: u.ItemType, Size: u.Size, Available: u.Available, C: u.CoworkerContractIds })), total: brut.TotalItems });
     }
