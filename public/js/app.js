@@ -12,15 +12,13 @@ let etape = -1, atteinte = 0;
 function accueil() {
   $$("[data-libres]").forEach(e => (e.textContent = `${libresTotal()} boxes libres`));
   $$("[data-preavis]").forEach(e => (e.textContent = preavis()));
+  $("#tarifs").innerHTML = TAILLES.map(t => `<li><b>${t === "C" ? "Casier" : LIBELLE[t]}</b><span>${eur(prix(t))}</span></li>`).join("");
   const a = S.data.activite || {};
   // Preuve sociale : uniquement les chiffres de Nexudus.
   const rec = a.recents || [];
-  if (rec.length || a.loues) {
-    const cols = ["#0F5C45", "#F28C28", "#3B7A66", "#C9681A", "#13241E"];
-    $("#visages").innerHTML = rec.slice(0, 4).map((r, i) => `<span style="background:${cols[i % cols.length]}">${esc((r.prenom || "?")[0])}</span>`).join("");
-    $("#preuve-txt").textContent = a.semaine ? `${a.semaine} réservations cette semaine` : `${a.loues} boxes déjà loués`;
-    $("#preuve").hidden = false;
-  }
+  const cols = ["#0F5C45", "#F28C28", "#3B7A66", "#C9681A", "#13241E"];
+  $("#visages").innerHTML = rec.slice(0, 3).map((r, i) => `<span style="background:${cols[i % cols.length]}">${esc((r.prenom || "?")[0])}</span>`).join("");
+  $("#preuve-txt").textContent = a.semaine ? `${a.semaine} réservations cette semaine` : a.loues ? `${a.loues} boxes loués` : `${libresTotal()} boxes libres`;
   $("#chiffres").innerHTML = [[a.loues ?? 0, "boxes loués"], [a.semaine ?? 0, "réservés cette semaine"], [libresTotal(), "libres en ce moment"]].map(([n, t]) => `<div><b data-compte="${n}">${comptes ? n : 0}</b><span>${t}</span></div>`).join("");
   const c = $("#tailles"); c.innerHTML = "";
   for (const t of TAILLES) {
@@ -45,6 +43,16 @@ function fil() {
   const montre = () => { const r = rec[i++ % rec.length], t = $("#fil-txt"); t.classList.add("sort"); setTimeout(() => { t.textContent = `${r.prenom || "Un client"} a réservé le box ${r.box}, ${ilYa(r.quand)}.`; t.classList.remove("sort"); }, 350); };
   montre(); filT = setInterval(montre, 4500);
 }
+
+// Commentaires d'exemple qui défilent dans la barre de l'accueil.
+const AVIS = [
+  ["« Box réservé le dimanche soir, j'y étais le lundi matin avec la camionnette. »", "Camille, box de 10 m²"],
+  ["« Le monte-charge est juste en face de mon box. Parfait pour le stock de ma boutique. »", "Margaux, box de 5 m²"],
+  ["« On choisit son box sur le plan, on paie, et on a son code. Simple. »", "Karim, box de 2 m²"],
+  ["« Propre, éclairé, accessible tôt le matin. Exactement ce qu'il me fallait. »", "Thomas, box de 20 m²"],
+];
+let ai = 0;
+setInterval(() => { const f = $("#b-avis"); f.classList.add("sort"); setTimeout(() => { ai = (ai + 1) % AVIS.length; $("#b-avis-txt").textContent = AVIS[ai][0]; $("#b-avis-qui").textContent = AVIS[ai][1]; f.classList.remove("sort"); }, 450); }, 5200);
 
 // Le bouton du bas n'apparaît qu'une fois l'accueil dépassé.
 const dock = $("#dock"), abtn = $("#agent-btn");
