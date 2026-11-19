@@ -1,8 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119194635";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119194635";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119194635";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261119194635";
+import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119195300";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119195300";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119195300";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261119195300";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: "14 passage des Malles, Les Puces", ouvert: true },
@@ -174,6 +174,7 @@ function ouvrirAgent() {
   setTimeout(() => $("#agent-champ").focus(), 200);
 }
 abtn.onclick = ouvrirAgent;
+$$("[data-atlas]").forEach(b => (b.onclick = ouvrirAgent));
 $("#ab-ouvrir").onclick = ouvrirAgent;
 $("#ab-fermer").onclick = () => { $("#agent-bulle").hidden = true; try { sessionStorage.setItem("sb-bulle", "1"); } catch {} };
 $("#agent-fermer").onclick = () => { agent.classList.add("ferme"); agent.setAttribute("aria-hidden", "true"); abtn.classList.remove("cache"); };

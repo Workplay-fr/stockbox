@@ -654,3 +654,15 @@ dialog.fen::backdrop{background:rgba(5,22,17,.45);backdrop-filter:blur(8px)}
 @media (max-width:700px){.agent-bulle{display:none!important}}
 @media (max-width:700px){.tarifs-bas{padding:0 10px}.tarifs{flex-wrap:nowrap;gap:5px}.tarifs li{padding:7px 9px;gap:4px;font-size:12.5px;white-space:nowrap}}
 @media (max-width:370px){.tarifs li{padding:6px 7px;font-size:11.5px}}
+/* ===== Atlas intégré : un lien discret sous le bouton principal, puis un segment de la barre du bas ===== */
+.atlas-btn,.agent-bulle{display:none!important}
+.hero-atlas{display:inline-flex;align-items:center;gap:8px;margin-top:18px;border:0;background:none;color:rgba(255,255,255,.86);font:500 15px/1.2 var(--f);cursor:pointer;padding:6px 10px;border-radius:999px;text-shadow:0 1px 12px rgba(5,20,28,.55);transition:color .3s,background .3s;animation:apparait 1s .9s var(--ease) both}
+.hero-atlas svg{color:var(--tg);flex:none}
+.hero-atlas u{text-decoration:none;background:linear-gradient(currentColor,currentColor) 0 100%/100% 1px no-repeat;padding-bottom:2px;transition:background-size .4s var(--ease)}
+.hero-atlas:hover{color:#fff;background:rgba(255,255,255,.08)}
+.hero-atlas:hover u{background-size:0 1px;background-position:100% 100%}
+.dock-atlas{display:inline-flex;align-items:center;gap:7px;border:0;background:none;color:rgba(255,255,255,.88);font:600 14.5px/1 var(--f);cursor:pointer;padding:10px 14px 10px 16px;margin-left:-4px;border-left:1px solid rgba(255,255,255,.16);border-radius:0;transition:color .3s}
+.dock-atlas svg{color:var(--tg);transition:transform .5s var(--ease)}
+.dock-atlas:hover{color:#fff}.dock-atlas:hover svg{transform:rotate(90deg) scale(1.15)}
+.hero-atlas:focus-visible,.dock-atlas:focus-visible{outline:2px solid var(--tg);outline-offset:3px;border-radius:999px}
+@media (max-width:700px){.dock{right:10px}.dock-atlas{padding:10px 10px 10px 12px}.dock-atlas span{display:none}.hero-atlas{font-size:14px;margin-top:12px}}
