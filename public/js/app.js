@@ -1,8 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119174135";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119174135";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119174135";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261119174135";
+import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119175145";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119175145";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119175145";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261119175145";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: "14 passage des Malles, Les Puces", ouvert: true },
@@ -191,6 +191,15 @@ async function envoyer(txt) {
   } catch { att.remove(); bulleIA("Connexion impossible. Réessayez dans un instant."); H.pop(); }
   occupe = false;
 }
+
+// La façade animée se cale exactement comme l'image (couverture, ancrée à 62 % de la hauteur), pour que ciel, végétation et lumière tombent juste.
+const decor = $("#decor"), heroEl = $(".hero");
+function caler() { const W = heroEl.clientWidth, H = heroEl.clientHeight; let w = W, h = W / 1.5; if (h < H) { h = H; w = H * 1.5; } Object.assign(decor.style, { width: w + "px", height: h + "px", left: (W - w) / 2 + "px", top: (H - h) * .62 + "px" }); }
+caler(); new ResizeObserver(caler).observe(heroEl);
+{ const e = $("#etoiles"); let html = ""; for (let i = 0; i < 90; i++) html += `<i style="left:${(Math.random() * 100).toFixed(1)}%;top:${(Math.random() * 100).toFixed(1)}%;--t:${(2 + Math.random() * 3).toFixed(1)}s;--d:${(Math.random() * 3).toFixed(1)}s;${Math.random() < .15 ? "width:3px;height:3px;" : ""}"></i>`; e.innerHTML = html; }
+{ const n = $("#nuages"); let html = ""; for (let i = 0; i < 7; i++) { const w = 18 + Math.random() * 26, t = 90 + Math.random() * 80; html += `<i style="--w:${w.toFixed(0)}%;--h:${(w * .16).toFixed(1)}%;--y:${(4 + Math.random() * 46).toFixed(0)}%;--o:${(.18 + Math.random() * .2).toFixed(2)};--t:${t.toFixed(0)}s;--d:-${(Math.random() * t).toFixed(0)}s"></i>`; } n.innerHTML = html; }
+// Pause des animations du décor quand l'accueil n'est plus visible.
+new IntersectionObserver(([en]) => decor.querySelectorAll(".d-nuages i,.d-nuit,.d-etoiles,.d-lueur").forEach(x => (x.style.animationPlayState = en.isIntersecting ? "running" : "paused")), { threshold: 0 }).observe(heroEl);
 
 // Le bouton principal suit légèrement le pointeur.
 const ctaH = $(".cta-hero");

@@ -14,6 +14,8 @@ export async function onRequestPost({ request, env }) {
   if (limite(request, "resa", 4, 60 * 60e3)) return err(429, "Trop de réservations envoyées. Réessayez plus tard.");
 
   const prenom = nettoie(d.prenom, 60), nom = nettoie(d.nom, 60), email = nettoie(d.email, 160).toLowerCase(), tel = nettoie(d.tel, 40);
+  const pro = d.profil === "pro", societe = pro ? nettoie(d.societe, 120) : "", cp = nettoie(d.cp, 10), valeur = nettoie(d.valeur, 60);
+  if (pro && societe.length < 2) return err(400, "Indiquez le nom de votre société.");
   if (!prenom || !nom) return err(400, "Indiquez votre prénom et votre nom.");
   if (!emailValide(email)) return err(400, "Cette adresse e-mail n'est pas valide.");
   if (!d.cgv) return err(400, "Merci d'accepter les conditions de location.");
@@ -50,12 +52,12 @@ export async function onRequestPost({ request, env }) {
   const debutZ = `${debut}T00:00:00Z`;
   const unMoisApres = (() => { const [y, m, j] = debut.split("-").map(Number); return isoZ(new Date(Date.UTC(y, m, Math.min(j, 28)))); })();
   try {
-    const client = await contact(env, { prenom, nom, email, tel, note: `Client créé depuis le site StockBox (démo) · réservation ${reference}.` });
+    const client = await contact(env, { prenom, nom, email, tel, societe, cp, note: `Client créé depuis le site StockBox (démo), réservation ${reference}. ${pro ? "Professionnel" : "Particulier"}${cp ? ", code postal " + cp : ""}.` });
     const contrat = await nx(env, "POST", "/billing/coworkercontracts", {
       IssuedById: CFG.business, CoworkerId: client.id, TariffId: formule.id, Quantity: 1, BillingDay: jourFact, StartDate: debutZ,
       Desks: [box.id], PricePlanTermsAccepted: true, IncludeSignupFee: true, ApplyProRating: false,
       ...(promo ? { Price: 0, ContractSchedules: [{ Price: formule.prix, ApplyOn: unMoisApres }] } : {}),
-      Notes: `Réservation ${reference} faite sur le site StockBox (démo, paiement simulé). Box ${box.nom} · ${formule.nom}${promo ? " · code BIENVENUE (1er mois offert)" : ""}.`,
+      Notes: [`Réservation ${reference} faite sur le site StockBox (démo, paiement simulé).`, `Box ${box.nom}, ${formule.nom}, entrée le ${debut.split("-").reverse().join("/")}.`, `${pro ? "Professionnel" + (societe ? " (" + societe + ")" : "") : "Particulier"}${cp ? ", code postal " + cp : ""}.`, valeur ? `Valeur déclarée des biens : ${valeur}. ${assurance ? "Assurance : " + assurance.nom + "." : "Assurance personnelle."}` : "", promo ? "Code BIENVENUE : premier mois offert." : ""].filter(Boolean).join("\n"),
     });
     const idContrat = contrat.Value && contrat.Value.Id;
     if (!idContrat) throw new Error("Nexudus n'a pas renvoyé l'identifiant du contrat.");
