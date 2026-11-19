@@ -15,6 +15,14 @@ const MARQUE = "[DÉMO]";
 const PRENOMS = ["Camille","Léa","Hugo","Inès","Thomas","Chloé","Lucas","Manon","Nathan","Sarah","Julien","Emma","Karim","Alice","Maxime","Jade","Antoine","Yasmine","Paul","Louise","Mehdi","Clara","Romain","Zoé","Bastien","Nina","Samuel","Lina","Victor","Anaïs","Adrien","Margaux","Rayan","Elsa","Quentin","Mila","Florian","Salomé","Théo","Agathe"];
 const NOMS = ["Moreau","Laurent","Girard","Benali","Fontaine","Rousseau","Lefèvre","Mercier","Garnier","Chevalier","Perrin","Blanc","Haddad","Faure","Robin","Dumas","Lemoine","Martel","Roux","Gauthier","Bouchard","Marchand","Colin","Vidal","Renaud","Arnaud","Picard","Lacroix","Brunet","Caron","Guerin","Masson","Aubert","Barbier","Noël","Leroy","Rolland","Meyer","Morel","Baron"];
 const SOCIETES = { 3: "Atelier Lumen", 8: "Maison Vert-Galant", 13: "Cartons & Co", 19: "Studio Brique", 26: "Les Puces de Margaux", 33: "Archi Nord" };
+// Prénom + nom jamais déjà pris parmi les clients de démo.
+function nomLibre(pris, graine) {
+  for (let t = 0; t < PRENOMS.length * NOMS.length; t++) {
+    const k = graine + t * 13, prenom = PRENOMS[k % PRENOMS.length], nom = NOMS[(k * 7 + Math.floor(k / PRENOMS.length)) % NOMS.length];
+    if (!pris.has(`${prenom} ${nom}`)) { pris.add(`${prenom} ${nom}`); return [prenom, nom]; }
+  }
+  return ["Client", String(graine)];
+}
 const slug = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z]/g, "");
 
 const DEMO_EMAIL = /^stockbox\.demo\+/i;
@@ -38,17 +46,31 @@ export async function onRequestPost({ request, env }) {
     }
 
     if (d.action === "remplir") {
-      if (existants.length >= CIBLE) return json(200, { ok: true, demo: existants.length, fini: true });
       oublier();
       const c = await catalogue(env);
       // Un box sur deux dans chaque taille et chaque étage, pour un immeuble rempli à moitié, de façon régulière.
       const tous = Object.entries(c.etages).flatMap(([n, l]) => l.map(b => ({ ...b, n })));
       const rang = {}; const candidats = tous.filter(b => { const k = b.n + b.taille; rang[k] = (rang[k] || 0) + 1; return rang[k] % 2 === 0 && b.libre; });
-      const aFaire = candidats.slice(0, Math.min(PAR_APPEL, CIBLE - existants.length));
-      const faits = [];
+      const aFaire = candidats.slice(0, Math.max(0, Math.min(PAR_APPEL, CIBLE - existants.length)));
+      const faits = [], renommes = [];
+      const pris = new Set();
+      const parClient = new Map(); for (const ct of tousDemo) if (ct.CoworkerId && !parClient.has(ct.CoworkerId)) parClient.set(ct.CoworkerId, ct);
+      // Doublons laissés par les premiers passages : renommés proprement (nom et adresse), 4 par appel.
+      for (const ct of parClient.values()) {
+        const nomAct = String(ct.CoworkerFullName || "");
+        if (!pris.has(nomAct)) { pris.add(nomAct); continue; }
+        if (renommes.length >= 4) continue;
+        try {
+          const fiche = await nx(env, "GET", `/spaces/coworkers/${ct.CoworkerId}`);
+          const [pr, no] = nomLibre(pris, ct.CoworkerId % 997);
+          const ancien = /\.ancien\./i.test(ct.CoworkerEmail || "") || /Ancien/.test(fiche.Notes || "");
+          await nx(env, "PUT", "/spaces/coworkers", { ...fiche, FullName: `${pr} ${no}`, Salutation: pr, Email: `stockbox.demo+${slug(pr)}.${slug(no)}${ancien ? ".ancien" : ""}.${ct.CoworkerId}@workplay.fr` });
+          renommes.push(`${nomAct} → ${pr} ${no}`);
+        } catch (e) { console.error("Renommage démo :", e.message); }
+      }
       for (const [k, b] of aFaire.entries()) {
         const i = existants.length + k;
-        const prenom = PRENOMS[i % PRENOMS.length], nom = NOMS[(i * 7) % NOMS.length];
+        const [prenom, nom] = nomLibre(pris, i);
         const co = await nx(env, "POST", "/spaces/coworkers", {
           CoworkerType: 1, FullName: `${prenom} ${nom}`, Email: `stockbox.demo+${slug(prenom)}.${slug(nom)}.${i}@workplay.fr`, CompanyName: SOCIETES[i] || null,
           Gender: 1, TaxRateType: 1, CountryId: CFG.pays, SimpleTimeZoneId: CFG.fuseau, InvoicingBusinessId: CFG.business,
@@ -71,7 +93,7 @@ export async function onRequestPost({ request, env }) {
         // Un box sur trois a eu un locataire avant : contrat terminé, pour l'historique et le taux de départ.
         if (i % 3 === 0) {
           try {
-            const p2 = PRENOMS[(i + 17) % PRENOMS.length], n2 = NOMS[(i * 7 + 13) % NOMS.length];
+            const [p2, n2] = nomLibre(pris, i + 500);
             const ancien = await nx(env, "POST", "/spaces/coworkers", {
               CoworkerType: 1, FullName: `${p2} ${n2}`, Email: `stockbox.demo+${slug(p2)}.${slug(n2)}.ancien.${i}@workplay.fr`,
               Gender: 1, TaxRateType: 1, CountryId: CFG.pays, SimpleTimeZoneId: CFG.fuseau, InvoicingBusinessId: CFG.business,
@@ -88,7 +110,7 @@ export async function onRequestPost({ request, env }) {
         faits.push(b.nom);
       }
       oublier();
-      return json(200, { ok: true, faits, demo: existants.length + faits.length, fini: existants.length + faits.length >= CIBLE || !aFaire.length });
+      return json(200, { ok: true, faits, renommes, demo: existants.length + faits.length, fini: !renommes.length && (existants.length + faits.length >= CIBLE || !aFaire.length) });
     }
 
     if (d.action === "vider") {
