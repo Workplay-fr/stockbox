@@ -22,7 +22,13 @@ export async function onRequestPost({ request, env }) {
   if (d.cle !== env.SITE_PASSWORD) return json(403, { ok: false, erreur: "Clé incorrecte." });
   try {
     const tousDemo = await contratsDemo(env), existants = enCours(tousDemo);
-    if (d.action === "etat") return json(200, { ok: true, demo: existants.length, cible: CIBLE });
+    if (d.action === "etat") {
+      oublier(); const c = await catalogue(env);
+      const boxes = Object.values(c.etages).flat();
+      const brut = await nx(env, "GET", `/sys/floorplandesks?FloorPlanDesk_FloorPlan=1415061712&size=5`);
+      return json(200, { ok: true, demo: existants.length, cible: CIBLE, boxes: boxes.length, libres: boxes.filter(b => b.libre).length,
+        exemple: (brut.Records || []).slice(0, 2).map(u => ({ Name: u.Name, ItemType: u.ItemType, Size: u.Size, Available: u.Available, C: u.CoworkerContractIds })), total: brut.TotalItems });
+    }
 
     if (d.action === "remplir") {
       if (existants.length >= CIBLE) return json(200, { ok: true, demo: existants.length, fini: true });
