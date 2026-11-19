@@ -617,3 +617,9 @@ dialog.fen::backdrop{background:rgba(5,22,17,.45);backdrop-filter:blur(8px)}
 .agent-bulle .ab-ouvrir b{display:block;font:700 15px/1.2 var(--t);margin-bottom:3px;color:var(--em)}
 .agent-tete{background:linear-gradient(135deg,#0A3B2E,#0F5C45)}
 .agent-tete b{font:700 19px/1.1 var(--t)}
+/* Immeuble et comparateur bord à bord, quelle que soit la largeur de l'écran */
+.imm{width:calc(100vw - 32px);max-width:none;grid-template-columns:clamp(90px,8vw,140px) minmax(0,1fr) clamp(300px,24vw,420px)}
+.imm-tete{width:calc(100vw - 32px)}
+.comparateur{max-width:none}
+@media (min-width:1800px){.fiche h3{font-size:64px}.fiche{padding:32px}}
+@media (max-width:1000px){.imm{grid-template-columns:minmax(0,1fr);width:calc(100vw - 16px)}.imm-tete{width:calc(100vw - 16px)}}
