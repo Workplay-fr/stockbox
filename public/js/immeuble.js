@@ -1,6 +1,6 @@
 // Étape 3 : l'immeuble en grand. Pile des trois niveaux, ascenseur pour changer d'étage, zoom et déplacement dans l'étage,
 // boxes allumés selon leur état réel dans Nexudus, box conseillé mis en avant.
-import { $, $$, el, NS, G, esc, eur, S, NOMS, COURT, TAILLES, LIBELLE, IDEAL, boxes, libres, libresTotal, prix, volumeTaille, preavis, boxParId, boxConseille, reduit } from "./commun.js?v=20261119201350";
+import { $, $$, el, NS, G, esc, eur, S, NOMS, COURT, TAILLES, LIBELLE, IDEAL, boxes, libres, libresTotal, prix, volumeTaille, preavis, boxParId, boxConseille, reduit, nomBox } from "./commun.js?v=20261119202332";
 
 let zone, scene, pileIn, bulle, onReserver = () => {};
 const V = { mode: "pile", etage: null, z: 1, x: 0, y: 0 };
@@ -143,7 +143,12 @@ function centrerSur(b) {
 
 function ecouter() {
   let glisse = null, bouge = false; const pts = new Map();
-  zone.addEventListener("wheel", e => { if (V.mode !== "etage") return; e.preventDefault(); const r = zone.getBoundingClientRect(); zoomer(e.deltaY < 0 ? 1.15 : 1 / 1.15, e.clientX - r.left, e.clientY - r.top, false); }, { passive: false });
+  zone.addEventListener("wheel", e => {
+    if (V.mode !== "etage") return;
+    if (!(e.ctrlKey || e.metaKey)) { astuce(); return; }   // la molette seule fait défiler la page
+    e.preventDefault(); const r = zone.getBoundingClientRect(); zoomer(e.deltaY < 0 ? 1.12 : 1 / 1.12, e.clientX - r.left, e.clientY - r.top, false);
+  }, { passive: false });
+  zone.addEventListener("pointerenter", e => { if (e.pointerType === "mouse" && V.mode === "etage") astuce(); });
   zone.addEventListener("pointerdown", e => { pts.set(e.pointerId, e); if (V.mode === "etage") { glisse = { x: e.clientX, y: e.clientY, vx: V.x, vy: V.y, d: null }; bouge = false; } });
   zone.addEventListener("pointermove", e => {
     if (pts.has(e.pointerId)) pts.set(e.pointerId, e);
@@ -160,10 +165,21 @@ function ecouter() {
     if (bouge) { bouge = false; return; }
     const p = e.target.closest?.(".box"); if (V.mode !== "etage" || !p) return;
     const b = boxParId(p.dataset.id);
-    if (!b.libre) { bulle.innerHTML = `<b>Box ${esc(b.nom)}</b><small>Loué, contrat actif dans Nexudus</small>`; return; }
+    if (!b.libre) { bulle.innerHTML = `<b>${esc(nomBox(b))}</b><small>Loué, contrat actif dans Nexudus</small>`; return; }
     if (S.filtre && b.taille !== S.filtre) { S.filtre = null; peindre(); }
-    choisir(b, true);
+    if (reduit) { choisir(b, true); versFiche(); return; }
+    p.classList.remove("eleve"); void p.getBoundingClientRect(); p.classList.add("eleve");
+    setTimeout(() => { choisir(b, true); versFiche(); }, 380);
   });
+}
+
+// Sur mobile, la fiche est sous le plan : on y descend en douceur après le choix.
+function versFiche() { if (!matchMedia("(max-width:1000px)").matches) return; setTimeout(() => $("#fiche").scrollIntoView({ behavior: reduit ? "auto" : "smooth", block: "nearest" }), 450); }
+// Indication discrète pour zoomer, au survol du plan.
+let astuceT = null;
+function astuce() {
+  const a = $("#astuce-zoom"); const k = a && a.querySelector("[data-touche]"); if (k && /Mac|iPhone|iPad/.test(navigator.platform)) k.textContent = "⌘"; if (!a || !matchMedia("(hover:hover)").matches) return;
+  a.classList.add("on"); clearTimeout(astuceT); astuceT = setTimeout(() => a.classList.remove("on"), 2200);
 }
 
 let survole = null;
@@ -175,7 +191,7 @@ function survol(p, e) {
   if (b.libre && !(S.filtre && b.taille !== S.filtre)) p.classList.add("survol");
   const r = zone.getBoundingClientRect();
   bulle.style.left = e.clientX - r.left + "px"; bulle.style.top = e.clientY - r.top + "px";
-  bulle.innerHTML = `<b>Box ${esc(b.nom)}</b> ${LIBELLE[b.taille]}<small>${b.libre ? eur(prix(b.taille)) + " par mois, libre" : "Loué, contrat actif dans Nexudus"}</small>`;
+  bulle.innerHTML = `<b>${esc(nomBox(b))}</b>${b.taille === "C" ? "" : " " + LIBELLE[b.taille]}<small>${b.libre ? eur(prix(b.taille)) + " par mois, libre" : "Loué, contrat actif dans Nexudus"}</small>`;
   bulle.classList.add("on");
   prisme(b.libre ? b : null);
 }
@@ -190,7 +206,7 @@ function prisme(survolB) {
       const haut = pts.map(([x, y]) => [x, y - H]);
       g.insertAdjacentHTML("beforeend", pts.map((q, i) => `<line class="arete" x1="${q[0]}" y1="${q[1]}" x2="${haut[i][0]}" y2="${haut[i][1]}"/>`).join("") + `<polygon class="haut" points="${haut.map(q => q.join(",")).join(" ")}"/>`);
       if (b === S.choix) {
-        const cx = haut.reduce((s, q) => s + q[0], 0) / 4, cy = Math.min(...haut.map(q => q[1])) - 26, t = `Box ${b.nom}`, w = t.length * 9 + 26;
+        const cx = haut.reduce((s, q) => s + q[0], 0) / 4, cy = Math.min(...haut.map(q => q[1])) - 26, t = nomBox(b), w = t.length * 9 + 26;
         rep.innerHTML = `<circle class="onde" cx="${cx}" cy="${cy + 18}" r="8"/><rect class="etiquette" x="${cx - w / 2}" y="${cy - 26}" width="${w}" height="30" rx="15"/><text x="${cx}" y="${cy - 6}" text-anchor="middle">${esc(t)}</text><circle cx="${cx}" cy="${cy + 18}" r="6"/>`;
       }
     }
@@ -210,10 +226,10 @@ function fiche(anime) {
     const estReco = S.reco && S.reco.id === b.id, vol = volumeTaille(b.taille);
     const pres = b.etage === "0" ? "à deux pas du quai de chargement" : "près du monte-charge";
     f.innerHTML = `${estReco ? `<span class="reco">★ Notre suggestion en ${LIBELLE[b.taille]}</span>` : `<span class="reco" style="background:var(--em-clair);color:var(--em)">Libre</span>`}
-      <div><h3>Box ${esc(b.nom)}</h3><div class="ou">${NOMS[b.etage]}, ${pres}</div></div>
+      <div><h3>${esc(nomBox(b))}</h3><div class="ou">${NOMS[b.etage]}, ${pres}</div></div>
       <div class="prix"><b>${eur(prix(b.taille))}</b><span>par mois</span></div>
       <dl><dt>Surface</dt><dd>${b.taille === "C" ? "Casier de 1 m³" : `${LIBELLE[b.taille]}, ${vol} m³ environ`}</dd><dt>Idéal pour</dt><dd>${IDEAL[b.taille]}</dd><dt>Engagement</dt><dd>Aucun, préavis de ${preavis()} jours</dd></dl>
-      <button class="btn btn-tg" type="button" id="btn-resa" ${b.libre && !S.apercu ? "" : "disabled"}>Réserver le box ${esc(b.nom)}</button>
+      <button class="btn btn-tg" type="button" id="btn-resa" ${b.libre && !S.apercu ? "" : "disabled"}>Réserver le ${esc(nomBox(b, true))}</button>
       ${S.apercu ? `<p style="font-size:13px;color:var(--tg-fonce);margin:10px 0 0">Aperçu hors ligne : réservation désactivée.</p>` : ""}
       <button class="lien autre" type="button" id="btn-autre">Choisir un autre box</button>`;
     $("#btn-resa").onclick = () => onReserver(S.choix);

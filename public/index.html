@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
 <link rel="preload" as="image" href="/img/facade.webp" fetchpriority="high">
-<link rel="stylesheet" href="/css/site.css?v=20261119201350">
+<link rel="stylesheet" href="/css/site.css?v=20261119202332">
 </head>
 <body>
 
@@ -39,8 +39,9 @@
       <span class="cta-txt"><b>Choisir mon box</b></span>
       <span class="cta-rond" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
     </button>
+    <p class="reassure">Paiement sécurisé · Code d'accès envoyé immédiatement</p>
     <button class="hero-atlas" type="button" data-atlas><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 4.6 2.4 6.9 7.5 7.6v.8c-5.1.7-6.9 3-7.5 7.6h-.8c-.6-4.6-2.4-6.9-7.5-7.6v-.8C8.8 8.9 10.6 6.6 11.2 2Z" fill="currentColor"/></svg><span>Une question ? <u>Demandez à Atlas</u></span></button>
-    <div class="tarifs-bas"><ul class="tarifs" id="tarifs" aria-label="Prix par mois"></ul><p class="tarifs-note">Prix par mois, sans engagement. 14 passage des Malles, Saint-Ouen.</p></div>
+    <div class="tarifs-bas"><ul class="tarifs" id="tarifs" aria-label="Prix par mois"></ul><p class="tarifs-note">Prix par mois, sans engagement. 14 passage des Malles, Saint-Ouen, à 5 min du périphérique.</p></div>
     <div class="barre" aria-label="Avis et réservations">
       <div class="b-note"><span class="b-chiffre">4,8</span><span><span class="etoiles" aria-label="4,8 sur 5">★★★★★</span><small>Note moyenne, avis d'exemple</small></span></div>
       <figure class="b-avis" id="b-avis"><blockquote id="b-avis-txt">« Box réservé le dimanche soir, j'y étais le lundi matin avec la camionnette. »</blockquote><figcaption id="b-avis-qui">Camille, box de 10 m²</figcaption></figure>
@@ -51,7 +52,7 @@
   <section class="immeuble" id="immeuble" aria-labelledby="titre-imm">
     <div class="imm-tete">
       <h2 id="titre-imm">Choisissez votre box.</h2>
-      <div class="rappel" id="rappel"><button class="cta cta-petit" type="button" data-ouvrir><span class="cta-txt">Choisir mon centre et ma taille</span><span class="cta-rond" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+      <div class="rappel" id="rappel"><button class="cta cta-petit" type="button" data-ouvrir><span class="cta-txt">Choisir mon box</span><span class="cta-rond" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
     </div>
     <div class="imm">
       <div class="ascenseur" id="ascenseur"></div>
@@ -59,6 +60,7 @@
         <div class="filtres" id="filtres" role="group" aria-label="Taille"></div>
         <div class="scene" id="scene"><div class="pile vue-pile" id="pile"><div class="pile-in" id="pile-in"></div></div></div>
         <div class="bulle" id="bulle"></div>
+        <div class="astuce-zoom" id="astuce-zoom" aria-hidden="true"><kbd data-touche>Ctrl</kbd> + molette pour zoomer</div>
         <div class="outils-scene" id="outils" hidden><button type="button" data-z="1" aria-label="Zoomer">+</button><button type="button" data-z="-1" aria-label="Dézoomer">−</button><button type="button" data-z="0" aria-label="Recentrer">⟲</button></div>
         <div class="legende" aria-hidden="true"><span><i class="l-libre"></i>Libre</span><span><i class="l-occ"></i>Loué</span><span><i class="l-choix"></i>Votre choix</span></div>
       </div>
@@ -126,7 +128,7 @@
       <div>
         <details><summary>Que puis-je stocker ?</summary><p>Meubles, cartons, électroménager, vélos, archives, stock professionnel. Sont interdits les denrées périssables, les produits dangereux ou inflammables et les animaux.</p></details>
         <details><summary>Faut-il une assurance ?</summary><p>Vos biens doivent être assurés. Choisissez l'une de nos formules à la réservation, ou gardez votre assurance habitation si elle couvre le stockage.</p></details>
-        <details><summary>Quand puis-je entrer ?</summary><p>À la date choisie, dès le lendemain de la réservation. Votre code d'accès arrive par e-mail la veille.</p></details>
+        <details open><summary>Quand puis-je entrer ?</summary><p>À la date choisie, dès le lendemain de la réservation. Votre code d'accès arrive par e-mail la veille.</p></details>
         <details><summary>Comment résilier ?</summary><p>Depuis votre espace client ou à l'accueil, en prévenant <span data-preavis>15</span> jours avant la fin du mois.</p></details>
       </div>
     </div>
@@ -177,7 +179,7 @@
   <form id="agent-form"><input id="agent-champ" autocomplete="off" placeholder="Demandez à Atlas…" aria-label="Votre question" maxlength="600"><button class="btn btn-em" type="submit">Envoyer</button></form>
 </section>
 
-<script src="/js/gsap.min.js?v=20261119201350"></script>
-<script type="module" src="/js/app.js?v=20261119201350"></script>
+<script src="/js/gsap.min.js?v=20261119202332"></script>
+<script type="module" src="/js/app.js?v=20261119202332"></script>
 </body>
 </html>

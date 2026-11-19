@@ -666,3 +666,38 @@ dialog.fen::backdrop{background:rgba(5,22,17,.45);backdrop-filter:blur(8px)}
 .dock-atlas:hover{color:#fff}.dock-atlas:hover svg{transform:rotate(90deg) scale(1.15)}
 .hero-atlas:focus-visible,.dock-atlas:focus-visible{outline:2px solid var(--tg);outline-offset:3px;border-radius:999px}
 @media (max-width:700px){.dock{right:10px}.dock-atlas{padding:10px 10px 10px 12px}.dock-atlas span{display:none}.hero-atlas{font-size:14px;margin-top:12px}}
+
+/* ===== Ajustements de conversion (nov. 2026) ===== */
+/* Connexion : secondaire, en verre, comme la pastille des boxes libres. Un seul bouton tangerine plein par écran. */
+.connexion{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.34);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.connexion:hover{background:rgba(255,255,255,.24);transform:translateY(-1px)}
+.connexion:focus-visible{outline:2px solid #fff;outline-offset:3px}
+/* Voile radial un peu plus présent derrière le titre et le bouton ; la photo reste lisible autour. */
+.hero::after{background:radial-gradient(62% 48% at 50% 44%,rgba(6,24,30,.46),rgba(6,24,30,.18) 62%,rgba(6,24,30,0) 85%),radial-gradient(90% 60% at 50% 42%,rgba(8,30,40,.5),rgba(8,30,40,.1) 70%),linear-gradient(180deg,rgba(8,30,40,.45),rgba(8,30,40,0) 30%,rgba(7,28,22,.65))}
+/* Réassurance sous le bouton principal, même ton que le lien Atlas. */
+.reassure{margin:14px 0 0;font-size:13.5px;color:rgba(255,255,255,.86);text-shadow:0 1px 12px rgba(5,20,28,.55);animation:apparait 1s .85s var(--ease) both}
+.reassure + .hero-atlas{margin-top:6px}
+/* Pastilles de prix : boutons vers la 3D, survol discret. */
+.tarifs li{padding:0;background:none;border:0;backdrop-filter:none;-webkit-backdrop-filter:none}
+.tarif{display:flex;align-items:baseline;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.24);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font:inherit;font-size:14.5px;color:#fff;cursor:pointer;transition:background .3s,border-color .3s,transform .3s var(--ease)}
+.tarif span{color:rgba(255,255,255,.75)}.tarif b{font-weight:600}
+.tarif:hover{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.5);transform:translateY(-2px)}
+.tarif:focus-visible{outline:2px solid #fff;outline-offset:3px}
+@media (max-width:700px){.tarif{padding:7px 9px;gap:4px;font-size:12.5px;white-space:nowrap}}
+@media (max-width:400px){.tarif{padding:6px 7px;font-size:11.5px}.tarifs{gap:4px}.reassure{font-size:12px}}
+/* Barre du bas : fondu et légère translation. */
+.dock{opacity:0;pointer-events:none;transition:transform .55s var(--ease),opacity .4s}
+.dock.vu{opacity:1;pointer-events:auto}
+@media (min-width:701px){.dock{transform:translate(-50%,24px)}.dock.vu{transform:translate(-50%,0)}}
+@media (max-width:700px){.dock{transform:translateY(24px)}.dock.vu{transform:translateY(0)}}
+/* Plan : un doigt fait défiler la page, deux doigts zooment ; une fois zoomé, le doigt déplace le plan. */
+.scene-zone{touch-action:pan-x pan-y}
+.scene-zone.zoom{touch-action:none}
+.astuce-zoom{position:absolute;z-index:7;left:50%;bottom:14px;transform:translate(-50%,6px);padding:7px 12px;border-radius:999px;background:rgba(19,36,30,.78);color:#fff;font-size:12.5px;opacity:0;pointer-events:none;transition:opacity .35s,transform .35s var(--ease);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.astuce-zoom.on{opacity:1;transform:translate(-50%,0)}
+.astuce-zoom kbd{font:600 11.5px/1 var(--f);padding:2px 6px;border-radius:5px;background:rgba(255,255,255,.18)}
+/* Mise en avant du box cliqué, juste avant la fiche. */
+.vue-etage .box.eleve{transform-box:fill-box;transform-origin:center;animation:eleve .38s var(--ease)}
+@keyframes eleve{0%{transform:translateY(0) scale(1)}45%{transform:translateY(-7px) scale(1.06);fill:rgba(242,140,40,.85)}100%{transform:translateY(0) scale(1)}}
+/* FAQ : l'animation de hauteur est faite en JS ; le contenu ne déborde pas pendant le mouvement. */
+.faq details p{overflow:hidden}

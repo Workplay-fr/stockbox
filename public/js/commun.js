@@ -29,6 +29,14 @@ export const boxParId = id => PARID.get(Number(id));
 export const boxes = n => (S.data && S.data.etages[n]) || [];
 export const libres = (n, t) => boxes(n).filter(b => b.libre && (!t || b.taille === t)).length;
 export const libresTotal = t => ["0", "1", "2"].reduce((s, n) => s + libres(n, t), 0);
+// Source unique de tous les compteurs du site : le même inventaire Nexudus que le plan 3D.
+export function compteurs() {
+  const tous = ["0", "1", "2"].flatMap(boxes), total = tous.length, l = libresTotal();
+  return { total, libres: l, loues: total - l, semaine: S.data?.activite?.semaine ?? 0 };
+}
+// Un seul format de nom partout, celui du plan : « Box 104 », « Casier C12 ».
+export const estCasier = nom => /^C/i.test(String(nom || ""));
+export const nomBox = (b, min = false) => { const n = typeof b === "string" ? b : b?.nom; const t = `${estCasier(n) ? "Casier" : "Box"} ${n}`; return min ? t.charAt(0).toLowerCase() + t.slice(1) : t; };
 export const prix = t => S.data?.formules?.[t]?.prix ?? SECOURS[t].prix;
 export const volumeTaille = t => S.data?.formules?.[t]?.volume ?? SECOURS[t].volume;
 export const preavis = () => S.data?.formules?.["10"]?.preavis || 15;

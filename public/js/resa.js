@@ -1,6 +1,6 @@
 // Réservation dans la page : une question par écran, un toucher pour répondre, le ticket se remplit à gauche.
 // Paiement simulé ; client, contrat, box, assurance et frais sont créés pour de vrai dans Nexudus (/api/reserver).
-import { $, $$, el, G, esc, eur, S, NOMS, LIBELLE, prix, preavis, reduit } from "./commun.js?v=20261119201350";
+import { $, $$, el, G, esc, eur, S, NOMS, LIBELLE, prix, preavis, reduit, nomBox } from "./commun.js?v=20261119202332";
 
 const PORTAIL = "https://stockbox.nexudus.site/stockbox/login?redirectTo=%252Fstockbox%252Fuser%252Fdashboard%252Fpersonal";
 const R = { e: 0, profil: null, debut: null, valeur: null, assurance: undefined, accessoires: new Set(), code: "", prenom: "", nom: "", email: "", tel: "", cp: "", societe: "", codeOuvert: false };
@@ -55,7 +55,7 @@ function ticket(neuf) {
     const pts = S.zones.etages[b.etage][b.nom], H = S.zones.kz * S.zones.hauteur, haut = pts.map(([x, y]) => [x, y - H]);
     const cx = pts.reduce((s, q) => s + q[0], 0) / 4, cy = pts.reduce((s, q) => s + q[1], 0) / 4 - H / 2, w = ["C", "2"].includes(b.taille) ? 300 : 440;
     t.innerHTML = `<div class="t-vis"><svg viewBox="${cx - w / 2} ${cy - w * .28} ${w} ${w * .5625}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="/img/etage-${b.etage}.webp" width="1536" height="1024"/><polygon points="${pts.map(q => q.join(",")).join(" ")}" fill="rgba(242,140,40,.8)" stroke="#B85F12" stroke-width="2"/>${pts.map((q, i) => `<line x1="${q[0]}" y1="${q[1]}" x2="${haut[i][0]}" y2="${haut[i][1]}" stroke="#F28C28" stroke-width="2"/>`).join("")}<polygon points="${haut.map(q => q.join(",")).join(" ")}" fill="rgba(242,140,40,.3)" stroke="#F28C28" stroke-width="2"/></svg></div>
-      <div class="t-corps"><div class="t-box">Box ${esc(b.nom)}</div><div class="t-ou">${LIBELLE[b.taille]}, ${NOMS[b.etage].toLowerCase()}, StockBox Saint-Ouen</div><dl id="t-lignes"></dl>
+      <div class="t-corps"><div class="t-box">${esc(nomBox(b))}</div><div class="t-ou">${LIBELLE[b.taille]}, ${NOMS[b.etage].toLowerCase()}, StockBox Saint-Ouen</div><dl id="t-lignes"></dl>
       <div class="t-total"><div><small>Aujourd'hui</small><b id="t-auj">${eur(m.aujourdhui)}</b></div><div class="m"><small>Puis chaque mois</small><br><span id="t-mois">${eur(m.mensuel)}</span></div></div></div>
       <div class="t-confiance"><span>Sans engagement</span><span>Préavis ${preavis()} jours</span><span>Accès dès le jour choisi</span></div>`;
     avant = {};
@@ -158,7 +158,7 @@ async function suivant() {
 // Fichier agenda (.ics) pour le jour d'entrée.
 export function agenda(d) {
   const j = d.debut.replace(/-/g, ""), fin = new Date(d.debut + "T12:00:00"); fin.setDate(fin.getDate() + 1);
-  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//StockBox//FR", "BEGIN:VEVENT", `UID:${d.reference}@stockbox`, `DTSTART;VALUE=DATE:${j}`, `DTEND;VALUE=DATE:${iso(fin).replace(/-/g, "")}`, `SUMMARY:Entrée dans mon box ${d.box.nom} (StockBox)`, "LOCATION:StockBox Saint-Ouen, 14 passage des Malles, 93400 Saint-Ouen", `DESCRIPTION:Réservation ${d.reference}. Accès 7 j/7 de 6 h à 22 h avec votre code.`, "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//StockBox//FR", "BEGIN:VEVENT", `UID:${d.reference}@stockbox`, `DTSTART;VALUE=DATE:${j}`, `DTEND;VALUE=DATE:${iso(fin).replace(/-/g, "")}`, `SUMMARY:Entrée dans mon ${nomBox(d.box, true)} (StockBox)`, "LOCATION:StockBox Saint-Ouen, 14 passage des Malles, 93400 Saint-Ouen", `DESCRIPTION:Réservation ${d.reference}. Accès 7 j/7 de 6 h à 22 h avec votre code.`, "END:VEVENT", "END:VCALENDAR"].join("\r\n");
   const a = el("a", { href: URL.createObjectURL(new Blob([ics], { type: "text/calendar" })), download: `stockbox-${d.box.nom}.ics` }); document.body.append(a); a.click(); a.remove();
 }
 export { PORTAIL };
@@ -168,7 +168,7 @@ export function finale(d, versImmeuble, fermer) {
   const code = String(1000 + Math.floor(Math.random() * 9000));
   const jour = new Date(d.debut + "T12:00:00").toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
   $("#fin").innerHTML = `<div class="porte"><div class="num-box">${esc(d.box.nom)}</div><div class="rideau"></div><div class="poignee"></div></div>
-    <h2>Le box ${esc(d.box.nom)} est à vous.</h2>
+    <h2>${esc(nomBox(d.box))} est à vous.</h2>
     <p>Rendez-vous ${jour}, ${NOMS[d.box.etage].toLowerCase()}. ${eur(d.aPayer)} payés, puis ${eur(d.mensuel)} par mois${d.promo ? ", premier mois offert" : ""}.</p>
     <div class="code" aria-label="Code d'accès de démonstration ${code}">${[...code].map(() => "<span>0</span>").join("")}</div>
     <p style="font-size:14px">Code d'accès de démonstration. Le vrai arrive par e-mail la veille.</p>

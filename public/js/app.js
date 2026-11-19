@@ -1,8 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119201350";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119201350";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119201350";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261119201350";
+import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119202332";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119202332";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119202332";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261119202332";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: "14 passage des Malles, Les Puces", ouvert: true },
@@ -25,27 +25,36 @@ const defiler = cible => new Promise(r => {
 // ---------------------------------------------------------------- accueil
 let comptes = false;
 function accueil() {
-  $$("[data-libres]").forEach(e => (e.textContent = `${libresTotal()} boxes libres`));
+  const K = compteurs();   // une seule source pour tous les chiffres de la page
+  $$("[data-libres]").forEach(e => (e.textContent = `${K.libres} boxes libres`));
   $$("[data-preavis]").forEach(e => (e.textContent = preavis()));
-  $("#tarifs").innerHTML = TAILLES.map(t => `<li><b>${t === "C" ? "Casier" : LIBELLE[t]}</b><span>${eur(prix(t))}</span></li>`).join("");
-  const a = S.data.activite || {}, rec = a.recents || [];
+  $("#tarifs").innerHTML = TAILLES.map(t => `<li><button type="button" class="tarif" data-taille="${t}" aria-label="Voir les ${t === "C" ? "casiers" : "boxes de " + LIBELLE[t]} dans l'immeuble, ${eur(prix(t))} par mois"><b>${t === "C" ? "Casier" : LIBELLE[t]}</b><span>${eur(prix(t))}</span></button></li>`).join("");
+  $$("#tarifs .tarif").forEach(b => (b.onclick = () => montrer(b.dataset.taille)));
+  const rec = S.data.activite?.recents || [];
   const cols = ["#0F5C45", "#F28C28", "#3B7A66", "#C9681A", "#13241E"];
   $("#visages").innerHTML = rec.slice(0, 3).map((r, i) => `<span style="background:${cols[i % cols.length]}">${esc((r.prenom || "?")[0])}</span>`).join("");
-  $("#preuve-txt").textContent = a.semaine ? `${a.semaine} réservations cette semaine` : a.loues ? `${a.loues} boxes loués` : `${libresTotal()} boxes libres`;
-  $("#chiffres").innerHTML = [[a.loues ?? 0, "boxes loués"], [a.semaine ?? 0, "réservés cette semaine"], [libresTotal(), "libres en ce moment"]].map(([n, t]) => `<div><b data-compte="${n}">${comptes ? n : 0}</b><span>${t}</span></div>`).join("");
-  const min = Math.min(...TAILLES.map(prix));
-  const sousCta = $("#cta-sous-txt"); if (sousCta) sousCta.textContent = `${libresTotal()} libres à Saint-Ouen, dès ${eur(min)} par mois`;
+  $("#preuve-txt").textContent = K.semaine ? `${K.semaine} réservations cette semaine` : `${K.loues} boxes loués`;
+  const vals = [[K.loues, "boxes loués"], [K.semaine, "réservés cette semaine"], [K.libres, "libres en ce moment"]];
+  const z = $("#chiffres");
+  if (z.children.length === vals.length) vals.forEach(([n], i) => { const b = z.children[i].querySelector("b"); b.dataset.compte = n; if (comptes) { G.killTweensOf?.(b); b.textContent = n; } });
+  else z.innerHTML = vals.map(([n, t]) => `<div><b data-compte="${n}">${comptes ? n : 0}</b><span>${t}</span></div>`).join("");
+  const sousCta = $("#cta-sous-txt"); if (sousCta) sousCta.textContent = `${K.libres} libres à Saint-Ouen, dès ${eur(Math.min(...TAILLES.map(prix)))} par mois`;
   if (document.querySelector(".onglet")) majTailles();
   fil(); dock();
 }
-new IntersectionObserver((es, io) => { if (!es.some(e => e.isIntersecting)) return; comptes = true; $$("[data-compte]").forEach(e => { const o = { v: 0 }; G.to(o, { v: Number(e.dataset.compte), duration: 1.4, ease: "power2.out", onUpdate: () => (e.textContent = Math.round(o.v)) }); }); io.disconnect(); }, { threshold: .4 }).observe($("#chiffres"));
+// Le décompte animé part de zéro une seule fois, et se termine toujours sur la valeur à jour.
+new IntersectionObserver((es, io) => {
+  if (!es.some(e => e.isIntersecting)) return; comptes = true;
+  $$("[data-compte]").forEach(e => { const o = { v: 0 }; G.to(o, { v: Number(e.dataset.compte), duration: 1.4, ease: "power2.out", onUpdate: () => (e.textContent = Math.round(o.v)), onComplete: () => (e.textContent = e.dataset.compte) }); });
+  io.disconnect();
+}, { threshold: .4 }).observe($("#chiffres"));
 
 let filT = null;
 function fil() {
   const rec = (S.data.activite?.recents || []).filter(r => r.box), z = $("#fil-direct"); clearInterval(filT);
   if (!rec.length) { z.hidden = true; return; }
   z.hidden = false; let i = 0;
-  const montre = () => { const r = rec[i++ % rec.length], t = $("#fil-txt"); t.classList.add("sort"); setTimeout(() => { t.textContent = `${r.prenom || "Un client"} a réservé le box ${r.box}, ${ilYa(r.quand)}.`; t.classList.remove("sort"); }, 350); };
+  const montre = () => { const r = rec[i++ % rec.length], t = $("#fil-txt"); t.classList.add("sort"); setTimeout(() => { t.textContent = `${r.prenom || "Un client"} a réservé le ${nomBox(r.box, true)}, ${ilYa(r.quand)}.`; t.classList.remove("sort"); }, 350); };
   montre(); filT = setInterval(montre, 4500);
 }
 const AVIS = [
@@ -63,15 +72,18 @@ let heroVu = true;
 function dock() {
   const b = S.choix, info = $("#dock-info"), bt = $("#dock-btn");
   if (b && b.libre && !S.apercu) {
-    info.innerHTML = `<span class="choisi"><b>Box ${esc(b.nom)}, ${LIBELLE[b.taille]}</b><small>${eur(prix(b.taille))} par mois, sans engagement</small></span>`;
+    info.innerHTML = `<span class="choisi"><b>${esc(nomBox(b))}${b.taille === "C" ? "" : ", " + LIBELLE[b.taille]}</b><small>${eur(prix(b.taille))} par mois, sans engagement</small></span>`;
     bt.textContent = "Réserver"; bt.onclick = () => reserver();
   } else {
-    info.innerHTML = `<span class="point" style="display:inline-block;margin-right:8px;vertical-align:middle"></span><b>${libresTotal()} boxes libres</b> à Saint-Ouen`;
+    info.innerHTML = `<span class="point" style="display:inline-block;margin-right:8px;vertical-align:middle"></span><b>${compteurs().libres} boxes libres</b> à Saint-Ouen`;
     bt.textContent = "Choisir mon box"; bt.onclick = () => ouvrirChoix();
   }
-  dockEl.classList.toggle("vu", !heroVu && !$("#choix").open && $("#reserver").hidden);
+  dockEl.classList.toggle("vu", !ctaVu && !immVu && !$("#choix").open && $("#reserver").hidden);
 }
+let ctaVu = true, immVu = false;
 new IntersectionObserver(([e]) => { heroVu = e.isIntersecting; abtn.classList.toggle("sur-hero", heroVu); abtn.classList.toggle("compact", !heroVu); dock(); }, { threshold: .15 }).observe($(".hero"));
+new IntersectionObserver(([e]) => { ctaVu = e.isIntersecting; dock(); }).observe($(".cta-hero"));
+new IntersectionObserver(([e]) => { immVu = e.isIntersecting; dock(); }, { threshold: .25 }).observe($("#immeuble"));
 
 // ---------------------------------------------------------------- petite fenêtre : le centre, puis la taille
 const choix = $("#choix");
@@ -191,7 +203,7 @@ async function montrerBox(b, resa) {
 function offres(list) {
   const z = el("div", { class: "offres-ag" });
   for (const o of list) {
-    const c = el("div", { class: "offre-ag" }, `<span><b>Box ${esc(o.nom)}</b><small>${o.taille === "C" ? "Casier" : LIBELLE[o.taille]}, ${esc(o.etage_nom)}, ${eur(o.prix_mensuel)} par mois</small></span><span class="act"><button class="voir" type="button">Voir</button><button class="resa-ag" type="button">Réserver</button></span>`);
+    const c = el("div", { class: "offre-ag" }, `<span><b>${esc(nomBox(o.nom))}</b><small>${o.taille === "C" ? "Casier" : LIBELLE[o.taille]}, ${esc(o.etage_nom)}, ${eur(o.prix_mensuel)} par mois</small></span><span class="act"><button class="voir" type="button">Voir</button><button class="resa-ag" type="button">Réserver</button></span>`);
     const b = () => boxParId(o.id);
     c.querySelector(".voir").onclick = () => b() && montrerBox(b(), false);
     c.querySelector(".resa-ag").onclick = () => b() && montrerBox(b(), true);
@@ -256,3 +268,19 @@ charger().then(() => {
   // La fiche du box choisi met à jour la barre du bas.
   new MutationObserver(dock).observe($("#fiche"), { childList: true });
 }).catch(e => console.error(e));
+
+// ---------------------------------------------------------------- FAQ : accordéons qui s'ouvrent et se ferment en douceur
+$$(".faq details").forEach(d => {
+  const sum = d.querySelector("summary"), corps = d.querySelector("p");
+  sum.addEventListener("click", e => {
+    if (reduit || !corps.animate) return;
+    e.preventDefault();
+    if (d.open) {
+      const h = corps.offsetHeight;
+      corps.animate([{ height: h + "px", opacity: 1 }, { height: "0px", opacity: 0 }], { duration: 280, easing: "cubic-bezier(.4,0,.2,1)" }).onfinish = () => (d.open = false);
+    } else {
+      d.open = true; const h = corps.offsetHeight;
+      corps.animate([{ height: "0px", opacity: 0 }, { height: h + "px", opacity: 1 }], { duration: 340, easing: "cubic-bezier(.22,1,.36,1)" });
+    }
+  });
+});
