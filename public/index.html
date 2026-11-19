@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
 <link rel="preload" as="image" href="/img/facade.webp" fetchpriority="high">
-<link rel="stylesheet" href="/css/site.css?v=20261119172954">
+<link rel="stylesheet" href="/css/site.css?v=20261119173310">
 </head>
 <body>
 
@@ -29,7 +29,11 @@
     <img class="hero-img" src="/img/facade.webp" srcset="/img/facade-768.webp 768w, /img/facade.webp 1536w" sizes="100vw" alt="Le centre StockBox de Saint-Ouen au crépuscule, façade de brique et grandes fenêtres vertes éclairées" fetchpriority="high">
     <h1 id="titre-hero"><span><i>Le stockage,</i></span><span><i>digital et autonome.</i></span></h1>
     <p class="chapeau">Votre box réservé en deux minutes, accessible 7 j/7 avec votre code.</p>
-    <button class="cta" type="button" data-ouvrir><span class="cta-txt">Trouver mon box</span><span class="cta-rond" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+    <button class="cta cta-hero" type="button" data-ouvrir aria-describedby="cta-sous">
+      <span class="cta-lum" aria-hidden="true"></span>
+      <span class="cta-txt"><b>Trouver mon box</b><small id="cta-sous"><span class="point" aria-hidden="true"></span><span><span data-libres>Boxes libres</span> à Saint-Ouen</span></small></span>
+      <span class="cta-rond" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </button>
     <ul class="tarifs" id="tarifs" aria-label="Prix par mois"></ul>
     <p class="tarifs-note">Prix par mois, sans engagement. 14 passage des Malles, Saint-Ouen.</p>
     <div class="barre" aria-label="Avis et réservations">
@@ -149,7 +153,7 @@
   <form id="agent-form"><input id="agent-champ" autocomplete="off" placeholder="Votre question" aria-label="Votre question" maxlength="600"><button class="btn btn-em" type="submit">Envoyer</button></form>
 </section>
 
-<script src="/js/gsap.min.js?v=20261119172954"></script>
-<script type="module" src="/js/app.js?v=20261119172954"></script>
+<script src="/js/gsap.min.js?v=20261119173310"></script>
+<script type="module" src="/js/app.js?v=20261119173310"></script>
 </body>
 </html>

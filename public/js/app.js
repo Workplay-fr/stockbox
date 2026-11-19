@@ -1,7 +1,7 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119172954";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119172954";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261119172954";
+import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119173310";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119173310";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261119173310";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: "14 passage des Malles, Les Puces", ouvert: true },
@@ -174,6 +174,14 @@ async function envoyer(txt) {
     }
   } catch { att.remove(); bulleIA("Connexion impossible. Réessayez dans un instant."); H.pop(); }
   occupe = false;
+}
+
+// Le bouton principal suit légèrement le pointeur.
+const ctaH = $(".cta-hero");
+if (ctaH && !reduit && matchMedia("(hover:hover)").matches) {
+  const zone = $(".hero");
+  zone.addEventListener("pointermove", e => { const r = ctaH.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2), d = Math.hypot(dx, dy); const k = d < 220 ? (1 - d / 220) * .18 : 0; ctaH.style.setProperty("--mx", (dx * k).toFixed(1) + "px"); ctaH.style.setProperty("--my", (dy * k).toFixed(1) + "px"); });
+  zone.addEventListener("pointerleave", () => { ctaH.style.setProperty("--mx", "0px"); ctaH.style.setProperty("--my", "0px"); });
 }
 
 // ---------------------------------------------------------------- démarrage
