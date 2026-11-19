@@ -1,7 +1,14 @@
 // POST /api/demo { action: "etat" | "remplir" | "vider", cle } : contrats de démonstration, pour que l'immeuble ne soit pas vide.
 // Réservé à l'administrateur : la clé est le mot de passe du site (SITE_PASSWORD). Tout ce qui est créé ici est marqué « [DÉMO] »
 // (notes du contrat) et ses clients ont une adresse stockbox.demo+…@workplay.fr : « vider » ne touche qu'à ces fiches-là.
-import { catalogue, oublier, nx, pret, json, isoZ, CFG, contratsDuLieu } from "../../lib/nexudus.js";
+import { catalogue, oublier, nx as nxBrut, pret, json, isoZ, CFG, contratsDuLieu } from "../../lib/nexudus.js";
+const pause = ms => new Promise(r => setTimeout(r, ms));
+async function nx(env, m, chemin, corps) {
+  for (let essai = 0; ; essai++) {
+    try { const r = await nxBrut(env, m, chemin, corps); if (m !== "GET") await pause(400); return r; }
+    catch (e) { if (e.status !== 429 || essai >= 3) throw e; await pause(2500 * (essai + 1)); }
+  }
+}
 
 const CIBLE = 62, PAR_APPEL = 2;   // la moitié des 124 boxes
 const MARQUE = "[DÉMO]";
@@ -10,9 +17,10 @@ const NOMS = ["Moreau","Laurent","Girard","Benali","Fontaine","Rousseau","Lefèv
 const SOCIETES = { 3: "Atelier Lumen", 8: "Maison Vert-Galant", 13: "Cartons & Co", 19: "Studio Brique", 26: "Les Puces de Margaux", 33: "Archi Nord" };
 const slug = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z]/g, "");
 
-const enCours = l => l.filter(c => !/Ancien contrat/.test(c.Notes || ""));
+const DEMO_EMAIL = /^stockbox\.demo\+/i;
+const enCours = l => l.filter(c => !/\.ancien\./i.test(c.CoworkerEmail || "") && !(c.CancellationDate && new Date(/Z$/.test(c.CancellationDate) ? c.CancellationDate : c.CancellationDate + "Z") < new Date()));
 async function contratsDemo(env) {
-  return (await contratsDuLieu(env)).filter(c => String(c.Notes || "").startsWith(MARQUE));
+  return (await contratsDuLieu(env)).filter(c => DEMO_EMAIL.test(c.CoworkerEmail || "") || String(c.Notes || "").startsWith(MARQUE));
 }
 
 export async function onRequestPost({ request, env }) {
@@ -42,7 +50,7 @@ export async function onRequestPost({ request, env }) {
         const i = existants.length + k;
         const prenom = PRENOMS[i % PRENOMS.length], nom = NOMS[(i * 7) % NOMS.length];
         const co = await nx(env, "POST", "/spaces/coworkers", {
-          CoworkerType: 1, FullName: `${prenom} ${nom}`, Email: `stockbox.demo+${slug(prenom)}.${slug(nom)}@workplay.fr`, CompanyName: SOCIETES[i] || null,
+          CoworkerType: 1, FullName: `${prenom} ${nom}`, Email: `stockbox.demo+${slug(prenom)}.${slug(nom)}.${i}@workplay.fr`, CompanyName: SOCIETES[i] || null,
           Gender: 1, TaxRateType: 1, CountryId: CFG.pays, SimpleTimeZoneId: CFG.fuseau, InvoicingBusinessId: CFG.business,
           MondayAttendance: 1, TuesdayAttendance: 1, WednesdayAttendance: 1, ThursdayAttendance: 1, FridayAttendance: 1, SaturdayAttendance: 1, SundayAttendance: 1,
           Notes: `${MARQUE} Client fictif créé pour la démo StockBox.`,
@@ -65,7 +73,7 @@ export async function onRequestPost({ request, env }) {
           try {
             const p2 = PRENOMS[(i + 17) % PRENOMS.length], n2 = NOMS[(i * 7 + 13) % NOMS.length];
             const ancien = await nx(env, "POST", "/spaces/coworkers", {
-              CoworkerType: 1, FullName: `${p2} ${n2}`, Email: `stockbox.demo+${slug(p2)}.${slug(n2)}.${i}@workplay.fr`,
+              CoworkerType: 1, FullName: `${p2} ${n2}`, Email: `stockbox.demo+${slug(p2)}.${slug(n2)}.ancien.${i}@workplay.fr`,
               Gender: 1, TaxRateType: 1, CountryId: CFG.pays, SimpleTimeZoneId: CFG.fuseau, InvoicingBusinessId: CFG.business,
               Notes: `${MARQUE} Ancien client fictif (démo StockBox).`,
             });
