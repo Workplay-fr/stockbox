@@ -1,8 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119181123";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119181123";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119181123";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261119181123";
+import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261119181457";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261119181457";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261119181457";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261119181457";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: "14 passage des Malles, Les Puces", ouvert: true },
@@ -170,7 +170,7 @@ let memoAg = { devis: null };
 const bulleIA = (txt, qui = "ia") => { const m = el("div", { class: "m " + qui }); m.innerHTML = esc(txt).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>"); filAg.append(m); filAg.scrollTop = filAg.scrollHeight; return m; };
 function ouvrirAgent() {
   agent.classList.remove("ferme"); agent.setAttribute("aria-hidden", "false"); abtn.classList.add("cache"); $("#agent-bulle").hidden = true;
-  if (!filAg.children.length) bulleIA("Bonjour. Que souhaitez-vous stocker ? Je vous trouve la bonne taille, un box libre, et je peux vous préparer un devis.");
+  if (!filAg.children.length) bulleIA("Bonjour, je suis Atlas. Dites-moi ce que vous voulez stocker : je calcule le volume, je vous montre un box libre dans l'immeuble et je peux vous préparer un devis.");
   setTimeout(() => $("#agent-champ").focus(), 200);
 }
 abtn.onclick = ouvrirAgent;
