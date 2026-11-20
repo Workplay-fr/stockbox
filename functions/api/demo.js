@@ -73,7 +73,7 @@ export async function onRequestPost({ request, env }) {
         const [prenom, nom] = nomLibre(pris, i);
         const co = await nx(env, "POST", "/spaces/coworkers", {
           CoworkerType: 1, FullName: `${prenom} ${nom}`, Email: `stockbox.demo+${slug(prenom)}.${slug(nom)}.${i}@workplay.fr`, CompanyName: SOCIETES[i] || null,
-          Gender: 1, TaxRateType: 1, CountryId: CFG.pays, SimpleTimeZoneId: CFG.fuseau, InvoicingBusinessId: CFG.business,
+          Gender: 1, TaxRateType: 1, CountryId: CFG.pays, SimpleTimeZoneId: CFG.fuseau, InvoicingBusinessId: CFG.business, DoNotProcessInvoicesAutomatically: true,
           MondayAttendance: 1, TuesdayAttendance: 1, WednesdayAttendance: 1, ThursdayAttendance: 1, FridayAttendance: 1, SaturdayAttendance: 1, SundayAttendance: 1,
           Notes: `${MARQUE} Client fictif créé pour la démo StockBox.`,
         });
@@ -96,7 +96,7 @@ export async function onRequestPost({ request, env }) {
             const [p2, n2] = nomLibre(pris, i + 500);
             const ancien = await nx(env, "POST", "/spaces/coworkers", {
               CoworkerType: 1, FullName: `${p2} ${n2}`, Email: `stockbox.demo+${slug(p2)}.${slug(n2)}.ancien.${i}@workplay.fr`,
-              Gender: 1, TaxRateType: 1, CountryId: CFG.pays, SimpleTimeZoneId: CFG.fuseau, InvoicingBusinessId: CFG.business,
+              Gender: 1, TaxRateType: 1, CountryId: CFG.pays, SimpleTimeZoneId: CFG.fuseau, InvoicingBusinessId: CFG.business, DoNotProcessInvoicesAutomatically: true,
               Notes: `${MARQUE} Ancien client fictif (démo StockBox).`,
             });
             const fin = new Date(debut.getTime() - 3 * jour), deb2 = new Date(fin.getTime() - (90 + (i * 31) % 240) * jour);
