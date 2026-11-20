@@ -80,12 +80,20 @@ export async function onRequestPost({ request, env }) {
       for (const [k, b] of aFaire.entries()) {
         const i = existants.length + k;
         const [prenom, nom] = nomLibre(pris, i);
-        const co = await nx(env, "POST", "/spaces/coworkers", {
+        // Nexudus limite les créations de clients en rafale : au-delà, un client fictif existant prend un second box.
+        let co, reutilise = false;
+        try { co = await nx(env, "POST", "/spaces/coworkers", {
           CoworkerType: 1, FullName: `${prenom} ${nom}`, Email: `stockbox.demo+${slug(prenom)}.${slug(nom)}.${i}@workplay.fr`, CompanyName: SOCIETES[i] || null,
           Gender: 1, TaxRateType: 1, CountryId: CFG.pays, SimpleTimeZoneId: CFG.fuseau, InvoicingBusinessId: CFG.business, DoNotProcessInvoicesAutomatically: true,
           MondayAttendance: 1, TuesdayAttendance: 1, WednesdayAttendance: 1, ThursdayAttendance: 1, FridayAttendance: 1, SaturdayAttendance: 1, SundayAttendance: 1,
           Notes: `${MARQUE} Client fictif créé pour la démo StockBox.`,
-        });
+        }); }
+        catch (e) {
+          if (!/Too many customers/i.test(e.message)) throw e;
+          const actuels = enCours(tousDemo).filter(c => c.CoworkerId);
+          if (!actuels.length) throw e;
+          co = { Value: { Id: actuels[(i * 7) % actuels.length].CoworkerId } }; reutilise = true;
+        }
         const idCo = co.Value && co.Value.Id;
         const jour = 864e5, auj = new Date(); auj.setUTCHours(0, 0, 0, 0);
         // Ancienneté étalée sur 14 mois, pour des courbes d'arrivées et une durée moyenne de location crédibles.
@@ -100,7 +108,7 @@ export async function onRequestPost({ request, env }) {
         if (i % 5 === 2) { ct.CancellationDate = isoZ(new Date(auj.getTime() + (14 + (i * 9) % 56) * jour)); ct.CancellationReason = 1; ct.CancellationNotes = `${MARQUE} Préavis donné (déménagement terminé).`; }
         await nx(env, "POST", "/billing/coworkercontracts", ct);
         // Un box sur trois a eu un locataire avant : contrat terminé, pour l'historique et le taux de départ.
-        if (i % 3 === 0) {
+        if (i % 3 === 0 && !reutilise) {
           try {
             const [p2, n2] = nomLibre(pris, i + 500);
             const ancien = await nx(env, "POST", "/spaces/coworkers", {
