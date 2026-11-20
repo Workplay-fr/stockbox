@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
 <link rel="preload" as="image" href="/img/facade.webp" fetchpriority="high">
-<link rel="stylesheet" href="/css/site.css?v=20261120143529">
+<link rel="stylesheet" href="/css/site.css?v=20261120144227">
 </head>
 <body>
 
@@ -111,15 +111,27 @@
     <div class="large">
       <div class="avis-tete">
         <h2 class="titre" id="titre-avis">Ils stockent chez nous.</h2>
-        <div class="chiffres" id="chiffres"></div>
+        <p class="source-direct"><span class="point" aria-hidden="true"></span>Source : Nexudus, mis à jour en direct</p>
       </div>
+      <div class="tdb">
+        <div class="kpis" id="chiffres"></div>
+        <div class="carte-etages" id="carte-etages" aria-label="Occupation du bâtiment, étage par étage"></div>
+      </div>
+      <ol class="journal" id="journal" aria-label="Dernières réservations"></ol>
       <div class="avis">
-        <figure><div class="etoiles" aria-label="5 sur 5">★★★★★</div><blockquote>« J'ai vidé mon 2 pièces avant des travaux. Box réservé le dimanche soir, j'y étais le lundi matin avec la camionnette. Le quai était libre. »</blockquote><figcaption><b>Camille</b>, box de 10 m²</figcaption></figure>
-        <figure><div class="etoiles" aria-label="5 sur 5">★★★★★</div><blockquote>« Je garde le stock de ma boutique. Le monte-charge est juste en face de mon box : c'est pour ça que j'ai choisi le premier étage. »</blockquote><figcaption><b>Margaux</b>, box de 5 m²</figcaption></figure>
-        <figure><div class="etoiles" aria-label="4 sur 5">★★★★<span style="opacity:.3">★</span></div><blockquote>« On voit ce qui est libre et on choisit son emplacement. Aucun engagement : j'ai rendu mon box au bout de quatre mois. »</blockquote><figcaption><b>Karim</b>, box de 2 m²</figcaption></figure>
+        <figure><div class="etoiles" aria-label="5 sur 5">★★★★★</div><blockquote>« J'ai vidé mon 2 pièces avant des travaux. Box réservé le dimanche soir, j'y étais le lundi matin avec la camionnette. Le quai était libre. »</blockquote><figcaption><b>Camille</b><span class="tags"><i>Box de 10 m²</i><i>Travaux</i><i>Cliente depuis 8 mois</i></span></figcaption></figure>
+        <figure><div class="etoiles" aria-label="5 sur 5">★★★★★</div><blockquote>« Je garde le stock de ma boutique. Le monte-charge est juste en face de mon box : c'est pour ça que j'ai choisi le premier étage. »</blockquote><figcaption><b>Margaux</b><span class="tags"><i>Box de 5 m²</i><i>Pro, stock de boutique</i><i>Cliente depuis 1 an</i></span></figcaption></figure>
+        <figure><div class="etoiles" aria-label="4 sur 5">★★★★<span style="opacity:.3">★</span></div><blockquote>« On voit ce qui est libre et on choisit son emplacement. Aucun engagement : j'ai rendu mon box au bout de quatre mois. »</blockquote><figcaption><b>Karim</b><span class="tags"><i>Box de 2 m²</i><i>Étudiant</i><i>4 mois, puis parti</i></span></figcaption></figure>
       </div>
       <p class="mention">Avis d'exemple rédigés pour cette démonstration. Les chiffres et les réservations, eux, viennent de Nexudus en temps réel.</p>
-      <div class="fil-direct" id="fil-direct" hidden><span class="point" aria-hidden="true"></span><span class="txt" id="fil-txt"></span></div>
+      <ul class="specs" aria-label="Sécurité">
+        <li><b>Code personnel</b>propre à chaque client</li>
+        <li><b>Journal des entrées</b>chaque passage horodaté</li>
+        <li><b>Vidéosurveillance</b>24 h/24, 7 j/7</li>
+        <li><b>Assurance</b>au choix, dès la réservation</li>
+        <li><b>Résiliation en ligne</b>préavis de <span data-preavis>15</span> jours</li>
+      </ul>
+      <div class="avis-cta"><button class="cta" type="button" data-ouvrir><span class="cta-txt">Choisir mon box</span><span class="cta-rond" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
     </div>
   </section>
 
@@ -180,7 +192,7 @@
   <form id="agent-form"><input id="agent-champ" autocomplete="off" placeholder="Demandez à Atlas…" aria-label="Votre question" maxlength="600"><button class="btn btn-em" type="submit">Envoyer</button></form>
 </section>
 
-<script src="/js/gsap.min.js?v=20261120143529"></script>
-<script type="module" src="/js/app.js?v=20261120143529"></script>
+<script src="/js/gsap.min.js?v=20261120144227"></script>
+<script type="module" src="/js/app.js?v=20261120144227"></script>
 </body>
 </html>

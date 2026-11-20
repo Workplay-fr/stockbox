@@ -1,8 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261120143529";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir } from "./immeuble.js?v=20261120143529";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261120143529";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261120143529";
+import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, boxes, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261120144227";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir, ouvrir as ouvrirEtage } from "./immeuble.js?v=20261120144227";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261120144227";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261120144227";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: "14 passage des Malles, Les Puces", ouvert: true },
@@ -34,10 +34,19 @@ function accueil() {
   const cols = ["#0F5C45", "#F28C28", "#3B7A66", "#C9681A", "#13241E"];
   if ($("#visages")) $("#visages").innerHTML = rec.slice(0, 3).map((r, i) => `<span style="background:${cols[i % cols.length]}">${esc((r.prenom || "?")[0])}</span>`).join("");
   if ($("#preuve-txt")) $("#preuve-txt").textContent = `${K.loues} boxes loués`;
-  const vals = [[K.loues, "boxes loués"], [K.libres, "libres en ce moment"]];
+  // Tableau de bord du bâtiment : trois indicateurs calculés depuis Nexudus
+  const act = S.data.activite || {}, der = (act.recents || [])[0];
+  const taux = K.total ? Math.round(K.loues / K.total * 100) : 0;
+  const anc = act.anciennete;
+  const kpis = [
+    [taux, " %", "occupation"],
+    [anc ?? "—", anc === 1 ? " mois" : " mois", "ancienneté moyenne"],
+    [null, der ? ilYa(der.quand) : "—", "dernière réservation"],
+  ];
   const z = $("#chiffres");
-  if (z.children.length === vals.length) vals.forEach(([n], i) => { const b = z.children[i].querySelector("b"); b.dataset.compte = n; if (comptes) { G.killTweensOf?.(b); b.textContent = n; } });
-  else z.innerHTML = vals.map(([n, t]) => `<div><b data-compte="${n}">${comptes ? n : 0}</b><span>${t}</span></div>`).join("");
+  if (z.children.length === kpis.length) kpis.forEach(([n, u], i) => { const b = z.children[i].querySelector("b"); if (n === null) { b.textContent = u; return; } b.dataset.compte = n; b.dataset.unite = u; if (comptes || typeof n !== "number") b.textContent = n + u; });
+  else z.innerHTML = kpis.map(([n, u, t]) => n === null ? `<div><b>${esc(u)}</b><span>${t}</span></div>` : `<div><b ${typeof n === "number" ? `data-compte="${n}" data-unite="${u}"` : ""}>${typeof n === "number" ? (comptes ? n : 0) : n}${u}</b><span>${t}</span></div>`).join("");
+  carteEtages(); journal();
   const sousCta = $("#cta-sous-txt"); if (sousCta) sousCta.textContent = `${K.libres} libres à Saint-Ouen, dès ${eur(Math.min(...TAILLES.map(prix)))} par mois`;
   if (document.querySelector(".onglet")) majTailles();
   fil(); dock();
@@ -45,18 +54,40 @@ function accueil() {
 // Le décompte animé part de zéro une seule fois, et se termine toujours sur la valeur à jour.
 new IntersectionObserver((es, io) => {
   if (!es.some(e => e.isIntersecting)) return; comptes = true;
-  $$("[data-compte]").forEach(e => { const o = { v: 0 }; G.to(o, { v: Number(e.dataset.compte), duration: 1.4, ease: "power2.out", onUpdate: () => (e.textContent = Math.round(o.v)), onComplete: () => (e.textContent = e.dataset.compte) }); });
+  $$("[data-compte]").forEach(e => { const o = { v: 0 }; G.to(o, { v: Number(e.dataset.compte), duration: 1.4, ease: "power2.out", onUpdate: () => (e.textContent = Math.round(o.v) + (e.dataset.unite || "")), onComplete: () => (e.textContent = e.dataset.compte + (e.dataset.unite || "")) }); });
   io.disconnect();
 }, { threshold: .4 }).observe($("#chiffres"));
 
 let filT = null;
 function fil() {
   const rec = (S.data.activite?.recents || []).filter(r => r.box), z = $("#fil-direct"); clearInterval(filT);
+  if (!z) return;
   if (!rec.length) { z.hidden = true; return; }
   z.hidden = false; let i = 0;
   const montre = () => { const r = rec[i++ % rec.length], t = $("#fil-txt"); t.classList.add("sort"); setTimeout(() => { t.textContent = `${r.prenom || "Un client"} a réservé le ${nomBox(r.box, true)}, ${ilYa(r.quand)}.`; t.classList.remove("sort"); }, 350); };
   montre(); filT = setInterval(montre, 4500);
 }
+// Mini-carte : un carré par box, étage par étage ; un clic ouvre l'étage dans la 3D.
+function carteEtages() {
+  const c = $("#carte-etages"); if (!c) return;
+  const NOMS_E = { "2": "2ᵉ", "1": "1ᵉʳ", "0": "RDC" };
+  c.innerHTML = ["2", "1", "0"].map(n => {
+    const bx = [...boxes(n)].sort((a, b) => String(a.nom).localeCompare(String(b.nom), "fr", { numeric: true }));
+    const l = bx.filter(b => b.libre).length;
+    return `<button type="button" class="ce-ligne" data-n="${n}" aria-label="${NOMS_E[n]} étage : ${l} libres sur ${bx.length}, voir dans l'immeuble"><span class="ce-nom">${NOMS_E[n]}</span><span class="ce-cases">${bx.map(b => `<i class="${b.libre ? "l" : "o"}"></i>`).join("")}</span><span class="ce-nb">${l}<small>/${bx.length}</small></span></button>`;
+  }).join("") + `<p class="ce-leg"><i class="l"></i>Libre <i class="o"></i>Loué</p>`;
+  $$(".ce-ligne", c).forEach(b => (b.onclick = () => { S.filtre = null; cacherResa(); defiler($("#immeuble")).then(() => { entrerImmeuble(null); ouvrirEtage(b.dataset.n); }); }));
+}
+// Journal : les dernières réservations lues dans Nexudus, horodatées.
+function journal() {
+  const j = $("#journal"); if (!j) return;
+  const rec = (S.data.activite?.recents || []).filter(r => r.box).slice(0, 5);
+  const heure = q => { const d = new Date(q), auj = new Date(); const h = d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }); return d.toDateString() === auj.toDateString() ? h : d.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" }) + " " + h; };
+  const tailleDe = nom => { for (const n of ["0", "1", "2"]) { const b = boxes(n).find(x => x.nom === nom); if (b) return b.taille; } return null; };
+  j.hidden = !rec.length;
+  j.innerHTML = rec.map(r => { const t = tailleDe(r.box); return `<li><time>${esc(heure(r.quand))}</time><b>${esc(nomBox(r.box))}</b><span>${t && t !== "C" ? esc(LIBELLE[t]) : ""}</span><em>réservé en ligne</em></li>`; }).join("");
+}
+
 const AVIS = [
   ["« Box réservé le dimanche soir, j'y étais le lundi matin avec la camionnette. »", "Camille, box de 10 m²"],
   ["« Le monte-charge est juste en face de mon box. Parfait pour le stock de ma boutique. »", "Margaux, box de 5 m²"],
@@ -78,12 +109,13 @@ function dock() {
     info.innerHTML = `<span class="point" style="display:inline-block;margin-right:8px;vertical-align:middle"></span><b>${compteurs().libres} boxes libres</b> à Saint-Ouen`;
     bt.textContent = "Choisir mon box"; bt.onclick = () => ouvrirChoix();
   }
-  dockEl.classList.toggle("vu", !ctaVu && !immVu && !$("#choix").open && $("#reserver").hidden);
+  dockEl.classList.toggle("vu", !ctaVu && !immVu && !ctaSocVu && !$("#choix").open && $("#reserver").hidden);
 }
-let ctaVu = true, immVu = false;
+let ctaVu = true, immVu = false, ctaSocVu = false;
 new IntersectionObserver(([e]) => { heroVu = e.isIntersecting; abtn.classList.toggle("sur-hero", heroVu); abtn.classList.toggle("compact", !heroVu); dock(); }, { threshold: .15 }).observe($(".hero"));
 new IntersectionObserver(([e]) => { ctaVu = e.isIntersecting; dock(); }).observe($(".cta-hero"));
 new IntersectionObserver(([e]) => { immVu = e.isIntersecting; dock(); }, { threshold: .25 }).observe($("#immeuble"));
+if ($(".avis-cta")) new IntersectionObserver(([e]) => { ctaSocVu = e.isIntersecting; dock(); }).observe($(".avis-cta"));
 
 // ---------------------------------------------------------------- petite fenêtre : le centre, puis la taille
 const choix = $("#choix");

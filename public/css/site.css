@@ -781,3 +781,46 @@ dialog.fen::backdrop{background:rgba(5,22,17,.45);backdrop-filter:blur(8px)}
 .en-nexudus:hover{background:#fff;color:var(--encre)}.en-nexudus:hover b{color:var(--encre)}
 .en-nexudus:focus-visible{outline:2px solid #fff;outline-offset:3px}
 @media (max-width:560px){.en-nexudus{font-size:9px;letter-spacing:.16em;padding:6px 7px}.marque{gap:6px}}
+
+/* ===== « Ils stockent chez nous » : tableau de bord public du bâtiment ===== */
+.avis-tete{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.source-direct{display:inline-flex;align-items:center;gap:8px;margin:0;font-size:13px;color:rgba(255,255,255,.66)}
+.tdb{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:18px;margin-top:40px;align-items:stretch}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.kpis > div{padding:24px 22px;border-radius:22px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;justify-content:space-between;gap:16px}
+.kpis b{display:block;font:700 clamp(30px,2.8vw,44px)/1 var(--t);letter-spacing:-.04em;white-space:nowrap}
+.kpis > div:nth-child(3) b{font-size:clamp(20px,2vw,28px);letter-spacing:-.02em;line-height:1.1;white-space:normal}
+.kpis span{color:rgba(255,255,255,.66);font-size:13.5px}
+.carte-etages{padding:20px 22px;border-radius:22px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;justify-content:center;gap:8px}
+.ce-ligne{display:grid;grid-template-columns:42px minmax(0,1fr) 54px;align-items:center;gap:12px;padding:8px 10px;border:0;border-radius:14px;background:transparent;color:#fff;font:inherit;text-align:left;cursor:pointer;transition:background .25s}
+.ce-ligne:hover{background:rgba(255,255,255,.07)}
+.ce-ligne:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.ce-nom{font-weight:600;font-size:14px}
+.ce-cases{display:flex;flex-wrap:wrap;gap:3px}
+.ce-cases i,.ce-leg i{display:block;width:9px;height:9px;border-radius:2px}
+.ce-cases i.l,.ce-leg i.l{background:#3BB58A}
+.ce-cases i.o,.ce-leg i.o{background:rgba(232,92,74,.75)}
+.ce-nb{text-align:right;font:700 18px/1 var(--t)}.ce-nb small{font:500 12px var(--f);color:rgba(255,255,255,.55)}
+.ce-leg{display:flex;align-items:center;gap:7px;margin:6px 0 0 10px;font-size:12px;color:rgba(255,255,255,.6)}.ce-leg i{margin-left:8px}.ce-leg i:first-child{margin-left:0}
+.journal{list-style:none;margin:18px 0 0;padding:16px 20px;border-radius:18px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.08);font:500 13.5px/1.9 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:rgba(255,255,255,.82)}
+.journal li{display:flex;gap:16px;align-items:baseline}
+.journal li::before{content:">";color:var(--tg)}
+.journal time{min-width:88px}
+.journal b{min-width:96px}
+.journal span{flex:1}
+.journal time{color:rgba(255,255,255,.5)}
+.journal b{font-weight:600;color:#fff}
+.journal em{font-style:normal;color:#3BB58A}
+.avis figcaption{display:flex;flex-direction:column;gap:8px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags i{font-style:normal;font-size:12px;padding:4px 9px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.78)}
+.specs{list-style:none;margin:34px 0 0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;border-radius:18px;overflow:hidden;background:rgba(255,255,255,.12)}
+.specs li{padding:16px 18px;background:var(--em-nuit);font-size:13px;color:rgba(255,255,255,.62);line-height:1.4}
+.specs b{display:block;color:#fff;font-size:14.5px;margin-bottom:3px}
+.avis-cta{display:flex;justify-content:center;margin-top:40px}
+@media (max-width:1000px){.tdb{grid-template-columns:1fr}.specs{grid-template-columns:repeat(2,minmax(0,1fr))}.specs li:last-child{grid-column:1/-1}}
+@media (max-width:700px){
+  .kpis{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.kpis > div{padding:16px 12px;border-radius:18px;gap:10px}.kpis b{font-size:28px}.kpis > div:nth-child(3) b{font-size:16px}.kpis span{font-size:11.5px}
+  .carte-etages{padding:14px 10px}.ce-ligne{grid-template-columns:34px minmax(0,1fr) 44px;gap:8px;padding:6px}.ce-cases i{width:7px;height:7px}
+  .journal{padding:12px 14px;font-size:11.5px}.journal li{gap:9px}.journal time{min-width:0}.journal b{min-width:0}.journal li em{display:none}
+}
