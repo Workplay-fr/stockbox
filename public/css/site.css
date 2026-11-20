@@ -753,3 +753,24 @@ dialog.fen::backdrop{background:rgba(5,22,17,.45);backdrop-filter:blur(8px)}
 .b-lieu small{display:block;font-size:12.5px;color:rgba(255,255,255,.66);margin-top:2px}
 @media (max-width:700px){.lieu-ic{width:32px;height:32px}.b-lieu small{font-size:11.5px}}
 @media (max-width:700px){.b-lieu .rue{display:none}.b-lieu{gap:9px}}
+/* ===== Immeuble : en-tête centré et aéré, toutes les tailles visibles ===== */
+.imm-tete{flex-direction:column;justify-content:center;text-align:center;gap:14px;margin:clamp(28px,5vw,56px) auto clamp(18px,3vw,30px)}
+.imm-tete h2{line-height:1.12;width:auto}
+.imm-tete .rappel{justify-content:center}
+@media (max-width:700px){
+  .imm-tete{gap:12px;margin:28px auto 18px}
+  .imm-tete h2{font-size:28px;width:auto}
+  /* Les six choix tiennent sur une ligne, sans défilement caché : libellé, puis nombre de libres */
+  .filtres{position:static;transform:none;left:auto;max-width:none;width:100%;margin:0 0 10px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;padding:4px;border-radius:18px;overflow:visible;-webkit-mask:none;mask:none}
+  .filtre{flex-direction:column;justify-content:center;gap:3px;padding:8px 2px;border-radius:14px;font-size:12.5px;line-height:1.1;min-height:52px;text-align:center}
+  .filtre .nb{font-size:10.5px;padding:1px 6px;min-width:0}
+}
+@media (max-width:700px){.scene-zone{padding-top:0}.scene-zone .filtres{position:relative;z-index:6}}
+/* Filtres du plan (ordinateur) : largeur réelle, toutes les tailles visibles */
+@media (min-width:701px){.filtres{width:max-content;max-width:calc(100% - 20px)}}
+/* Barre de l'accueil : lieu + pastille des boxes libres */
+.puce-libres{display:inline-flex;align-items:center;gap:7px;margin-left:6px;padding:6px 12px 6px 10px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);font-size:13px;white-space:nowrap}
+.puce-libres b{font-weight:600}
+@media (max-width:700px){.puce-libres{padding:5px 9px 5px 8px;font-size:11.5px;margin-left:2px}.b-lieu small{display:none}}
+@media (max-width:700px){.b-lieu .lieu-ic{display:none}.b-lieu{flex-direction:column;align-items:flex-end;gap:4px;text-align:right}.puce-libres{margin:0}.b-lieu b{font-size:14px}}
+@media (max-width:560px){.tarifs-bas{bottom:104px}.hero{padding-bottom:196px}}
