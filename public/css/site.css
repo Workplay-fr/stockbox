@@ -713,3 +713,21 @@ dialog.fen::backdrop{background:rgba(5,22,17,.45);backdrop-filter:blur(8px)}
 .b-note{border-right:0!important;padding-right:0!important}
 @media (min-width:901px){.barre{width:fit-content;min-width:min(560px,calc(100vw - 40px));gap:48px;padding:12px 26px}}
 @media (max-width:700px){.reassure .sep-atlas{display:none}.reassure .hero-atlas{flex-basis:100%;justify-content:center}}
+/* ===== Mobile : en-tête de l'immeuble aéré ===== */
+@media (max-width:700px){
+  .imm-tete{gap:10px;margin-bottom:12px}
+  .imm-tete .rappel .puce:nth-child(2){display:none}
+  .imm-tete .rappel .puce{padding:6px 12px;font-size:13px}
+  /* Étages : une barre segmentée, du rez-de-chaussée au 2e, avec le nombre de libres en clair */
+  .ascenseur{justify-content:stretch;gap:4px;padding:4px;border-radius:18px;background:#fff;border:1px solid var(--ligne);margin-bottom:10px}
+  .afficheur{display:none}
+  .bouton-etage{flex:1;width:auto;height:46px;border-radius:14px;border:0;background:transparent;font-size:15px;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:none!important}
+  .bouton-etage:hover{transform:none}
+  .bouton-etage[aria-pressed=true]{background:var(--em);color:#fff}
+  .bouton-etage small{position:static;min-width:0;height:auto;padding:2px 7px;font:600 11.5px/1.4 var(--f);background:rgba(15,92,69,.1);color:var(--em)}
+  .bouton-etage[aria-pressed=true] small{background:rgba(255,255,255,.2);color:#fff}
+  .bouton-etage[data-n="0"]{order:1}.bouton-etage[data-n="1"]{order:2}.bouton-etage[data-n="2"]{order:3}.bouton-etage.tout{order:4;flex:.8;font-size:13px}
+  /* Filtres de taille : plus d'air entre les pastilles */
+  .filtres{gap:6px;padding:5px}
+  .filtre{padding:8px 12px;font-size:13.5px}
+}

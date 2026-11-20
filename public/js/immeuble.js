@@ -1,6 +1,6 @@
 // Étape 3 : l'immeuble en grand. Pile des trois niveaux, ascenseur pour changer d'étage, zoom et déplacement dans l'étage,
 // boxes allumés selon leur état réel dans Nexudus, box conseillé mis en avant.
-import { $, $$, el, NS, G, esc, eur, S, NOMS, COURT, TAILLES, LIBELLE, IDEAL, boxes, libres, libresTotal, prix, volumeTaille, preavis, boxParId, boxConseille, reduit, nomBox } from "./commun.js?v=20261119214746";
+import { $, $$, el, NS, G, esc, eur, S, NOMS, COURT, TAILLES, LIBELLE, IDEAL, boxes, libres, libresTotal, prix, volumeTaille, preavis, boxParId, boxConseille, reduit, nomBox } from "./commun.js?v=20261120064656";
 
 let zone, scene, pileIn, bulle, onReserver = () => {};
 const V = { mode: "pile", etage: null, z: 1, x: 0, y: 0 };
@@ -236,7 +236,7 @@ function fiche(anime) {
     $("#btn-autre").onclick = () => { S.choix = null; recentrer(); peindre(); fiche(true); };
   } else if (V.mode === "etage") {
     const n = V.etage;
-    f.innerHTML = `<div class="vide"><b>${NOMS[n]}</b>${libres(n, S.filtre)} boxes ${S.filtre ? LIBELLE[S.filtre] : ""} libres sur cet étage. Touchez un box vert pour le choisir. Faites défiler ou pincez pour zoomer.</div>`;
+    f.innerHTML = `<div class="vide"><b>${NOMS[n]}</b>${libres(n, S.filtre)} boxes ${S.filtre ? LIBELLE[S.filtre] : ""} libres sur cet étage. Touchez un box vert pour le choisir. Zoomez avec deux doigts.</div>`;
   } else {
     f.innerHTML = `<div class="vide"><b>${libresTotal(S.filtre)} boxes ${S.filtre ? "de " + LIBELLE[S.filtre] + " " : ""}libres.</b>Choisissez un étage dans l'immeuble ou avec l'ascenseur.</div>`;
   }
