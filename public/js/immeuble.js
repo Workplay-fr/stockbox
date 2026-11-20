@@ -1,6 +1,6 @@
 // Étape 3 : l'immeuble en grand. Pile des trois niveaux, ascenseur pour changer d'étage, zoom et déplacement dans l'étage,
 // boxes allumés selon leur état réel dans Nexudus, box conseillé mis en avant.
-import { $, $$, el, NS, G, esc, eur, S, NOMS, COURT, TAILLES, LIBELLE, IDEAL, boxes, libres, libresTotal, prix, volumeTaille, preavis, boxParId, boxConseille, reduit, nomBox } from "./commun.js?v=20261120144227";
+import { $, $$, el, NS, G, esc, eur, S, NOMS, COURT, TAILLES, LIBELLE, IDEAL, boxes, libres, libresTotal, prix, volumeTaille, preavis, boxParId, boxConseille, reduit, nomBox } from "./commun.js?v=20261120145116";
 
 let zone, scene, pileIn, bulle, onReserver = () => {};
 const V = { mode: "pile", etage: null, z: 1, x: 0, y: 0 };
@@ -34,8 +34,11 @@ export function initImmeuble(reserver) {
 function mesurer() {
   const W = zone.clientWidth, H = zone.clientHeight - 52;
   const lw = Math.min(W * 1.04, H / .9 * 1536 / 1024), lh = lw * 1024 / 1536;
-  const sp = Math.min(.92, (H * .98) / (lh * 1.42), W / lw);
-  geo = { lw, lh, sp, gap: lh * sp * .29 };
+  // Étages nettement séparés : écart de 42 % de la hauteur d'un plan, et l'échelle s'adapte pour que les trois tiennent.
+  // Vue éclatée en escalier : chaque étage est décalé en hauteur ET en largeur, pour qu'aucun ne cache l'autre.
+  const EY = .72, EX = 0;
+  const sp = Math.min(.92, (H * .96) / (lh * (0.95 + 2 * EY)), (W * .98) / (lw * (1 + 2 * EX)));
+  geo = { lw, lh, sp, gap: lh * sp * EY, dx: lw * sp * EX };
   pileIn.style.setProperty("--lw", lw + "px");
   $$(".niveau", pileIn).forEach(n => n.style.setProperty("--lw", lw + "px"));
 }
@@ -46,9 +49,10 @@ function placer(anime = true) {
   for (const niv of $$(".niveau", pileIn)) {
     const n = Number(niv.dataset.n);
     let y, s;
-    if (V.mode === "pile") { y = (1 - n) * geo.gap; s = geo.sp; }
+    let x = 0;
+    if (V.mode === "pile") { y = (1 - n) * geo.gap; x = (1 - n) * geo.dx; s = geo.sp; }
     else { const e = Number(V.etage); y = n === e ? 0 : (n > e ? -1 : 1) * geo.lh * .95; s = 1; }
-    niv.style.setProperty("--y", y + "px"); niv.style.setProperty("--s", s); niv.style.setProperty("--sh", s * 1.03);
+    niv.style.setProperty("--y", y + "px"); niv.style.setProperty("--x", x + "px"); niv.style.setProperty("--s", s); niv.style.setProperty("--sh", s * 1.03);
     niv.classList.toggle("actif", V.mode === "etage" && n === Number(V.etage));
     if (!anime) { niv.style.transition = "none"; void niv.offsetWidth; niv.style.transition = ""; }
   }

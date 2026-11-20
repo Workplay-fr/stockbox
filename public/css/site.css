@@ -139,7 +139,7 @@ a{color:inherit}
 .scene{position:absolute;inset:0;transform-origin:50% 50%;will-change:transform}
 .pile{position:absolute;inset:0;perspective:2000px}
 .pile-in{position:absolute;inset:0;transform-style:preserve-3d;transition:transform 1s var(--ease)}
-.niveau{position:absolute;left:50%;top:50%;width:var(--lw);aspect-ratio:1536/1024;transform:translate(-50%,-50%) translateY(var(--y,0px)) scale(var(--s,1));transition:transform 1.1s var(--ease),opacity .8s var(--ease),filter .6s;pointer-events:none}
+.niveau{position:absolute;left:50%;top:50%;width:var(--lw);aspect-ratio:1536/1024;transform:translate(-50%,-50%) translate(var(--x,0px),var(--y,0px)) scale(var(--s,1));transition:transform 1.1s var(--ease),opacity .8s var(--ease),filter .6s;pointer-events:none}
 .niveau img{position:absolute;inset:0;width:100%;height:100%;user-select:none;-webkit-user-drag:none;filter:drop-shadow(0 34px 34px rgba(19,36,30,.18))}
 .niveau svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .niveau[data-n="2"]{z-index:3}.niveau[data-n="1"]{z-index:2}.niveau[data-n="0"]{z-index:1}
@@ -754,7 +754,7 @@ dialog.fen::backdrop{background:rgba(5,22,17,.45);backdrop-filter:blur(8px)}
 @media (max-width:700px){.lieu-ic{width:32px;height:32px}.b-lieu small{font-size:11.5px}}
 @media (max-width:700px){.b-lieu .rue{display:none}.b-lieu{gap:9px}}
 /* ===== Immeuble : en-tête centré et aéré, toutes les tailles visibles ===== */
-.imm-tete{flex-direction:column;justify-content:center;text-align:center;gap:14px;margin:clamp(28px,5vw,56px) auto clamp(18px,3vw,30px)}
+.imm-tete{flex-direction:column;justify-content:center;text-align:center;gap:12px;margin:clamp(24px,3.5vw,44px) auto clamp(12px,2vw,20px)}
 .imm-tete h2{line-height:1.12;width:auto}
 .imm-tete .rappel{justify-content:center}
 @media (max-width:700px){
@@ -824,3 +824,4 @@ dialog.fen::backdrop{background:rgba(5,22,17,.45);backdrop-filter:blur(8px)}
   .carte-etages{padding:14px 10px}.ce-ligne{grid-template-columns:34px minmax(0,1fr) 44px;gap:8px;padding:6px}.ce-cases i{width:7px;height:7px}
   .journal{padding:12px 14px;font-size:11.5px}.journal li{gap:9px}.journal time{min-width:0}.journal b{min-width:0}.journal li em{display:none}
 }
+.vue-pile .etiq{left:auto;right:96%;transform:scale(calc(1 / var(--s,1)));transform-origin:right center;white-space:nowrap}
