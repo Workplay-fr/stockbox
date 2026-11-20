@@ -735,3 +735,21 @@ dialog.fen::backdrop{background:rgba(5,22,17,.45);backdrop-filter:blur(8px)}
 .connexion{width:40px;height:40px;padding:0!important;gap:0;border-radius:50%;display:inline-grid;place-items:center;flex:none}
 .connexion svg{width:18px;height:18px}
 @media (max-width:700px){.connexion{width:38px;height:38px}}
+/* Pastille du haut : « 108 boxes libres », l'adresse se déplie au clic */
+.direct{font:inherit;font-size:14px;color:#fff;cursor:pointer;gap:9px;transition:background .3s,border-color .3s}
+.direct:hover{background:rgba(255,255,255,.22)}
+.direct:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.direct .ou{display:grid!important;grid-template-columns:0fr;opacity:0;transition:grid-template-columns .45s var(--ease),opacity .3s,margin .45s var(--ease);margin-left:-9px;white-space:nowrap}
+.direct .ou > span{overflow:hidden;color:rgba(255,255,255,.8)}
+.direct .ou > span::before{content:"· ";}
+.direct[aria-expanded=true] .ou{grid-template-columns:1fr;opacity:1;margin-left:0}
+@media (max-width:560px){.direct{display:flex!important;font-size:13px;padding:8px 12px 8px 10px;position:relative}.haut-d{gap:8px}.direct .ou{position:absolute;top:calc(100% + 8px);right:0;margin:0;padding:8px 12px;border-radius:14px;background:rgba(8,32,26,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.2);grid-template-columns:1fr;transform:translateY(-4px);pointer-events:none;transition:opacity .3s,transform .3s var(--ease)}.direct[aria-expanded=true] .ou{transform:none}.direct .ou > span::before{content:""}}
+@media (max-width:560px){.direct .ou{display:block!important;width:max-content;max-width:calc(100vw - 40px)}.direct .ou > span{overflow:visible}}
+/* Barre de l'accueil : la note, puis le lieu */
+.direct{cursor:default}.direct:hover{background:rgba(255,255,255,.14)}
+.b-lieu{display:flex;align-items:center;gap:12px}
+.lieu-ic{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:var(--tg);flex:none}
+.b-lieu b{display:block;font-size:15px}
+.b-lieu small{display:block;font-size:12.5px;color:rgba(255,255,255,.66);margin-top:2px}
+@media (max-width:700px){.lieu-ic{width:32px;height:32px}.b-lieu small{font-size:11.5px}}
+@media (max-width:700px){.b-lieu .rue{display:none}.b-lieu{gap:9px}}
