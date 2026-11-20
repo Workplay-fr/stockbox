@@ -1,6 +1,6 @@
 // Étape 3 : l'immeuble en grand. Pile des trois niveaux, ascenseur pour changer d'étage, zoom et déplacement dans l'étage,
 // boxes allumés selon leur état réel dans Nexudus, box conseillé mis en avant.
-import { $, $$, el, NS, G, esc, eur, S, NOMS, COURT, TAILLES, LIBELLE, IDEAL, boxes, libres, libresTotal, prix, volumeTaille, preavis, boxParId, boxConseille, reduit, nomBox } from "./commun.js?v=20261120145116";
+import { $, $$, el, NS, G, esc, eur, S, NOMS, COURT, TAILLES, LIBELLE, IDEAL, boxes, libres, libresTotal, prix, volumeTaille, preavis, boxParId, boxConseille, reduit, nomBox } from "./commun.js?v=20261120145915";
 
 let zone, scene, pileIn, bulle, onReserver = () => {};
 const V = { mode: "pile", etage: null, z: 1, x: 0, y: 0 };
@@ -89,10 +89,28 @@ function peindre() {
   filtres(); ascenseur(); prisme();
 }
 
+// Choix de la taille : une seule fonction, utilisée par la carte de droite (ordinateur) et le menu (mobile).
+export function filtrer(t) {
+  S.filtre = t; if (S.choix && t && S.choix.taille !== t) S.choix = null; S.reco = t ? boxConseille(t) : null;
+  peindre(); fiche(); vague();
+}
+// Liste des tailles : nom, prix par mois, nombre de libres.
+function listeTailles() {
+  const li = (t, nom, px, n) => `<li><button type="button" class="t-opt" data-t="${t ?? ""}" aria-pressed="${String(S.filtre === t)}"><span class="t-nom">${nom}</span><span class="t-prix">${px}</span><span class="t-nb">${n}</span></button></li>`;
+  return `<ul class="tailles-liste" role="list">${li(null, "Toutes les tailles", "", libresTotal(null))}${TAILLES.map(t => li(t, t === "C" ? "Casier" : LIBELLE[t], eur(prix(t)), libresTotal(t))).join("")}</ul>`;
+}
+function lierTailles(racine, apres) {
+  $$(".t-opt", racine).forEach(b => (b.onclick = () => { filtrer(b.dataset.t || null); apres && apres(); }));
+}
+// Mobile : un menu déroulant à côté de Saint-Ouen.
 function filtres() {
-  const c = $("#filtres"); c.innerHTML = "";
-  const mk = (t, txt) => { const b = el("button", { class: "filtre", type: "button", "aria-pressed": String(S.filtre === t) }, `${txt}${t ? `<span class="nb">${libresTotal(t)}</span>` : ""}`); b.onclick = () => { S.filtre = t; if (S.choix && t && S.choix.taille !== t) S.choix = null; S.reco = t ? boxConseille(t) : null; peindre(); fiche(); vague(); }; c.append(b); };
-  mk(null, "Toutes"); for (const t of TAILLES) mk(t, LIBELLE[t]);
+  const m = $("#menu-tailles"); if (!m) return;
+  const ouvert = m.classList.contains("ouvert");
+  m.innerHTML = `<button type="button" class="mt-btn" aria-expanded="${ouvert}" aria-haspopup="true">${S.filtre ? (S.filtre === "C" ? "Casier" : LIBELLE[S.filtre]) + " · " + eur(prix(S.filtre)) : "Toutes les tailles"}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="mt-pop">${listeTailles()}</div>`;
+  const ferme = () => { m.classList.remove("ouvert"); $(".mt-btn", m).setAttribute("aria-expanded", "false"); };
+  $(".mt-btn", m).onclick = e => { e.stopPropagation(); const o = !m.classList.contains("ouvert"); m.classList.toggle("ouvert", o); $(".mt-btn", m).setAttribute("aria-expanded", String(o)); };
+  lierTailles(m, ferme);
+  if (!m.dataset.lie) { m.dataset.lie = "1"; document.addEventListener("click", e => { if (!m.contains(e.target)) { m.classList.remove("ouvert"); const b = $(".mt-btn", m); b && b.setAttribute("aria-expanded", "false"); } }); }
 }
 
 let afficheVal = null;
@@ -238,11 +256,14 @@ function fiche(anime) {
       <button class="lien autre" type="button" id="btn-autre">Choisir un autre box</button>`;
     $("#btn-resa").onclick = () => onReserver(S.choix);
     $("#btn-autre").onclick = () => { S.choix = null; recentrer(); peindre(); fiche(true); };
-  } else if (V.mode === "etage") {
-    const n = V.etage;
-    f.innerHTML = `<div class="vide"><b>${NOMS[n]}</b>${libres(n, S.filtre)} boxes ${S.filtre ? LIBELLE[S.filtre] : ""} libres sur cet étage. Touchez un box vert pour le choisir. Zoomez avec deux doigts.</div>`;
   } else {
-    f.innerHTML = `<div class="vide"><b>${libresTotal(S.filtre)} boxes ${S.filtre ? "de " + LIBELLE[S.filtre] + " " : ""}libres.</b>Choisissez un étage dans l'immeuble ou avec l'ascenseur.</div>`;
+    const n = V.mode === "etage" ? V.etage : null;
+    const tete = n !== null
+      ? `<b>${NOMS[n]}</b>${libres(n, S.filtre)} boxes ${S.filtre ? (S.filtre === "C" ? "casiers " : LIBELLE[S.filtre] + " ") : ""}libres sur cet étage. Touchez un box vert pour le choisir.`
+      : `<b>${libresTotal(S.filtre)} boxes ${S.filtre ? "de " + LIBELLE[S.filtre] + " " : ""}libres.</b>Choisissez une taille, puis un étage.`;
+    f.innerHTML = `<div class="vide">${tete}</div>${listeTailles()}<button class="lien simu-lien" type="button" id="vers-simu">Je ne sais pas quelle taille choisir</button>`;
+    lierTailles(f);
+    $("#vers-simu").onclick = () => { const z = $("#tailles-bloc"); z && z.scrollIntoView({ behavior: reduit ? "auto" : "smooth" }); const s = $("#simu"); if (s && s.hidden) { const bt = document.querySelector("[aria-controls='simu'], #simu-ouvrir, .simu-ouvrir"); bt ? bt.click() : (s.hidden = false); } };
   }
 }
 export function rafraichir() { peindre(); fiche(); }
