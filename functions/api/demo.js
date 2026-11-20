@@ -52,7 +52,16 @@ export async function onRequestPost({ request, env }) {
       const tous = Object.entries(c.etages).flatMap(([n, l]) => l.map(b => ({ ...b, n })));
       const rang = {}; const candidats = tous.filter(b => { const k = b.n + b.taille; rang[k] = (rang[k] || 0) + 1; return rang[k] % 2 === 0 && b.libre; });
       const aFaire = candidats.slice(0, Math.max(0, Math.min(PAR_APPEL, CIBLE - existants.length)));
-      const faits = [], renommes = [];
+      const faits = [], renommes = [], sansFacture = [];
+      // Clients fictifs : pas de traitement automatique des factures (5 par appel).
+      try {
+        const aCouper = (await nx(env, "GET", `/spaces/coworkers?Coworker_InvoicingBusiness=${CFG.business}&Coworker_DoNotProcessInvoicesAutomatically=false&size=25`)).Records || [];
+        for (const c of aCouper.filter(c => /^stockbox\.demo\+/i.test(c.Email || "")).slice(0, 5)) {
+          const fiche = await nx(env, "GET", `/spaces/coworkers/${c.Id}`);
+          await nx(env, "PUT", "/spaces/coworkers", { ...fiche, DoNotProcessInvoicesAutomatically: true });
+          sansFacture.push(c.FullName);
+        }
+      } catch (e) { console.error("Facturation démo :", e.message); }
       const pris = new Set();
       const parClient = new Map(); for (const ct of tousDemo) if (ct.CoworkerId && !parClient.has(ct.CoworkerId)) parClient.set(ct.CoworkerId, ct);
       // Doublons laissés par les premiers passages : renommés proprement (nom et adresse), 4 par appel.
@@ -110,7 +119,7 @@ export async function onRequestPost({ request, env }) {
         faits.push(b.nom);
       }
       oublier();
-      return json(200, { ok: true, faits, renommes, demo: existants.length + faits.length, fini: !renommes.length && (existants.length + faits.length >= CIBLE || !aFaire.length) });
+      return json(200, { ok: true, faits, renommes, sansFacture, demo: existants.length + faits.length, fini: !renommes.length && !sansFacture.length && (existants.length + faits.length >= CIBLE || !aFaire.length) });
     }
 
     if (d.action === "vider") {
