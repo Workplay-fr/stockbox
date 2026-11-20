@@ -731,3 +731,7 @@ dialog.fen::backdrop{background:rgba(5,22,17,.45);backdrop-filter:blur(8px)}
   .filtres{gap:6px;padding:5px}
   .filtre{padding:8px 12px;font-size:13.5px}
 }
+/* Connexion : une simple icône dans un cercle de verre */
+.connexion{width:40px;height:40px;padding:0!important;gap:0;border-radius:50%;display:inline-grid;place-items:center;flex:none}
+.connexion svg{width:18px;height:18px}
+@media (max-width:700px){.connexion{width:38px;height:38px}}
