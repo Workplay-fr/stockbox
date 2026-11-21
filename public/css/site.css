@@ -856,3 +856,34 @@ dialog.fen::backdrop{background:rgba(5,22,17,.45);backdrop-filter:blur(8px)}
   .mt-pop .t-opt{padding:11px 12px;font-size:14.5px}
 }
 @media (max-width:1000px){.mt-pop{left:auto;right:0;transform:translateY(-6px);width:min(290px,calc(100vw - 24px))}.menu-tailles.ouvert .mt-pop{transform:none}}
+
+/* ===== Fenêtre « site de démonstration » ===== */
+.demo-pop{border:0;padding:0;background:transparent;max-width:none;max-height:none;margin:auto;overflow:visible}
+.demo-pop::backdrop{background:rgba(8,24,20,.45);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);animation:dp-fond .3s ease both}
+.demo-pop.sort::backdrop{opacity:0;transition:opacity .25s}
+.dp-in{position:relative;width:min(440px,calc(100vw - 32px));padding:30px 28px 26px;border-radius:26px;background:#fff;color:var(--encre);box-shadow:0 30px 80px rgba(8,24,20,.35);animation:dp-entre .45s var(--ease) both;transition:transform .2s}
+.demo-pop.sort .dp-in{animation:dp-sort .26s ease both}
+.dp-poignee{display:none}
+.dp-x{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;border:0;background:var(--em-clair);color:var(--em);display:grid;place-items:center;cursor:pointer;transition:background .2s,transform .2s}
+.dp-x:hover{background:var(--em);color:#fff;transform:rotate(90deg)}
+.dp-x:focus-visible,.dp-ok:focus-visible{outline:2px solid var(--em);outline-offset:3px}
+.dp-badge{display:inline-block;padding:5px 11px;border-radius:999px;background:rgba(242,140,40,.14);color:#A85A12;font-size:12.5px;font-weight:600}
+.demo-pop h2{margin:14px 0 10px;font:700 26px/1.15 var(--t);letter-spacing:-.02em;padding-right:36px}
+.demo-pop p{margin:0 0 10px;color:var(--gris);font-size:15px;line-height:1.5}
+.dp-contact a{color:var(--em);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.dp-ok{width:100%;margin-top:14px;justify-content:center}
+@keyframes dp-entre{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes dp-sort{to{opacity:0;transform:translateY(16px) scale(.97)}}
+@keyframes dp-fond{from{opacity:0}}
+@media (max-width:700px){
+  .demo-pop{margin:auto 0 0;width:100%}
+  .dp-in{width:100%;border-radius:26px 26px 0 0;padding:22px 22px calc(22px + env(safe-area-inset-bottom));animation-name:dp-monte}
+  .demo-pop.sort .dp-in{animation-name:dp-descend}
+  .dp-poignee{display:block;width:42px;height:5px;border-radius:5px;background:var(--ligne);margin:0 auto 14px}
+  .demo-pop h2{font-size:23px}
+  @keyframes dp-monte{from{transform:translateY(100%)}to{transform:none}}
+  @keyframes dp-descend{to{transform:translateY(100%)}}
+}
+@media (prefers-reduced-motion:reduce){.dp-in,.demo-pop::backdrop{animation:none!important}}
+.dp-ok{background:var(--em);color:#fff;box-shadow:0 10px 26px rgba(15,92,69,.28)}.dp-ok:hover{background:#0b4a37}
+.dp-in:focus{outline:none}

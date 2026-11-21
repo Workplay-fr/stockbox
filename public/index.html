@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
 <link rel="preload" as="image" href="/img/facade.webp" fetchpriority="high">
-<link rel="stylesheet" href="/css/site.css?v=20261120152201">
+<link rel="stylesheet" href="/css/site.css?v=20261121090725">
 </head>
 <body>
 
@@ -192,7 +192,18 @@
   <form id="agent-form"><input id="agent-champ" autocomplete="off" placeholder="Demandez à Atlas…" aria-label="Votre question" maxlength="600"><button class="btn btn-em" type="submit">Envoyer</button></form>
 </section>
 
-<script src="/js/gsap.min.js?v=20261120152201"></script>
-<script type="module" src="/js/app.js?v=20261120152201"></script>
+<dialog class="demo-pop" id="demo-pop" aria-labelledby="demo-pop-titre">
+  <div class="dp-in" tabindex="-1" autofocus>
+    <span class="dp-poignee" aria-hidden="true"></span>
+    <button class="dp-x" type="button" aria-label="Fermer" data-fermer-demo><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <span class="dp-badge">Démonstration</span>
+    <h2 id="demo-pop-titre">Ceci est un site de démonstration.</h2>
+    <p>StockBox est un espace fictif. Les disponibilités, les réservations et les devis sont branchés en direct à Nexudus.</p>
+    <p class="dp-contact">Pour en savoir plus : <a href="mailto:matthias@nexudus.com?subject=D%C3%A9mo%20StockBox">matthias@nexudus.com</a></p>
+    <button class="btn btn-em dp-ok" type="button" data-fermer-demo>Découvrir le site</button>
+  </div>
+</dialog>
+<script src="/js/gsap.min.js?v=20261121090725"></script>
+<script type="module" src="/js/app.js?v=20261121090725"></script>
 </body>
 </html>

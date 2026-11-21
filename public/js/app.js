@@ -1,8 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, boxes, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261120152201";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir, ouvrir as ouvrirEtage } from "./immeuble.js?v=20261120152201";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261120152201";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261120152201";
+import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, boxes, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261121090725";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir, ouvrir as ouvrirEtage } from "./immeuble.js?v=20261121090725";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261121090725";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261121090725";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: "14 passage des Malles, Les Puces", ouvert: true },
@@ -316,3 +316,28 @@ $$(".faq details").forEach(d => {
     }
   });
 });
+
+// ---------------------------------------------------------------- Fenêtre « site de démonstration », une fois par session
+{
+  const d = $("#demo-pop");
+  let vu = false; try { vu = sessionStorage.getItem("sb-demo") === "1"; } catch {}
+  if (d && !vu && d.showModal) {
+    const fermer = () => {
+      if (!d.open || d.classList.contains("sort")) return;
+      try { sessionStorage.setItem("sb-demo", "1"); } catch {}
+      d.classList.add("sort"); setTimeout(() => { d.close(); d.classList.remove("sort"); d.querySelector(".dp-in").style.transform = ""; }, reduit ? 0 : 260);
+    };
+    setTimeout(() => d.showModal(), 600);
+    $$("[data-fermer-demo]", d).forEach(b => (b.onclick = fermer));
+    d.addEventListener("cancel", e => { e.preventDefault(); fermer(); });            // Échap
+    d.addEventListener("click", e => { if (e.target === d) fermer(); });              // clic à côté
+    // Mobile : un glissement vers le bas (ou de côté) ferme la fenêtre.
+    const inn = d.querySelector(".dp-in"); let x0 = null, y0 = null;
+    inn.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+    inn.addEventListener("touchmove", e => { if (y0 === null) return; const dy = e.touches[0].clientY - y0; if (dy > 0) inn.style.transform = `translateY(${dy}px)`; }, { passive: true });
+    inn.addEventListener("touchend", e => {
+      if (y0 === null) return; const t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0; x0 = y0 = null;
+      if (dy > 60 || Math.abs(dx) > 90) fermer(); else inn.style.transform = "";
+    });
+  }
+}
