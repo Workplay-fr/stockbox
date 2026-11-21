@@ -1,8 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, L, EN, LOC, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, boxes, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261121091606";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir, ouvrir as ouvrirEtage } from "./immeuble.js?v=20261121091606";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261121091606";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261121091606";
+import { $, $$, L, EN, LOC, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, boxes, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261121094908";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir, ouvrir as ouvrirEtage } from "./immeuble.js?v=20261121094908";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261121094908";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261121094908";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: L("14 passage des Malles, Les Puces", "14 passage des Malles, flea market"), ouvert: true },
@@ -322,27 +322,92 @@ $$(".faq details").forEach(d => {
   });
 });
 
-// ---------------------------------------------------------------- Fenêtre « site de démonstration », une fois par session
+// ---------------------------------------------------------------- Accueil : une semaine dans la vie d'un centre StockBox avec Nexudus
+// Cinq écrans animés, une fois par visite (relançable depuis le pied de page). Textes en français et en anglais.
 {
   const d = $("#demo-pop");
-  let vu = false; try { vu = sessionStorage.getItem("sb-demo") === "1"; } catch {}
-  if (d && !vu && d.showModal) {
-    const fermer = () => {
-      if (!d.open || d.classList.contains("sort")) return;
-      try { sessionStorage.setItem("sb-demo", "1"); } catch {}
-      d.classList.add("sort"); setTimeout(() => { d.close(); d.classList.remove("sort"); d.querySelector(".dp-in").style.transform = ""; }, reduit ? 0 : 260);
-    };
-    setTimeout(() => d.showModal(), 600);
-    $$("[data-fermer-demo]", d).forEach(b => (b.onclick = fermer));
-    d.addEventListener("cancel", e => { e.preventDefault(); fermer(); });            // Échap
-    d.addEventListener("click", e => { if (e.target === d) fermer(); });              // clic à côté
-    // Mobile : un glissement vers le bas (ou de côté) ferme la fenêtre.
-    const inn = d.querySelector(".dp-in"); let x0 = null, y0 = null;
-    inn.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
-    inn.addEventListener("touchmove", e => { if (y0 === null) return; const dy = e.touches[0].clientY - y0; if (dy > 0) inn.style.transform = `translateY(${dy}px)`; }, { passive: true });
-    inn.addEventListener("touchend", e => {
-      if (y0 === null) return; const t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0; x0 = y0 = null;
-      if (dy > 60 || Math.abs(dx) > 90) fermer(); else inn.style.transform = "";
-    });
+  const MAIL = `mailto:matthias@nexudus.com?subject=${encodeURIComponent(L("Démo StockBox", "StockBox demo"))}`;
+  const ic = p => `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
+  const ECRANS = [
+    { k: L("Bonjour", "Hello"), t: L("Bienvenue sur StockBox.", "Welcome to StockBox."),
+      p: L("Ce centre est fictif, mais tout ce que vous faites ici arrive en direct dans Nexudus, le logiciel qui le gère. Suivez une semaine dans sa vie.", "This centre is fictional, but everything you do here lands live in Nexudus, the software that runs it. Follow a week in its life."),
+      v: `<div class="dv-lien"><span class="dv-logo sb">${ic('<path d="M12 2 21 7v10l-9 5-9-5V7Z" fill="#F28C28"/><path d="M12 2 21 7l-9 5-9-5Z" fill="#FFB061"/>')}<b>StockBox</b></span><span class="dv-flux"><i></i><i></i><i></i></span><span class="dv-logo nx"><b>Nexudus</b></span></div>` },
+    { k: L("Lundi, 21 h", "Monday, 9 pm"), t: L("Un prospect, et personne à l'accueil.", "A prospect, and nobody at the desk."),
+      p: L("Il écrit sur le site ou sur WhatsApp. L'IA de Nexudus lui répond à partir de vos données, lui montre un box libre et prépare le devis. Il l'accepte en ligne : la fiche arrive seule dans votre CRM.", "They message you on the website or WhatsApp. The Nexudus AI answers from your own data, shows them an available unit and prepares the quote. They accept it online, and the record lands in your CRM on its own."),
+      v: `<div class="dv-chat"><p class="q">${L("Bonsoir, il vous reste un 5 m² ?", "Hi, do you still have a 5 m² unit?")}</p><p class="r">${L("Oui, le box 112, près du monte-charge. 139 € par mois. Je vous prépare le devis ?", "Yes, unit 112, near the goods lift. €139 a month. Shall I prepare the quote?")}</p></div><div class="dv-crm"><span>${L("Nouveau", "New")}</span><span>${L("Devis", "Quote")}</span><span>${L("Gagné", "Won")}</span><i class="carte">${L("Devis accepté", "Quote accepted")}</i></div>` },
+    { k: L("Le 1er du mois", "The 1st of the month"), t: L("Les loyers tombent tout seuls.", "Rent comes in on its own."),
+      p: L("Prélèvement SEPA automatique, factures marquées payées, assurance et cadenas facturés avec le loyer. Pour les deux impayés, l'IA a déjà préparé les relances : vous validez d'un clic.", "Automatic SEPA direct debit, invoices marked as paid, insurance and padlocks billed with the rent. For the two unpaid invoices, the AI has already drafted the reminders: approve them in one click."),
+      v: `<div class="dv-loyers"><div class="ligne"><span>${L("Loyers prélevés", "Rent collected")}</span><b data-dv-n>0</b></div><div class="dv-jauge"><i></i></div><ul><li>${L("Factures envoyées", "Invoices sent")}</li><li>${L("Paiements rapprochés", "Payments reconciled")}</li><li class="att">${L("2 relances à valider", "2 reminders to approve")}</li></ul></div>` },
+    { k: L("Mercredi, 7 h", "Wednesday, 7 am"), t: L("Les portes s'ouvrent sans clé.", "Doors open without keys."),
+      p: L("Le téléphone du client ouvre le portail et son couloir : l'accès suit le contrat. Celui qui a résilié vendredi n'entre plus, sans que personne n'y touche. Une question ? Il ouvre une demande dans son espace, et l'IA répond depuis votre FAQ.", "The customer's phone opens the gate and their corridor: access follows the contract. Whoever cancelled last Friday can no longer get in, without anyone touching anything. A question? They open a request in their account, and the AI answers from your FAQ."),
+      n: L("Compatible Salto KS, Kisi, Brivo, Paxton, Unifi Access et une quinzaine d'autres serrures connectées.", "Works with Salto KS, Kisi, Brivo, Paxton, Unifi Access and around fifteen other smart access systems."),
+      v: `<div class="dv-acces"><div class="porte"><span class="voyant"></span></div><div class="tel">${ic('<rect x="7" y="2" width="10" height="20" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 18h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>')}</div><div class="badges"><span class="ok">${L("Accès ouvert", "Access granted")}</span><span class="non">${L("Contrat résilié", "Contract ended")}</span><span class="ticket">${L("Demande résolue", "Request resolved")}</span></div></div>` },
+    { k: L("Vendredi", "Friday"), t: L("Tout votre centre sur un écran.", "Your whole centre on one screen."),
+      p: L("Occupation, loyers, clients, site par site. Les chiffres ci-dessous sont ceux de cette démo, lus à l'instant dans Nexudus.", "Occupancy, rent, customers, site by site. The figures below are this demo's, read from Nexudus just now."),
+      v: `<div class="dv-kpi"><div><b data-dv-k="taux">0</b><span>${L("occupation", "occupancy")}</span><i><s data-dv-g="taux"></s></i></div><div><b data-dv-k="loyers">0</b><span>${L("loyers par mois", "monthly rent")}</span><i><s data-dv-g="loyers"></s></i></div><div><b data-dv-k="loues">0</b><span>${L("boxes loués", "units rented")}</span><i><s data-dv-g="loues"></s></i></div></div>` },
+  ];
+  d.innerHTML = `<div class="dp-in" tabindex="-1" autofocus>
+    <span class="dp-poignee" aria-hidden="true"></span>
+    <div class="dp-haut"><span class="dp-badge">${L("Démonstration", "Demo")}</span><button class="dp-passer" type="button" data-fermer-demo>${L("Passer", "Skip")}</button><button class="dp-x" type="button" aria-label="${L("Fermer", "Close")}" data-fermer-demo>${ic('<path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>')}</button></div>
+    <div class="dp-ecrans">${ECRANS.map((e, i) => `<section class="dp-ecran" data-i="${i}" ${i ? 'aria-hidden="true"' : ""}><div class="dp-vis" aria-hidden="true">${e.v}</div><p class="dp-k">${e.k}</p><h2 id="dp-titre-${i}">${e.t}</h2><p class="dp-p">${e.p}</p>${e.n ? `<p class="dp-n">${e.n}</p>` : ""}</section>`).join("")}</div>
+    <div class="dp-bas"><div class="dp-points" role="tablist" aria-label="${L("Étapes", "Steps")}">${ECRANS.map((_, i) => `<button type="button" role="tab" aria-label="${L("Écran", "Screen")} ${i + 1}" data-aller="${i}"></button>`).join("")}</div>
+      <div class="dp-actions"><a class="dp-mail" href="${MAIL}">${L("Parler à Matthias", "Talk to Matthias")}</a><button class="btn dp-ok" type="button" id="dp-suite">${L("Suivant", "Next")}</button></div></div>
+  </div>`;
+  const inn = $(".dp-in", d), ecrans = $$(".dp-ecran", d), points = $$(".dp-points button", d), suite = $("#dp-suite");
+  let i = 0;
+  // Chiffres réels de la démo pour le dernier écran.
+  function chiffres() {
+    const K = compteurs(), tous = ["0", "1", "2"].flatMap(boxes);
+    const loyers = tous.filter(b => !b.libre).reduce((t, b) => t + prix(b.taille), 0);
+    const val = { taux: K.total ? Math.round(K.loues / K.total * 100) : 0, loyers, loues: K.loues };
+    const fmt = { taux: v => v + L(" %", "%"), loyers: v => eur(Math.round(v)), loues: v => String(Math.round(v)) };
+    const part = { taux: val.taux / 100, loyers: Math.min(1, loyers / Math.max(1, tous.reduce((t, b) => t + prix(b.taille), 0))), loues: K.total ? K.loues / K.total : 0 };
+    for (const k of Object.keys(val)) {
+      const b = $(`[data-dv-k="${k}"]`, d), g = $(`[data-dv-g="${k}"]`, d), o = { v: 0 };
+      if (reduit) { b.textContent = fmt[k](val[k]); g.style.transform = `scaleX(${part[k]})`; continue; }
+      G.to(o, { v: val[k], duration: 1.4, ease: "power2.out", delay: .2, onUpdate: () => (b.textContent = fmt[k](o.v)) });
+      g.style.transform = "scaleX(0)"; requestAnimationFrame(() => requestAnimationFrame(() => (g.style.transform = `scaleX(${part[k]})`)));
+    }
   }
+  function loyersEcran() {
+    const n = $("[data-dv-n]", d), cible = Math.max(1, compteurs().loues), o = { v: 0 };
+    if (reduit) { n.textContent = cible; return; }
+    G.to(o, { v: cible, duration: 1.6, ease: "power2.out", delay: .3, onUpdate: () => (n.textContent = Math.round(o.v)) });
+  }
+  function montrer(n) {
+    i = Math.max(0, Math.min(ECRANS.length - 1, n));
+    ecrans.forEach((e, k) => { e.classList.toggle("on", k === i); e.classList.toggle("avant", k < i); e.setAttribute("aria-hidden", String(k !== i)); });
+    points.forEach((p, k) => p.setAttribute("aria-selected", String(k === i)));
+    d.setAttribute("aria-labelledby", `dp-titre-${i}`);
+    const fin = i === ECRANS.length - 1;
+    suite.textContent = fin ? L("Découvrir le site", "Explore the site") : L("Suivant", "Next");
+    $(".dp-passer", d).hidden = fin;
+    if (i === 2) loyersEcran();
+    if (fin) chiffres();
+  }
+  const fermer = () => {
+    if (!d.open || d.classList.contains("sort")) return;
+    try { sessionStorage.setItem("sb-demo", "1"); } catch {}
+    d.classList.add("sort"); setTimeout(() => { d.close(); d.classList.remove("sort"); inn.style.transform = ""; }, reduit ? 0 : 260);
+  };
+  const ouvrirAccueil = () => { if (d.open) return; montrer(0); d.showModal(); };
+  suite.onclick = () => (i === ECRANS.length - 1 ? fermer() : montrer(i + 1));
+  points.forEach(p => (p.onclick = () => montrer(Number(p.dataset.aller))));
+  $$("[data-fermer-demo]", d).forEach(b => (b.onclick = fermer));
+  $$("[data-accueil]").forEach(b => (b.onclick = ouvrirAccueil));
+  d.addEventListener("cancel", e => { e.preventDefault(); fermer(); });
+  d.addEventListener("click", e => { if (e.target === d) fermer(); });
+  d.addEventListener("keydown", e => { if (e.key === "ArrowRight") montrer(i + 1); if (e.key === "ArrowLeft") montrer(i - 1); });
+  // Mobile : glisser à gauche ou à droite pour changer d'écran, vers le bas pour fermer.
+  let x0 = null, y0 = null;
+  inn.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  inn.addEventListener("touchmove", e => { if (y0 === null) return; const dy = e.touches[0].clientY - y0, dx = e.touches[0].clientX - x0; if (dy > 0 && dy > Math.abs(dx)) inn.style.transform = `translateY(${dy}px)`; }, { passive: true });
+  inn.addEventListener("touchend", e => {
+    if (y0 === null) return; const t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0; x0 = y0 = null;
+    if (dy > 70 && dy > Math.abs(dx)) return fermer();
+    inn.style.transform = "";
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) montrer(i + (dx < 0 ? 1 : -1));
+  });
+  let vu = false; try { vu = sessionStorage.getItem("sb-demo") === "1"; } catch {}
+  if (d.showModal && !vu) setTimeout(ouvrirAccueil, 600);
 }

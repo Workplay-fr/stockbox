@@ -110,8 +110,8 @@ T = [
      '<summary>How do I cancel?</summary><p>From your account or at reception, giving <span data-preavis>15</span> days\' notice before the end of the month.</p>'),
     # Pied de page
     ('<p class="grand">Votre box vous attend.</p>', '<p class="grand">Your unit is waiting.</p>'),
-    ("<p class=\"note\">StockBox est un centre de self-stockage imaginaire, créé pour une démonstration. Disponibilités, réservations et contrats sont gérés dans <a href=\"https://nexudus.com\" target=\"_blank\" rel=\"noopener\">Nexudus</a> ; le paiement est simulé. <a href=\"/deconnexion\">Quitter la démo</a></p>",
-     '<p class="note">StockBox is an imaginary self-storage centre, built for a demo. Availability, bookings and contracts are managed in <a href="https://nexudus.com" target="_blank" rel="noopener">Nexudus</a>; payment is simulated. <a href="/deconnexion">Leave the demo</a></p>'),
+    ("<p class=\"note\">StockBox est un centre de self-stockage imaginaire, créé pour une démonstration. Disponibilités, réservations et contrats sont gérés dans <a href=\"https://nexudus.com\" target=\"_blank\" rel=\"noopener\">Nexudus</a> ; le paiement est simulé. <button class=\"lien-note\" type=\"button\" data-accueil>Comment ça marche</button> · <a href=\"/deconnexion\">Quitter la démo</a></p>",
+     '<p class="note">StockBox is an imaginary self-storage centre, built for a demo. Availability, bookings and contracts are managed in <a href="https://nexudus.com" target="_blank" rel="noopener">Nexudus</a>; payment is simulated. <button class="lien-note" type="button" data-accueil>How it works</button> · <a href="/deconnexion">Leave the demo</a></p>'),
     # Barre du bas
     ('<b data-libres>Boxes libres</b> à Saint-Ouen</span>', '<b data-libres>Units available</b> in Saint-Ouen</span>'),
     ("aria-label=\"Demander à Atlas, l'IA de StockBox\"><svg width=\"15\"", 'aria-label="Ask Atlas, the StockBox AI"><svg width="15"'),
@@ -140,15 +140,6 @@ T = [
      '<button type="button">I\'m moving out of a one-bedroom flat</button><button type="button">I want a quote for my business</button><button type="button">What can I store?</button><button type="button">Can I come on Sundays?</button>'),
     ('placeholder="Demandez à Atlas…" aria-label="Votre question" maxlength="600"><button class="btn btn-em" type="submit">Envoyer</button>',
      'placeholder="Ask Atlas…" aria-label="Your question" maxlength="600"><button class="btn btn-em" type="submit">Send</button>'),
-    # Fenêtre de démonstration
-    ('<button class="dp-x" type="button" aria-label="Fermer" data-fermer-demo>', '<button class="dp-x" type="button" aria-label="Close" data-fermer-demo>'),
-    ('<span class="dp-badge">Démonstration</span>', '<span class="dp-badge">Demo</span>'),
-    ('<h2 id="demo-pop-titre">Ceci est un site de démonstration.</h2>', '<h2 id="demo-pop-titre">This is a demo website.</h2>'),
-    ('<p>StockBox est un espace fictif. Les disponibilités, les réservations et les devis sont branchés en direct à Nexudus.</p>',
-     '<p>StockBox is a fictional space. Availability, bookings and quotes are connected live to Nexudus.</p>'),
-    ('<p class="dp-contact">Pour en savoir plus : <a href="mailto:matthias@nexudus.com?subject=D%C3%A9mo%20StockBox">',
-     '<p class="dp-contact">To find out more: <a href="mailto:matthias@nexudus.com?subject=StockBox%20demo">'),
-    ('data-fermer-demo>Découvrir le site</button>', 'data-fermer-demo>Explore the site</button>'),
 ]
 
 en = fr

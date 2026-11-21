@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
 <link rel="preload" as="image" href="/img/facade.webp" fetchpriority="high">
-<link rel="stylesheet" href="/css/site.css?v=20261121091606">
+<link rel="stylesheet" href="/css/site.css?v=20261121094908">
 </head>
 <body>
 
@@ -153,7 +153,7 @@
   <div class="large">
     <p class="grand">Your unit is waiting.</p>
     <button class="cta" type="button" data-ouvrir><span class="cta-txt">Choose my unit</span><span class="cta-rond" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
-    <p class="note">StockBox is an imaginary self-storage centre, built for a demo. Availability, bookings and contracts are managed in <a href="https://nexudus.com" target="_blank" rel="noopener">Nexudus</a>; payment is simulated. <a href="/deconnexion">Leave the demo</a></p>
+    <p class="note">StockBox is an imaginary self-storage centre, built for a demo. Availability, bookings and contracts are managed in <a href="https://nexudus.com" target="_blank" rel="noopener">Nexudus</a>; payment is simulated. <button class="lien-note" type="button" data-accueil>How it works</button> · <a href="/deconnexion">Leave the demo</a></p>
   </div>
 </footer>
 
@@ -193,18 +193,8 @@
   <form id="agent-form"><input id="agent-champ" autocomplete="off" placeholder="Ask Atlas…" aria-label="Your question" maxlength="600"><button class="btn btn-em" type="submit">Send</button></form>
 </section>
 
-<dialog class="demo-pop" id="demo-pop" aria-labelledby="demo-pop-titre">
-  <div class="dp-in" tabindex="-1" autofocus>
-    <span class="dp-poignee" aria-hidden="true"></span>
-    <button class="dp-x" type="button" aria-label="Close" data-fermer-demo><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-    <span class="dp-badge">Demo</span>
-    <h2 id="demo-pop-titre">This is a demo website.</h2>
-    <p>StockBox is a fictional space. Availability, bookings and quotes are connected live to Nexudus.</p>
-    <p class="dp-contact">To find out more: <a href="mailto:matthias@nexudus.com?subject=StockBox%20demo">matthias@nexudus.com</a></p>
-    <button class="btn btn-em dp-ok" type="button" data-fermer-demo>Explore the site</button>
-  </div>
-</dialog>
-<script src="/js/gsap.min.js?v=20261121091606"></script>
-<script type="module" src="/js/app.js?v=20261121091606"></script>
+<dialog class="demo-pop" id="demo-pop" aria-labelledby="dp-titre-0"></dialog>
+<script src="/js/gsap.min.js?v=20261121094908"></script>
+<script type="module" src="/js/app.js?v=20261121094908"></script>
 </body>
 </html>
