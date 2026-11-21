@@ -1,8 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, L, EN, LOC, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, boxes, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261121095426";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir, ouvrir as ouvrirEtage } from "./immeuble.js?v=20261121095426";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261121095426";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261121095426";
+import { $, $$, L, EN, LOC, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, boxes, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261121100644";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir, ouvrir as ouvrirEtage } from "./immeuble.js?v=20261121100644";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261121100644";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261121100644";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: L("14 passage des Malles, Les Puces", "14 passage des Malles, flea market"), ouvert: true },
@@ -326,7 +326,7 @@ $$(".faq details").forEach(d => {
 // Cinq écrans animés, à chaque arrivée sur le site (relançables depuis le pied de page). Textes en français et en anglais.
 {
   const d = $("#demo-pop");
-  const MAIL = `mailto:matthias@nexudus.com?subject=${encodeURIComponent(L("Démo StockBox", "StockBox demo"))}`;
+  const MAIL = `mailto:matthias@nexudus.com?subject=${encodeURIComponent(L("Démo StockBox : être recontacté", "StockBox demo: callback request"))}&body=${encodeURIComponent(L("Bonjour,\n\nJ'ai vu la démo StockBox et j'aimerais être recontacté.\n\nNom :\nSociété :\nTéléphone :\n", "Hello,\n\nI saw the StockBox demo and would like to be contacted.\n\nName:\nCompany:\nPhone:\n"))}`;
   const ic = p => `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
   const ECRANS = [
     { k: L("Bonjour", "Hello"), t: L("Bienvenue sur StockBox.", "Welcome to StockBox."),
@@ -351,7 +351,7 @@ $$(".faq details").forEach(d => {
     <div class="dp-haut"><span class="dp-badge">${L("Démonstration", "Demo")}</span><button class="dp-passer" type="button" data-fermer-demo>${L("Passer", "Skip")}</button><button class="dp-x" type="button" aria-label="${L("Fermer", "Close")}" data-fermer-demo>${ic('<path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>')}</button></div>
     <div class="dp-ecrans">${ECRANS.map((e, i) => `<section class="dp-ecran" data-i="${i}" ${i ? 'aria-hidden="true"' : ""}><div class="dp-vis" aria-hidden="true">${e.v}</div><p class="dp-k">${e.k}</p><h2 id="dp-titre-${i}">${e.t}</h2><p class="dp-p">${e.p}</p>${e.n ? `<p class="dp-n">${e.n}</p>` : ""}</section>`).join("")}</div>
     <div class="dp-bas"><div class="dp-points" role="tablist" aria-label="${L("Étapes", "Steps")}">${ECRANS.map((_, i) => `<button type="button" role="tab" aria-label="${L("Écran", "Screen")} ${i + 1}" data-aller="${i}"></button>`).join("")}</div>
-      <div class="dp-actions"><a class="dp-mail" href="${MAIL}">${L("Parler à Matthias", "Talk to Matthias")}</a><button class="btn dp-ok" type="button" id="dp-suite">${L("Suivant", "Next")}</button></div></div>
+      <div class="dp-actions"><a class="dp-mail" href="${MAIL}">${L("Être recontacté", "Get a callback")}</a><button class="btn dp-ok" type="button" id="dp-suite">${L("Suivant", "Next")}</button></div></div>
   </div>`;
   const inn = $(".dp-in", d), ecrans = $$(".dp-ecran", d), points = $$(".dp-points button", d), suite = $("#dp-suite");
   let i = 0;

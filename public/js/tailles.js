@@ -1,5 +1,5 @@
 // Comparateur de tailles : le box en 3D à l'échelle, une silhouette de 1,75 m, des cartons dedans ; les infos viennent de Nexudus.
-import { $, el, G, eur, S, L, EN, TAILLES, LIBELLE, EMPRISE, libresTotal, prix, volumeTaille, reduit } from "./commun.js?v=20261121095426";
+import { $, el, G, eur, S, L, EN, TAILLES, LIBELLE, EMPRISE, libresTotal, prix, volumeTaille, reduit } from "./commun.js?v=20261121100644";
 
 const DEDANS = EN ? {
   C: ["Two suitcases", "6 to 8 boxes", "Ski or camping gear"],
