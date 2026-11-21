@@ -1,18 +1,18 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, boxes, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261121090725";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir, ouvrir as ouvrirEtage } from "./immeuble.js?v=20261121090725";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261121090725";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261121090725";
+import { $, $$, L, EN, LOC, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, boxes, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261121091606";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir, ouvrir as ouvrirEtage } from "./immeuble.js?v=20261121091606";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261121091606";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261121091606";
 
 const CENTRES = [
-  { nom: "Saint-Ouen", sous: "14 passage des Malles, Les Puces", ouvert: true },
-  { nom: "Clichy", sous: "Berges de Seine", st: "Complet" },
-  { nom: "Paris 19e", sous: "La Villette", st: "Liste d'attente" },
-  { nom: "Montreuil", sous: "Croix-de-Chavaux", st: "Complet" },
-  { nom: "Issy-les-Moulineaux", sous: "Bords de Seine", st: "Complet" },
-  { nom: "Pantin", sous: "Canal de l'Ourcq", st: "Ouverture en 2027" },
+  { nom: "Saint-Ouen", sous: L("14 passage des Malles, Les Puces", "14 passage des Malles, flea market"), ouvert: true },
+  { nom: "Clichy", sous: L("Berges de Seine", "Seine riverside"), st: L("Complet", "Full") },
+  { nom: L("Paris 19e", "Paris 19th"), sous: "La Villette", st: L("Liste d'attente", "Waiting list") },
+  { nom: "Montreuil", sous: "Croix-de-Chavaux", st: L("Complet", "Full") },
+  { nom: "Issy-les-Moulineaux", sous: L("Bords de Seine", "Seine riverside"), st: L("Complet", "Full") },
+  { nom: "Pantin", sous: L("Canal de l'Ourcq", "Ourcq canal"), st: L("Ouverture en 2027", "Opening in 2027") },
 ];
-const RAPIDE = [["Quelques cartons", "C"], ["Un studio", "5"], ["Un 2 pièces", "10"], ["Un 3 pièces et plus", "20"]];
+const RAPIDE = EN ? [["A few boxes", "C"], ["A studio flat", "5"], ["A one-bedroom flat", "10"], ["Two bedrooms or more", "20"]] : [["Quelques cartons", "C"], ["Un studio", "5"], ["Un 2 pièces", "10"], ["Un 3 pièces et plus", "20"]];
 
 // Défilement doux de la page jusqu'à un élément (une seconde environ).
 const defiler = cible => new Promise(r => {
@@ -26,28 +26,28 @@ const defiler = cible => new Promise(r => {
 let comptes = false;
 function accueil() {
   const K = compteurs();   // une seule source pour tous les chiffres de la page
-  $$("[data-libres]").forEach(e => (e.textContent = `${K.libres} boxes libres`));
+  $$("[data-libres]").forEach(e => (e.textContent = L(`${K.libres} boxes libres`, `${K.libres} units available`)));
   $$("[data-preavis]").forEach(e => (e.textContent = preavis()));
-  $("#tarifs").innerHTML = TAILLES.map(t => `<li><button type="button" class="tarif" data-taille="${t}" aria-label="Voir les ${t === "C" ? "casiers" : "boxes de " + LIBELLE[t]} dans l'immeuble, ${eur(prix(t))} par mois"><b>${t === "C" ? "Casier" : LIBELLE[t]}</b><span>${eur(prix(t))}<small>/mois</small></span></button></li>`).join("");
+  $("#tarifs").innerHTML = TAILLES.map(t => `<li><button type="button" class="tarif" data-taille="${t}" aria-label="${L(`Voir les ${t === "C" ? "casiers" : "boxes de " + LIBELLE[t]} dans l'immeuble, ${eur(prix(t))} par mois`, `See the ${t === "C" ? "lockers" : LIBELLE[t] + " units"} in the building, ${eur(prix(t))} a month`)}"><b>${LIBELLE[t]}</b><span>${eur(prix(t))}<small>${L("/mois", "/mo")}</small></span></button></li>`).join("");
   $$("#tarifs .tarif").forEach(b => (b.onclick = () => montrer(b.dataset.taille)));
   const rec = S.data.activite?.recents || [];
   const cols = ["#0F5C45", "#F28C28", "#3B7A66", "#C9681A", "#13241E"];
   if ($("#visages")) $("#visages").innerHTML = rec.slice(0, 3).map((r, i) => `<span style="background:${cols[i % cols.length]}">${esc((r.prenom || "?")[0])}</span>`).join("");
-  if ($("#preuve-txt")) $("#preuve-txt").textContent = `${K.loues} boxes loués`;
+  if ($("#preuve-txt")) $("#preuve-txt").textContent = L(`${K.loues} boxes loués`, `${K.loues} units rented`);
   // Tableau de bord du bâtiment : trois indicateurs calculés depuis Nexudus
   const act = S.data.activite || {}, der = (act.recents || [])[0];
   const taux = K.total ? Math.round(K.loues / K.total * 100) : 0;
   const anc = act.anciennete;
   const kpis = [
-    [taux, " %", "occupation"],
-    [anc ?? "—", anc === 1 ? " mois" : " mois", "ancienneté moyenne"],
-    [null, der ? ilYa(der.quand) : "—", "dernière réservation"],
+    [taux, L(" %", "%"), L("occupation", "occupancy")],
+    [anc ?? "—", EN ? (anc === 1 ? " month" : " months") : " mois", L("ancienneté moyenne", "average stay so far")],
+    [null, der ? ilYa(der.quand) : "—", L("dernière réservation", "latest booking")],
   ];
   const z = $("#chiffres");
   if (z.children.length === kpis.length) kpis.forEach(([n, u], i) => { const b = z.children[i].querySelector("b"); if (n === null) { b.textContent = u; return; } b.dataset.compte = n; b.dataset.unite = u; if (comptes || typeof n !== "number") b.textContent = n + u; });
   else z.innerHTML = kpis.map(([n, u, t]) => n === null ? `<div><b>${esc(u)}</b><span>${t}</span></div>` : `<div><b ${typeof n === "number" ? `data-compte="${n}" data-unite="${u}"` : ""}>${typeof n === "number" ? (comptes ? n : 0) : n}${u}</b><span>${t}</span></div>`).join("");
   carteEtages(); journal();
-  const sousCta = $("#cta-sous-txt"); if (sousCta) sousCta.textContent = `${K.libres} libres à Saint-Ouen, dès ${eur(Math.min(...TAILLES.map(prix)))} par mois`;
+  const sousCta = $("#cta-sous-txt"); if (sousCta) sousCta.textContent = L(`${K.libres} libres à Saint-Ouen, dès ${eur(Math.min(...TAILLES.map(prix)))} par mois`, `${K.libres} available in Saint-Ouen, from ${eur(Math.min(...TAILLES.map(prix)))} a month`);
   if (document.querySelector(".onglet")) majTailles();
   fil(); dock();
 }
@@ -64,31 +64,36 @@ function fil() {
   if (!z) return;
   if (!rec.length) { z.hidden = true; return; }
   z.hidden = false; let i = 0;
-  const montre = () => { const r = rec[i++ % rec.length], t = $("#fil-txt"); t.classList.add("sort"); setTimeout(() => { t.textContent = `${r.prenom || "Un client"} a réservé le ${nomBox(r.box, true)}, ${ilYa(r.quand)}.`; t.classList.remove("sort"); }, 350); };
+  const montre = () => { const r = rec[i++ % rec.length], t = $("#fil-txt"); t.classList.add("sort"); setTimeout(() => { t.textContent = EN ? `${r.prenom || "A customer"} booked ${nomBox(r.box)}, ${ilYa(r.quand)}.` : `${r.prenom || "Un client"} a réservé le ${nomBox(r.box, true)}, ${ilYa(r.quand)}.`; t.classList.remove("sort"); }, 350); };
   montre(); filT = setInterval(montre, 4500);
 }
 // Mini-carte : un carré par box, étage par étage ; un clic ouvre l'étage dans la 3D.
 function carteEtages() {
   const c = $("#carte-etages"); if (!c) return;
-  const NOMS_E = { "2": "2ᵉ", "1": "1ᵉʳ", "0": "RDC" };
+  const NOMS_E = EN ? { "2": "2nd", "1": "1st", "0": "Ground" } : { "2": "2ᵉ", "1": "1ᵉʳ", "0": "RDC" };
   c.innerHTML = ["2", "1", "0"].map(n => {
     const bx = [...boxes(n)].sort((a, b) => String(a.nom).localeCompare(String(b.nom), "fr", { numeric: true }));
     const l = bx.filter(b => b.libre).length;
-    return `<button type="button" class="ce-ligne" data-n="${n}" aria-label="${NOMS_E[n]} étage : ${l} libres sur ${bx.length}, voir dans l'immeuble"><span class="ce-nom">${NOMS_E[n]}</span><span class="ce-cases">${bx.map(b => `<i class="${b.libre ? "l" : "o"}"></i>`).join("")}</span><span class="ce-nb">${l}<small>/${bx.length}</small></span></button>`;
-  }).join("") + `<p class="ce-leg"><i class="l"></i>Libre <i class="o"></i>Loué</p>`;
+    return `<button type="button" class="ce-ligne" data-n="${n}" aria-label="${L(`${NOMS_E[n]} étage : ${l} libres sur ${bx.length}, voir dans l'immeuble`, `${NOMS_E[n]} floor: ${l} of ${bx.length} available, see in the building`)}"><span class="ce-nom">${NOMS_E[n]}</span><span class="ce-cases">${bx.map(b => `<i class="${b.libre ? "l" : "o"}"></i>`).join("")}</span><span class="ce-nb">${l}<small>/${bx.length}</small></span></button>`;
+  }).join("") + `<p class="ce-leg"><i class="l"></i>${L("Libre", "Available")} <i class="o"></i>${L("Loué", "Rented")}</p>`;
   $$(".ce-ligne", c).forEach(b => (b.onclick = () => { S.filtre = null; cacherResa(); defiler($("#immeuble")).then(() => { entrerImmeuble(null); ouvrirEtage(b.dataset.n); }); }));
 }
 // Journal : les dernières réservations lues dans Nexudus, horodatées.
 function journal() {
   const j = $("#journal"); if (!j) return;
   const rec = (S.data.activite?.recents || []).filter(r => r.box).slice(0, 5);
-  const heure = q => { const d = new Date(q), auj = new Date(); const h = d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }); return d.toDateString() === auj.toDateString() ? h : d.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" }) + " " + h; };
+  const heure = q => { const d = new Date(q), auj = new Date(); const h = d.toLocaleTimeString(LOC, { hour: "2-digit", minute: "2-digit" }); return d.toDateString() === auj.toDateString() ? h : d.toLocaleDateString(LOC, { day: "2-digit", month: "2-digit" }) + " " + h; };
   const tailleDe = nom => { for (const n of ["0", "1", "2"]) { const b = boxes(n).find(x => x.nom === nom); if (b) return b.taille; } return null; };
   j.hidden = !rec.length;
-  j.innerHTML = rec.map(r => { const t = tailleDe(r.box); return `<li><time>${esc(heure(r.quand))}</time><b>${esc(nomBox(r.box))}</b><span>${t && t !== "C" ? esc(LIBELLE[t]) : ""}</span><em>réservé en ligne</em></li>`; }).join("");
+  j.innerHTML = rec.map(r => { const t = tailleDe(r.box); return `<li><time>${esc(heure(r.quand))}</time><b>${esc(nomBox(r.box))}</b><span>${t && t !== "C" ? esc(LIBELLE[t]) : ""}</span><em>${L("réservé en ligne", "booked online")}</em></li>`; }).join("");
 }
 
-const AVIS = [
+const AVIS = EN ? [
+  ["“I booked on Sunday evening and was there on Monday morning with the van.”", "Camille, 10 m² unit"],
+  ["“The goods lift is right in front of my unit. Perfect for my shop stock.”", "Margaux, 5 m² unit"],
+  ["“You choose your unit on the plan, pay, and get your code. Simple.”", "Karim, 2 m² unit"],
+  ["“Clean, well lit, open early in the morning. Exactly what I needed.”", "Thomas, 20 m² unit"],
+] : [
   ["« Box réservé le dimanche soir, j'y étais le lundi matin avec la camionnette. »", "Camille, box de 10 m²"],
   ["« Le monte-charge est juste en face de mon box. Parfait pour le stock de ma boutique. »", "Margaux, box de 5 m²"],
   ["« On choisit son box sur le plan, on paie, et on a son code. Simple. »", "Karim, box de 2 m²"],
@@ -103,11 +108,11 @@ let heroVu = true;
 function dock() {
   const b = S.choix, info = $("#dock-info"), bt = $("#dock-btn");
   if (b && b.libre && !S.apercu) {
-    info.innerHTML = `<span class="choisi"><b>${esc(nomBox(b))}${b.taille === "C" ? "" : ", " + LIBELLE[b.taille]}</b><small>${eur(prix(b.taille))} par mois, sans engagement</small></span>`;
-    bt.textContent = "Réserver"; bt.onclick = () => reserver();
+    info.innerHTML = `<span class="choisi"><b>${esc(nomBox(b))}${b.taille === "C" ? "" : ", " + LIBELLE[b.taille]}</b><small>${L(`${eur(prix(b.taille))} par mois, sans engagement`, `${eur(prix(b.taille))} a month, no commitment`)}</small></span>`;
+    bt.textContent = L("Réserver", "Book"); bt.onclick = () => reserver();
   } else {
-    info.innerHTML = `<span class="point" style="display:inline-block;margin-right:8px;vertical-align:middle"></span><b>${compteurs().libres} boxes libres</b> à Saint-Ouen`;
-    bt.textContent = "Choisir mon box"; bt.onclick = () => ouvrirChoix();
+    info.innerHTML = `<span class="point" style="display:inline-block;margin-right:8px;vertical-align:middle"></span>${L(`<b>${compteurs().libres} boxes libres</b> à Saint-Ouen`, `<b>${compteurs().libres} units available</b> in Saint-Ouen`)}`;
+    bt.textContent = L("Choisir mon box", "Choose my unit"); bt.onclick = () => ouvrirChoix();
   }
   dockEl.classList.toggle("vu", !ctaVu && !immVu && !ctaSocVu && !$("#choix").open && $("#reserver").hidden);
 }
@@ -152,12 +157,12 @@ function remplirChoix() {
   const g = $("#tailles-choix"); g.innerHTML = "";
   for (const t of TAILLES) {
     const [w, d] = EMPRISE[t], n = libresTotal(t);
-    const b = el("button", { class: "tc", type: "button", ...(n ? {} : { disabled: "" }) }, `<span class="emp"><i style="width:${w * 11}px;height:${d * 11}px"></i></span><b>${t === "C" ? "Casier" : LIBELLE[t]}</b><span class="p">${eur(prix(t))}</span><small>${n ? `${n} libres` : "Complet"}</small>`);
+    const b = el("button", { class: "tc", type: "button", ...(n ? {} : { disabled: "" }) }, `<span class="emp"><i style="width:${w * 11}px;height:${d * 11}px"></i></span><b>${LIBELLE[t]}</b><span class="p">${eur(prix(t))}</span><small>${n ? L(`${n} libres`, `${n} available`) : L("Complet", "Full")}</small>`);
     b.onclick = () => choisirTaille(t);
     g.append(b);
   }
   const sp = $("#sais-pas"); sp.innerHTML = "";
-  for (const [txt, t] of RAPIDE) { const b = el("button", { type: "button" }, `${txt} <small>· ${t === "C" ? "casier" : LIBELLE[t]}</small>`); b.onclick = () => choisirTaille(t); sp.append(b); }
+  for (const [txt, t] of RAPIDE) { const b = el("button", { type: "button" }, `${txt} <small>· ${t === "C" ? L("casier", "locker") : LIBELLE[t]}</small>`); b.onclick = () => choisirTaille(t); sp.append(b); }
 }
 
 // Temps de trajet entre l'adresse du visiteur et le centre (API Adresse de data.gouv.fr, estimation à vol d'oiseau corrigée).
@@ -167,16 +172,16 @@ $("#trajet-ouvrir").onclick = () => { const f = $("#trajet-form"), o = f.hidden;
 $("#trajet-form").addEventListener("submit", async e => {
   e.preventDefault();
   const q = $("#trajet-adresse").value.trim(), rep = $("#trajet-rep"); if (q.length < 3) return;
-  rep.textContent = "Calcul en cours…";
+  rep.textContent = L("Calcul en cours…", "Calculating…");
   try {
     const r = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(q)}&limit=1`).then(r => r.json());
     const f = r.features && r.features[0];
-    if (!f) { rep.textContent = "Adresse introuvable. Essayez avec la ville ou le code postal."; return; }
+    if (!f) { rep.textContent = L("Adresse introuvable. Essayez avec la ville ou le code postal.", "Address not found. Try a town or a French postcode."); return; }
     const p = { lat: f.geometry.coordinates[1], lon: f.geometry.coordinates[0] }, d = km(p, CENTRE_SO) * 1.3;
     const voiture = Math.max(5, Math.round(d / 22 * 60 + 4)), velo = Math.round(d / 15 * 60), tc = Math.max(8, Math.round(d / 16 * 60 + 9));
-    rep.innerHTML = `Depuis ${esc(f.properties.city || f.properties.label)} : <b>${voiture} min en voiture</b>${d < 12 ? `, ${velo} min à vélo` : ""}, environ ${tc} min en transports.`;
+    rep.innerHTML = EN ? `From ${esc(f.properties.city || f.properties.label)}: <b>${voiture} min by car</b>${d < 12 ? `, ${velo} min by bike` : ""}, about ${tc} min by public transport.` : `Depuis ${esc(f.properties.city || f.properties.label)} : <b>${voiture} min en voiture</b>${d < 12 ? `, ${velo} min à vélo` : ""}, environ ${tc} min en transports.`;
     G.fromTo(rep, { opacity: 0 }, { opacity: 1, duration: .4 });
-  } catch { rep.textContent = "Le calcul n'est pas disponible pour le moment."; }
+  } catch { rep.textContent = L("Le calcul n'est pas disponible pour le moment.", "Travel time is not available right now."); }
 });
 
 // La fenêtre se ferme, la page descend jusqu'à l'immeuble, les données sont relues et l'immeuble se met en place.
@@ -191,7 +196,7 @@ async function choisirTaille(t) {
 }
 function montrer(t) { S.choix = null; cacherResa(); defiler($("#immeuble")).then(() => { rappel(t); entrerImmeuble(t); }); }
 function rappel(t) {
-  $("#rappel").innerHTML = `<span class="puce"><span class="point" aria-hidden="true"></span>StockBox <b>Saint-Ouen</b></span><span class="puce">Box de <b>${t === "C" ? "casier" : LIBELLE[t]}</b>, ${libresTotal(t)} libres</span><button class="lien" type="button" id="changer">Changer</button>`;
+  $("#rappel").innerHTML = `<span class="puce"><span class="point" aria-hidden="true"></span>StockBox <b>Saint-Ouen</b></span><span class="puce">${EN ? `<b>${LIBELLE[t]}</b> units, ${libresTotal(t)} available` : `Box de <b>${t === "C" ? "casier" : LIBELLE[t]}</b>, ${libresTotal(t)} libres`}</span><button class="lien" type="button" id="changer">${L("Changer", "Change")}</button>`;
   $("#changer").onclick = () => ouvrirChoix("taille");
 }
 
@@ -214,7 +219,7 @@ let memoAg = { devis: null };
 const bulleIA = (txt, qui = "ia") => { const m = el("div", { class: "m " + qui }); m.innerHTML = esc(txt).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>"); filAg.append(m); filAg.scrollTop = filAg.scrollHeight; return m; };
 function ouvrirAgent() {
   agent.classList.remove("ferme"); agent.setAttribute("aria-hidden", "false"); abtn.classList.add("cache"); $("#agent-bulle").hidden = true;
-  if (!filAg.children.length) bulleIA("Bonjour, je suis Atlas. Dites-moi ce que vous voulez stocker : je calcule le volume, je vous montre un box libre dans l'immeuble et je peux vous préparer un devis.");
+  if (!filAg.children.length) bulleIA(L("Bonjour, je suis Atlas. Dites-moi ce que vous voulez stocker : je calcule le volume, je vous montre un box libre dans l'immeuble et je peux vous préparer un devis.", "Hello, I'm Atlas. Tell me what you want to store: I'll work out the volume, show you an available unit in the building and can prepare a quote for you."));
   setTimeout(() => $("#agent-champ").focus(), 200);
 }
 abtn.onclick = ouvrirAgent;
@@ -235,7 +240,7 @@ async function montrerBox(b, resa) {
 function offres(list) {
   const z = el("div", { class: "offres-ag" });
   for (const o of list) {
-    const c = el("div", { class: "offre-ag" }, `<span><b>${esc(nomBox(o.nom))}</b><small>${o.taille === "C" ? "Casier" : LIBELLE[o.taille]}, ${esc(o.etage_nom)}, ${eur(o.prix_mensuel)} par mois</small></span><span class="act"><button class="voir" type="button">Voir</button><button class="resa-ag" type="button">Réserver</button></span>`);
+    const c = el("div", { class: "offre-ag" }, `<span><b>${esc(nomBox(o.nom))}</b><small>${LIBELLE[o.taille]}, ${esc(o.etage_nom)}, ${eur(o.prix_mensuel)} ${L("par mois", "a month")}</small></span><span class="act"><button class="voir" type="button">${L("Voir", "View")}</button><button class="resa-ag" type="button">${L("Réserver", "Book")}</button></span>`);
     const b = () => boxParId(o.id);
     c.querySelector(".voir").onclick = () => b() && montrerBox(b(), false);
     c.querySelector(".resa-ag").onclick = () => b() && montrerBox(b(), true);
@@ -244,7 +249,7 @@ function offres(list) {
   filAg.append(z); filAg.scrollTop = filAg.scrollHeight;
 }
 function carteDevis(d) {
-  const z = el("div", { class: "devis-ag" }, `<small>Devis enregistré</small><b>Box ${esc(d.box)}, ${eur(d.mensuel)} par mois</b><p>Référence ${esc(d.reference)}. Entrée le ${new Date(d.jour + "T12:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}. Vous le recevrez à ${esc(d.email)} après relecture par l'équipe.</p><button type="button">Réserver maintenant en ligne</button>`);
+  const z = el("div", { class: "devis-ag" }, EN ? `<small>Quote saved</small><b>${esc(nomBox(d.box))}, ${eur(d.mensuel)} a month</b><p>Reference ${esc(d.reference)}. Move-in on ${new Date(d.jour + "T12:00:00").toLocaleDateString(LOC, { day: "numeric", month: "long" })}. You will receive it at ${esc(d.email)} once the team has reviewed it.</p><button type="button">Book online now</button>` : `<small>Devis enregistré</small><b>Box ${esc(d.box)}, ${eur(d.mensuel)} par mois</b><p>Référence ${esc(d.reference)}. Entrée le ${new Date(d.jour + "T12:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}. Vous le recevrez à ${esc(d.email)} après relecture par l'équipe.</p><button type="button">Réserver maintenant en ligne</button>`);
   z.querySelector("button").onclick = () => { const b = boxParId(d.id); if (b) montrerBox(b, true); };
   filAg.append(z); filAg.scrollTop = filAg.scrollHeight;
 }
@@ -255,17 +260,17 @@ async function envoyer(txt) {
   bulleIA(txt, "moi"); H.push({ role: "user", content: txt });
   const att = bulleIA("", "ia ecrit"); att.innerHTML = "<i></i><i></i><i></i>";
   try {
-    const d = await fetch("/api/agent", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ historique: H, memo: memoAg }) }).then(r => r.json()).catch(() => ({}));
+    const d = await fetch("/api/agent", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ historique: H, memo: memoAg, langue: EN ? "en" : "fr" }) }).then(r => r.json()).catch(() => ({}));
     att.remove();
-    if (!d.ok) { bulleIA(d.erreur || "L'assistant ne répond pas pour le moment."); H.pop(); }
+    if (!d.ok) { bulleIA(d.erreur || L("L'assistant ne répond pas pour le moment.", "The assistant is not responding right now.")); H.pop(); }
     else {
       if (d.memo) memoAg = d.memo;
-      bulleIA(d.texte || "C'est noté."); H.push({ role: "assistant", content: d.texte || "C'est noté." });
+      bulleIA(d.texte || L("C'est noté.", "Noted.")); H.push({ role: "assistant", content: d.texte || L("C'est noté.", "Noted.") });
       if (d.offres && d.offres.length) offres(d.offres);
       if (d.devis) { carteDevis(d.devis); actualiser().then(ok => ok && (accueil(), rafraichir())); }
       for (const a of d.actions || []) if (a.type === "box" && a.reserver) { const b = boxParId(a.id); if (b) montrerBox(b, true); }
     }
-  } catch { att.remove(); bulleIA("Connexion impossible. Réessayez dans un instant."); H.pop(); }
+  } catch { att.remove(); bulleIA(L("Connexion impossible. Réessayez dans un instant.", "Cannot connect. Please try again in a moment.")); H.pop(); }
   occupe = false;
 }
 

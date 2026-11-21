@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>StockBox Saint-Ouen · Self storage, book your unit online</title>
+<meta name="description" content="From a locker to a 20 m² unit in Saint-Ouen, near Paris: estimate your volume, pick your unit in the building and book online.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0F5C45">
+<meta property="og:title" content="StockBox Saint-Ouen"><meta property="og:image" content="/img/og.jpg">
+<link rel="icon" href="/favicon.svg">
+<link rel="alternate" hreflang="fr" href="/"><link rel="alternate" hreflang="en" href="/en/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<link rel="preload" as="image" href="/img/facade.webp" fetchpriority="high">
+<link rel="stylesheet" href="/css/site.css?v=20261121091606">
+</head>
+<body>
+
+<header class="haut">
+  <div class="marque">
+    <a class="logo" href="/en/" aria-label="StockBox, home"><svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 28 9.5v13L16 29 4 22.5v-13Z" fill="#F28C28"/><path d="M16 3 28 9.5 16 16 4 9.5Z" fill="#FFB061"/><path d="M16 16v13L4 22.5v-13Z" fill="#D9741A"/></svg>StockBox</a>
+    <a class="en-nexudus" href="https://www.nexudus.com/" target="_blank" rel="noopener">Powered by <b>Nexudus</b></a>
+  </div>
+  <div class="haut-d">
+    <a class="langue" href="/" hreflang="fr" lang="fr" aria-label="Version française">FR</a>
+    <a class="connexion" aria-label="Sign in to my account" title="My account" href="https://stockbox.nexudus.site/stockbox/login?redirectTo=%252Fstockbox%252Fuser%252Fdashboard%252Fpersonal" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="titre-hero">
+    <div class="decor" id="decor" aria-hidden="false">
+      <img class="hero-img" src="/img/facade.webp" srcset="/img/facade-768.webp 768w, /img/facade.webp 1536w" sizes="100vw" alt="The StockBox centre in Saint-Ouen at dusk, brick façade and large lit green windows" fetchpriority="high">
+      <div class="d-ciel" aria-hidden="true"><div class="d-nuit"></div><div class="d-etoiles" id="etoiles"></div><div class="d-nuages" id="nuages"></div></div>
+      <svg class="d-vent" viewBox="0 640 1536 280" preserveAspectRatio="none" aria-hidden="true"><defs><filter id="vent" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.014 0.045" numOctaves="2" seed="3" result="bruit"><animate attributeName="baseFrequency" dur="9s" values="0.014 0.045;0.017 0.05;0.012 0.042;0.014 0.045" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" in2="bruit" scale="7" xChannelSelector="R" yChannelSelector="G"/></filter></defs><image href="/img/facade.webp" x="0" y="0" width="1536" height="1024" filter="url(#vent)"/></svg>
+      <div class="d-lueur" aria-hidden="true"></div>
+    </div>
+    <h1 id="titre-hero"><span><i>Storage,</i></span><span><i>digital and self-service.</i></span></h1>
+    <p class="chapeau">Book your unit in two minutes, open 7 days a week with your code.</p>
+    <button class="cta cta-hero" type="button" data-ouvrir>
+      <span class="cta-lum" aria-hidden="true"></span>
+      <span class="cta-txt"><b>Choose my unit</b></span>
+      <span class="cta-rond" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </button>
+    <p class="reassure"><span>No commitment</span><i class="sep" aria-hidden="true">·</i><span>Secure payment</span><i class="sep sep-atlas" aria-hidden="true">·</i><button class="hero-atlas" type="button" data-atlas><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 4.6 2.4 6.9 7.5 7.6v.8c-5.1.7-6.9 3-7.5 7.6h-.8c-.6-4.6-2.4-6.9-7.5-7.6v-.8C8.8 8.9 10.6 6.6 11.2 2Z" fill="currentColor"/></svg><span>Any questions? <u>Ask Atlas</u></span></button></p>
+    <div class="tarifs-bas"><ul class="tarifs" id="tarifs" aria-label="Prices per month"></ul></div>
+    <div class="barre" aria-label="Reviews and location">
+      <div class="b-note"><span class="b-chiffre">4.8</span><span><span class="etoiles" aria-label="4.8 out of 5">★★★★★</span><small>Average rating, sample reviews</small></span></div>
+      <div class="b-direct b-lieu" id="preuve"><span class="lieu-ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><span><b>Saint-Ouen</b><small><span class="rue">14 passage des Malles · </span>5 min from the Paris ring road</small></span><span class="puce-libres"><span class="point" aria-hidden="true"></span><b data-libres>Units available</b></span></div>
+    </div>
+  </section>
+
+  <section class="immeuble" id="immeuble" aria-labelledby="titre-imm">
+    <div class="imm-tete">
+      <h2 id="titre-imm">Choose your unit.</h2>
+      <div class="imm-ligne"><div class="rappel" id="rappel"><span class="puce"><span class="point" aria-hidden="true"></span>StockBox <b>Saint-Ouen</b></span></div><div class="menu-tailles" id="menu-tailles"></div></div>
+    </div>
+    <div class="imm">
+      <div class="ascenseur" id="ascenseur"></div>
+      <div class="scene-zone" id="scene-zone">
+        <div class="filtres" id="filtres" role="group" aria-label="Size"></div>
+        <div class="scene" id="scene"><div class="pile vue-pile" id="pile"><div class="pile-in" id="pile-in"></div></div></div>
+        <div class="bulle" id="bulle"></div>
+        <div class="astuce-zoom" id="astuce-zoom" aria-hidden="true"><kbd data-touche>Ctrl</kbd> + scroll to zoom</div>
+        <div class="outils-scene" id="outils" hidden><button type="button" data-z="1" aria-label="Zoom in">+</button><button type="button" data-z="-1" aria-label="Zoom out">−</button><button type="button" data-z="0" aria-label="Reset view">⟲</button></div>
+        <div class="legende" aria-hidden="true"><span><i class="l-libre"></i>Available</span><span><i class="l-occ"></i>Rented</span><span><i class="l-choix"></i>Your choice</span></div>
+      </div>
+      <aside class="fiche" id="fiche" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section class="reserver" id="reserver" aria-label="Book your unit" hidden>
+    <div class="resa" id="resa">
+      <aside class="ticket" id="ticket" aria-label="Your booking"></aside>
+      <form class="questions" id="resa-form" novalidate>
+        <div class="q-tete"><button class="q-retour" type="button" id="resa-retour" aria-label="Go back"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><div class="q-barre" aria-hidden="true"><i id="q-barre"></i></div><span class="q-duree" id="q-duree">About 1 minute</span></div>
+        <div class="q-corps" id="resa-defile" aria-live="polite"></div>
+        <div class="q-pied" id="q-pied"><button class="cta cta-petit" type="submit" id="resa-suite"><span class="cta-txt">Continue</span><span class="cta-rond" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button><span class="q-aide">or press Enter</span></div>
+      </form>
+    </div>
+    <div class="e-fin" id="e-fin" hidden><div class="eclats" id="eclats"></div><div class="fin" id="fin"></div></div>
+  </section>
+
+  <section class="bloc tailles-bloc" id="tailles-bloc" aria-labelledby="titre-tailles">
+    <div class="large">
+      <h2 class="titre" id="titre-tailles">What size for your belongings?</h2>
+      <p class="intro">Each unit is drawn to scale, next to a 1.75 m silhouette.</p>
+      <div class="comparateur">
+        <div class="onglets" id="onglets" role="tablist" aria-label="Sizes"></div>
+        <div class="comp-scene"><svg id="comp-svg" viewBox="-300 -330 600 450" aria-hidden="true"></svg><span class="comp-echelle" id="comp-dim"></span></div>
+        <div class="comp-info" id="comp-info" aria-live="polite"></div>
+        <div class="simu-zone">
+          <button class="lien simu-lien" type="button" id="simu-ouvrir" aria-expanded="false" aria-controls="simu">Not sure of the size? Estimate my volume</button>
+          <div class="simu" id="simu" hidden>
+            <div class="simu-tete"><div class="simu-racc" id="simu-racc" role="group" aria-label="Size of your home"></div><button class="lien" type="button" id="simu-vider">Clear all</button></div>
+            <div class="simu-objets" id="simu-objets"></div>
+            <p class="simu-total" id="simu-total" aria-live="polite">Add your belongings or pick the size of your home.</p>
+          </div>
+        </div>
+      </div>
+      <div class="preuves">
+        <div class="preuve-c"><div class="pv-vis pv-chiffre"><b>6 am – 10 pm</b></div><h3>Your code, your hours</h3><p>7 days a week. Reception Monday to Saturday, 9 am to 7 pm.</p></div>
+        <div class="preuve-c"><div class="pv-vis pv-quai" role="img" aria-label="The ground-floor loading bay, with trolleys and a pallet truck"></div><h3>A bay to unload</h3><p>Covered, with trolleys and a goods lift, no booking needed.</p></div>
+        <div class="preuve-c"><div class="pv-vis pv-cadenas"><svg viewBox="0 0 120 90" aria-hidden="true"><rect x="22" y="8" width="76" height="74" rx="4" fill="#fff" stroke="#13241E" stroke-width="2"/><path d="M22 20h76M22 32h76M22 44h76M22 56h76M22 68h76" stroke="#C9CDC6" stroke-width="2"/><rect x="50" y="56" width="20" height="17" rx="3" fill="#F28C28"/><path d="M54 56v-6a6 6 0 0 1 12 0v6" fill="none" stroke="#13241E" stroke-width="2.5"/></svg></div><h3>Locked with your padlock</h3><p>Only you have the key. CCTV and a night-time alarm.</p></div>
+        <div class="preuve-c"><div class="pv-vis pv-chiffre"><b>No commitment</b></div><h3>Leave whenever you like</h3><p>Pay monthly, <span data-preavis>15</span> days' notice.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc avis-bloc" aria-labelledby="titre-avis">
+    <div class="large">
+      <div class="avis-tete">
+        <h2 class="titre" id="titre-avis">They store with us.</h2>
+        <p class="source-direct"><span class="point" aria-hidden="true"></span>Source: Nexudus, updated live</p>
+      </div>
+      <div class="tdb">
+        <div class="kpis" id="chiffres"></div>
+        <div class="carte-etages" id="carte-etages" aria-label="Building occupancy, floor by floor"></div>
+      </div>
+      <ol class="journal" id="journal" aria-label="Latest bookings"></ol>
+      <div class="avis">
+        <figure><div class="etoiles" aria-label="5 out of 5">★★★★★</div><blockquote>“I cleared out my flat before the renovation. I booked on Sunday evening and was there on Monday morning with the van. The bay was free.”</blockquote><figcaption><b>Camille</b><span class="tags"><i>10 m² unit</i><i>Renovation</i><i>Customer for 8 months</i></span></figcaption></figure>
+        <figure><div class="etoiles" aria-label="5 out of 5">★★★★★</div><blockquote>“I keep my shop's stock here. The goods lift is right in front of my unit: that's why I chose the first floor.”</blockquote><figcaption><b>Margaux</b><span class="tags"><i>5 m² unit</i><i>Business, shop stock</i><i>Customer for 1 year</i></span></figcaption></figure>
+        <figure><div class="etoiles" aria-label="4 out of 5">★★★★<span style="opacity:.3">★</span></div><blockquote>“You see what's available and choose your spot. No commitment: I gave my unit back after four months.”</blockquote><figcaption><b>Karim</b><span class="tags"><i>2 m² unit</i><i>Student</i><i>4 months, then left</i></span></figcaption></figure>
+      </div>
+      <p class="mention">Sample reviews written for this demo. The figures and bookings, however, come from Nexudus in real time.</p>
+      <ul class="specs" aria-label="Security">
+        <li><b>Personal code</b>unique to each customer</li>
+        <li><b>Entry log</b>every visit time-stamped</li>
+        <li><b>CCTV</b>24/7</li>
+        <li><b>Insurance</b>your choice, from booking</li>
+        <li><b>Cancel online</b><span data-preavis>15</span> days' notice</li>
+      </ul>
+      <div class="avis-cta"><button class="cta" type="button" data-ouvrir><span class="cta-txt">Choose my unit</span><span class="cta-rond" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+    </div>
+  </section>
+
+  <section class="bloc faq" aria-labelledby="titre-faq">
+    <div class="large faq-grille">
+      <h2 class="titre" id="titre-faq">Frequently asked questions.</h2>
+      <div>
+        <details><summary>What can I store?</summary><p>Furniture, boxes, appliances, bikes, archives, business stock. Perishable food, dangerous or flammable goods and animals are not allowed.</p></details>
+        <details><summary>Do I need insurance?</summary><p>Your belongings must be insured. Choose one of our plans when you book, or keep your home insurance if it covers storage.</p></details>
+        <details open><summary>When can I move in?</summary><p>On the date you choose, from the day after booking. Your access code arrives by email the day before.</p></details>
+        <details><summary>How do I cancel?</summary><p>From your account or at reception, giving <span data-preavis>15</span> days' notice before the end of the month.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="pied">
+  <div class="large">
+    <p class="grand">Your unit is waiting.</p>
+    <button class="cta" type="button" data-ouvrir><span class="cta-txt">Choose my unit</span><span class="cta-rond" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+    <p class="note">StockBox is an imaginary self-storage centre, built for a demo. Availability, bookings and contracts are managed in <a href="https://nexudus.com" target="_blank" rel="noopener">Nexudus</a>; payment is simulated. <a href="/deconnexion">Leave the demo</a></p>
+  </div>
+</footer>
+
+<div class="dock" id="dock"><span class="info" id="dock-info"><span class="point" style="display:inline-block;margin-right:8px;vertical-align:middle"></span><b data-libres>Units available</b> in Saint-Ouen</span><button class="dock-atlas" type="button" data-atlas aria-label="Ask Atlas, the StockBox AI"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 4.6 2.4 6.9 7.5 7.6v.8c-5.1.7-6.9 3-7.5 7.6h-.8c-.6-4.6-2.4-6.9-7.5-7.6v-.8C8.8 8.9 10.6 6.6 11.2 2Z" fill="currentColor"/></svg><span>Atlas</span></button><button class="btn btn-tg" type="button" id="dock-btn">Choose my unit</button></div>
+
+<!-- Petite fenêtre : le centre, puis la taille -->
+<dialog class="fen" id="choix" aria-labelledby="choix-titre">
+  <div class="choix-in">
+    <div class="choix-tete"><div class="choix-pas" aria-hidden="true"><i class="on"></i><i></i></div><button class="fermer" type="button" id="choix-fermer" aria-label="Close">×</button></div>
+    <div class="vue on" data-vue="centre">
+      <h2 id="choix-titre">Where do you want to store?</h2>
+      <p class="sous">Choose your StockBox centre.</p>
+      <ul class="centres" id="centres"></ul>
+      <div class="trajet">
+        <button class="lien" type="button" id="trajet-ouvrir" aria-expanded="false">How long from my home or office?</button>
+        <form class="trajet-form" id="trajet-form" hidden><input id="trajet-adresse" autocomplete="street-address" placeholder="Your address, home or office" aria-label="Your address, home or office"><button class="btn btn-em" type="submit">Calculate</button></form>
+        <p class="trajet-rep" id="trajet-rep" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="vue" data-vue="taille">
+      <h2>What size?</h2>
+      <p class="sous" id="sous-taille">StockBox Saint-Ouen. Prices per month, no commitment.</p>
+      <div class="tailles-choix" id="tailles-choix"></div>
+      <div class="sais-pas"><p>Not sure, I have…</p><div id="sais-pas"></div></div>
+      <button class="lien retour-choix" type="button" id="retour-centre">Change centre</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Assistant -->
+<button class="atlas-btn" id="agent-btn" type="button" aria-controls="agent" aria-expanded="false" aria-label="Ask Atlas, the StockBox AI"><span class="atlas-ic"><svg class="etincelle" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 4.6 2.4 6.9 7.5 7.6v.8c-5.1.7-6.9 3-7.5 7.6h-.8c-.6-4.6-2.4-6.9-7.5-7.6v-.8C8.8 8.9 10.6 6.6 11.2 2Z" fill="currentColor"/><path d="M19 15.5c.3 2 1 2.9 3 3.2v.4c-2 .3-2.7 1.2-3 3.2h-.4c-.3-2-1-2.9-3-3.2v-.4c2-.3 2.7-1.2 3-3.2Z" fill="currentColor" opacity=".7"/></svg></span><span class="atlas-txt"><b>Ask Atlas</b><small>StockBox AI, answers in seconds</small></span><span class="atlas-badge">IA</span></button>
+<div class="agent-bulle" id="agent-bulle" hidden><button type="button" class="ab-ouvrir" id="ab-ouvrir"><b>Atlas</b>Tell me what you're storing: I'll work out the volume, find an available unit and prepare a quote.</button><button type="button" class="ab-fermer" id="ab-fermer" aria-label="Close">×</button></div>
+<section class="agent ferme" id="agent" aria-label="Atlas, the StockBox AI" aria-hidden="true">
+  <div class="agent-tete"><span class="atlas-ic grand" aria-hidden="true"><svg class="etincelle" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 4.6 2.4 6.9 7.5 7.6v.8c-5.1.7-6.9 3-7.5 7.6h-.8c-.6-4.6-2.4-6.9-7.5-7.6v-.8C8.8 8.9 10.6 6.6 11.2 2Z" fill="currentColor"/><path d="M19 15.5c.3 2 1 2.9 3 3.2v.4c-2 .3-2.7 1.2-3 3.2h-.4c-.3-2-1-2.9-3-3.2v-.4c2-.3 2.7-1.2 3-3.2Z" fill="currentColor" opacity=".7"/></svg></span><div><b>Atlas</b><small><span class="point" style="display:inline-block;width:7px;height:7px;margin-right:6px;vertical-align:middle"></span>StockBox AI, powered by Claude</small></div><button class="fermer" type="button" id="agent-fermer" aria-label="Close the assistant">×</button></div>
+  <div class="fil" id="fil" aria-live="polite"></div>
+  <div class="suggestions" id="suggestions"><button type="button">I'm moving out of a one-bedroom flat</button><button type="button">I want a quote for my business</button><button type="button">What can I store?</button><button type="button">Can I come on Sundays?</button></div>
+  <form id="agent-form"><input id="agent-champ" autocomplete="off" placeholder="Ask Atlas…" aria-label="Your question" maxlength="600"><button class="btn btn-em" type="submit">Send</button></form>
+</section>
+
+<dialog class="demo-pop" id="demo-pop" aria-labelledby="demo-pop-titre">
+  <div class="dp-in" tabindex="-1" autofocus>
+    <span class="dp-poignee" aria-hidden="true"></span>
+    <button class="dp-x" type="button" aria-label="Close" data-fermer-demo><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <span class="dp-badge">Demo</span>
+    <h2 id="demo-pop-titre">This is a demo website.</h2>
+    <p>StockBox is a fictional space. Availability, bookings and quotes are connected live to Nexudus.</p>
+    <p class="dp-contact">To find out more: <a href="mailto:matthias@nexudus.com?subject=StockBox%20demo">matthias@nexudus.com</a></p>
+    <button class="btn btn-em dp-ok" type="button" data-fermer-demo>Explore the site</button>
+  </div>
+</dialog>
+<script src="/js/gsap.min.js?v=20261121091606"></script>
+<script type="module" src="/js/app.js?v=20261121091606"></script>
+</body>
+</html>

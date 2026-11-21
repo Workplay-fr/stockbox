@@ -3,7 +3,11 @@ export const $ = (s, r = document) => r.querySelector(s);
 export const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 export const el = (tag, attrs = {}, html = "") => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (html) e.innerHTML = html; return e; };
 export const NS = "http://www.w3.org/2000/svg";
-export const eur = n => new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 2 }).format(n) + " €";
+// Langue de la page : <html lang="en"> pour /en/, français sinon. L(fr, en) choisit le bon texte.
+export const EN = document.documentElement.lang === "en";
+export const L = (fr, en) => (EN ? en : fr);
+export const LOC = EN ? "en-GB" : "fr-FR";
+export const eur = n => EN ? new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(n) : new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 2 }).format(n) + " €";
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 export const reduit = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -15,11 +19,11 @@ export const G = window.gsap || {
 };
 if (reduit && window.gsap) window.gsap.globalTimeline.timeScale(20);
 
-export const NOMS = { 0: "Rez-de-chaussée", 1: "Étage 1", 2: "Étage 2" };
-export const COURT = { 0: "RDC", 1: "1", 2: "2" };
+export const NOMS = EN ? { 0: "Ground floor", 1: "Floor 1", 2: "Floor 2" } : { 0: "Rez-de-chaussée", 1: "Étage 1", 2: "Étage 2" };
+export const COURT = { 0: EN ? "G" : "RDC", 1: "1", 2: "2" };
 export const TAILLES = ["C", "2", "5", "10", "20"];
-export const LIBELLE = { C: "Casier", 2: "2 m²", 5: "5 m²", 10: "10 m²", 20: "20 m²" };
-export const IDEAL = { C: "Archives, valises, matériel de sport.", 2: "Le contenu d'une cave ou d'un débarras.", 5: "Un studio ou une chambre.", 10: "Un 2 pièces meublé.", 20: "Un 3 ou 4 pièces, ou du stock pro." };
+export const LIBELLE = { C: EN ? "Locker" : "Casier", 2: "2 m²", 5: "5 m²", 10: "10 m²", 20: "20 m²" };
+export const IDEAL = EN ? { C: "Archives, suitcases, sports gear.", 2: "The contents of a cellar or a box room.", 5: "A studio flat or one bedroom.", 10: "A furnished one-bedroom flat.", 20: "A two or three-bedroom home, or business stock." } : { C: "Archives, valises, matériel de sport.", 2: "Le contenu d'une cave ou d'un débarras.", 5: "Un studio ou une chambre.", 10: "Un 2 pièces meublé.", 20: "Un 3 ou 4 pièces, ou du stock pro." };
 export const EMPRISE = { C: [1, 1, 1], 2: [1.05, 2.5, 2.5], 5: [2.1, 2.5, 2.5], 10: [2.1, 5, 2.5], 20: [4, 5, 2.5] };   // largeur, profondeur, hauteur (m)
 const SECOURS = { C: { prix: 25, volume: 1 }, 2: { prix: 69, volume: 5 }, 5: { prix: 139, volume: 12 }, 10: { prix: 249, volume: 25 }, 20: { prix: 449, volume: 50 } };
 
@@ -36,7 +40,7 @@ export function compteurs() {
 }
 // Un seul format de nom partout, celui du plan : « Box 104 », « Casier C12 ».
 export const estCasier = nom => /^C/i.test(String(nom || ""));
-export const nomBox = (b, min = false) => { const n = typeof b === "string" ? b : b?.nom; const t = `${estCasier(n) ? "Casier" : "Box"} ${n}`; return min ? t.charAt(0).toLowerCase() + t.slice(1) : t; };
+export const nomBox = (b, min = false) => { const n = typeof b === "string" ? b : b?.nom; const t = `${estCasier(n) ? (EN ? "Locker" : "Casier") : "Box"} ${n}`; return min ? t.charAt(0).toLowerCase() + t.slice(1) : t; };
 export const prix = t => S.data?.formules?.[t]?.prix ?? SECOURS[t].prix;
 export const volumeTaille = t => S.data?.formules?.[t]?.volume ?? SECOURS[t].volume;
 export const preavis = () => S.data?.formules?.["10"]?.preavis || 15;
@@ -85,7 +89,7 @@ export function boxConseille(t) {
 }
 export const ilYa = iso => {
   const m = Math.max(1, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
-  if (m < 60) return `il y a ${m} min`;
-  const h = Math.round(m / 60); if (h < 24) return `il y a ${h} h`;
-  const j = Math.round(h / 24); return j === 1 ? "hier" : `il y a ${j} jours`;
+  if (m < 60) return EN ? `${m} min ago` : `il y a ${m} min`;
+  const h = Math.round(m / 60); if (h < 24) return EN ? `${h} h ago` : `il y a ${h} h`;
+  const j = Math.round(h / 24); return j === 1 ? L("hier", "yesterday") : EN ? `${j} days ago` : `il y a ${j} jours`;
 };

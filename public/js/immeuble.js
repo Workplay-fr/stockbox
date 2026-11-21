@@ -1,6 +1,6 @@
 // Étape 3 : l'immeuble en grand. Pile des trois niveaux, ascenseur pour changer d'étage, zoom et déplacement dans l'étage,
 // boxes allumés selon leur état réel dans Nexudus, box conseillé mis en avant.
-import { $, $$, el, NS, G, esc, eur, S, NOMS, COURT, TAILLES, LIBELLE, IDEAL, boxes, libres, libresTotal, prix, volumeTaille, preavis, boxParId, boxConseille, reduit, nomBox } from "./commun.js?v=20261121090725";
+import { $, $$, L, EN, el, NS, G, esc, eur, S, NOMS, COURT, TAILLES, LIBELLE, IDEAL, boxes, libres, libresTotal, prix, volumeTaille, preavis, boxParId, boxConseille, reduit, nomBox } from "./commun.js?v=20261121091606";
 
 let zone, scene, pileIn, bulle, onReserver = () => {};
 const V = { mode: "pile", etage: null, z: 1, x: 0, y: 0 };
@@ -84,7 +84,7 @@ function peindre() {
   for (const niv of $$(".niveau", pileIn)) {
     const n = niv.dataset.n, t = S.filtre;
     const k = libres(n, t);
-    $(".etiq", niv).innerHTML = `<b>${NOMS[n]}</b>${k ? `${k} box${k > 1 ? "es" : ""}${t ? " de " + LIBELLE[t] : ""} libre${k > 1 ? "s" : ""}` : t ? `Pas de ${LIBELLE[t]} libre` : "Complet"}`;
+    $(".etiq", niv).innerHTML = `<b>${NOMS[n]}</b>${EN ? (k ? `${k} ${t ? LIBELLE[t] + " " : ""}unit${k > 1 ? "s" : ""} available` : t ? `No ${LIBELLE[t]} available` : "Full") : (k ? `${k} box${k > 1 ? "es" : ""}${t ? " de " + LIBELLE[t] : ""} libre${k > 1 ? "s" : ""}` : t ? `Pas de ${LIBELLE[t]} libre` : "Complet")}`;
   }
   filtres(); ascenseur(); prisme();
 }
@@ -97,7 +97,7 @@ export function filtrer(t) {
 // Liste des tailles : nom, prix par mois, nombre de libres.
 function listeTailles() {
   const li = (t, nom, px, n) => `<li><button type="button" class="t-opt" data-t="${t ?? ""}" aria-pressed="${String(S.filtre === t)}"><span class="t-nom">${nom}</span><span class="t-prix">${px}</span><span class="t-nb">${n}</span></button></li>`;
-  return `<ul class="tailles-liste" role="list">${li(null, "Toutes les tailles", "", libresTotal(null))}${TAILLES.map(t => li(t, t === "C" ? "Casier" : LIBELLE[t], eur(prix(t)), libresTotal(t))).join("")}</ul>`;
+  return `<ul class="tailles-liste" role="list">${li(null, L("Toutes les tailles", "All sizes"), "", libresTotal(null))}${TAILLES.map(t => li(t, LIBELLE[t], eur(prix(t)), libresTotal(t))).join("")}</ul>`;
 }
 function lierTailles(racine, apres) {
   $$(".t-opt", racine).forEach(b => (b.onclick = () => { filtrer(b.dataset.t || null); apres && apres(); }));
@@ -106,7 +106,7 @@ function lierTailles(racine, apres) {
 function filtres() {
   const m = $("#menu-tailles"); if (!m) return;
   const ouvert = m.classList.contains("ouvert");
-  m.innerHTML = `<button type="button" class="mt-btn" aria-expanded="${ouvert}" aria-haspopup="true">${S.filtre ? (S.filtre === "C" ? "Casier" : LIBELLE[S.filtre]) + " · " + eur(prix(S.filtre)) : "Toutes les tailles"}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="mt-pop">${listeTailles()}</div>`;
+  m.innerHTML = `<button type="button" class="mt-btn" aria-expanded="${ouvert}" aria-haspopup="true">${S.filtre ? LIBELLE[S.filtre] + " · " + eur(prix(S.filtre)) : L("Toutes les tailles", "All sizes")}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="mt-pop">${listeTailles()}</div>`;
   const ferme = () => { m.classList.remove("ouvert"); $(".mt-btn", m).setAttribute("aria-expanded", "false"); };
   $(".mt-btn", m).onclick = e => { e.stopPropagation(); const o = !m.classList.contains("ouvert"); m.classList.toggle("ouvert", o); $(".mt-btn", m).setAttribute("aria-expanded", String(o)); };
   lierTailles(m, ferme);
@@ -117,9 +117,9 @@ let afficheVal = null;
 function ascenseur() {
   const a = $("#ascenseur");
   if (!a.dataset.pret) {
-    a.innerHTML = `<div class="afficheur" aria-hidden="true"><span id="led">—</span><small>étage</small></div>`;
+    a.innerHTML = `<div class="afficheur" aria-hidden="true"><span id="led">—</span><small>${L("étage", "floor")}</small></div>`;
     for (const n of ["2", "1", "0"]) { const b = el("button", { class: "bouton-etage", type: "button", "data-n": n, "aria-label": NOMS[n] }, `${COURT[n]}<small></small>`); b.onclick = () => ouvrir(n); a.append(b); }
-    const t = el("button", { class: "bouton-etage tout", type: "button", "aria-label": "Tout l'immeuble" }, "Tout"); t.onclick = () => pile(); a.append(t);
+    const t = el("button", { class: "bouton-etage tout", type: "button", "aria-label": L("Tout l'immeuble", "Whole building") }, L("Tout", "All")); t.onclick = () => pile(); a.append(t);
     a.dataset.pret = "1";
   }
   for (const b of $$(".bouton-etage[data-n]", a)) { const n = b.dataset.n, k = libres(n, S.filtre); b.setAttribute("aria-pressed", String(V.mode === "etage" && V.etage === n)); $("small", b).textContent = k; $("small", b).hidden = !k; }
@@ -187,7 +187,7 @@ function ecouter() {
     if (bouge) { bouge = false; return; }
     const p = e.target.closest?.(".box"); if (V.mode !== "etage" || !p) return;
     const b = boxParId(p.dataset.id);
-    if (!b.libre) { bulle.innerHTML = `<b>${esc(nomBox(b))}</b><small>Loué, contrat actif dans Nexudus</small>`; return; }
+    if (!b.libre) { bulle.innerHTML = `<b>${esc(nomBox(b))}</b><small>${L("Loué, contrat actif dans Nexudus", "Rented, active contract in Nexudus")}</small>`; return; }
     if (S.filtre && b.taille !== S.filtre) { S.filtre = null; peindre(); }
     if (reduit) { choisir(b, true); versFiche(); return; }
     p.classList.remove("eleve"); void p.getBoundingClientRect(); p.classList.add("eleve");
@@ -213,7 +213,7 @@ function survol(p, e) {
   if (b.libre && !(S.filtre && b.taille !== S.filtre)) p.classList.add("survol");
   const r = zone.getBoundingClientRect();
   bulle.style.left = e.clientX - r.left + "px"; bulle.style.top = e.clientY - r.top + "px";
-  bulle.innerHTML = `<b>${esc(nomBox(b))}</b>${b.taille === "C" ? "" : " " + LIBELLE[b.taille]}<small>${b.libre ? eur(prix(b.taille)) + " par mois, libre" : "Loué, contrat actif dans Nexudus"}</small>`;
+  bulle.innerHTML = `<b>${esc(nomBox(b))}</b>${b.taille === "C" ? "" : " " + LIBELLE[b.taille]}<small>${b.libre ? eur(prix(b.taille)) + L(" par mois, libre", " a month, available") : L("Loué, contrat actif dans Nexudus", "Rented, active contract in Nexudus")}</small>`;
   bulle.classList.add("on");
   prisme(b.libre ? b : null);
 }
@@ -246,22 +246,22 @@ function fiche(anime) {
   const b = S.choix;
   if (b) {
     const estReco = S.reco && S.reco.id === b.id, vol = volumeTaille(b.taille);
-    const pres = b.etage === "0" ? "à deux pas du quai de chargement" : "près du monte-charge";
-    f.innerHTML = `${estReco ? `<span class="reco">★ Notre suggestion en ${LIBELLE[b.taille]}</span>` : `<span class="reco" style="background:var(--em-clair);color:var(--em)">Libre</span>`}
+    const pres = b.etage === "0" ? L("à deux pas du quai de chargement", "a few steps from the loading bay") : L("près du monte-charge", "near the goods lift");
+    f.innerHTML = `${estReco ? `<span class="reco">★ ${L("Notre suggestion en", "Our pick in")} ${LIBELLE[b.taille]}</span>` : `<span class="reco" style="background:var(--em-clair);color:var(--em)">${L("Libre", "Available")}</span>`}
       <div><h3>${esc(nomBox(b))}</h3><div class="ou">${NOMS[b.etage]}, ${pres}</div></div>
-      <div class="prix"><b>${eur(prix(b.taille))}</b><span>par mois</span></div>
-      <dl><dt>Surface</dt><dd>${b.taille === "C" ? "Casier de 1 m³" : `${LIBELLE[b.taille]}, ${vol} m³ environ`}</dd><dt>Idéal pour</dt><dd>${IDEAL[b.taille]}</dd><dt>Engagement</dt><dd>Aucun, préavis de ${preavis()} jours</dd></dl>
-      <button class="btn btn-tg" type="button" id="btn-resa" ${b.libre && !S.apercu ? "" : "disabled"}>Réserver le ${esc(nomBox(b, true))}</button>
-      ${S.apercu ? `<p style="font-size:13px;color:var(--tg-fonce);margin:10px 0 0">Aperçu hors ligne : réservation désactivée.</p>` : ""}
-      <button class="lien autre" type="button" id="btn-autre">Choisir un autre box</button>`;
+      <div class="prix"><b>${eur(prix(b.taille))}</b><span>${L("par mois", "a month")}</span></div>
+      <dl><dt>${L("Surface", "Size")}</dt><dd>${b.taille === "C" ? L("Casier de 1 m³", "1 m³ locker") : EN ? `${LIBELLE[b.taille]}, about ${vol} m³` : `${LIBELLE[b.taille]}, ${vol} m³ environ`}</dd><dt>${L("Idéal pour", "Ideal for")}</dt><dd>${IDEAL[b.taille]}</dd><dt>${L("Engagement", "Commitment")}</dt><dd>${L(`Aucun, préavis de ${preavis()} jours`, `None, ${preavis()} days' notice`)}</dd></dl>
+      <button class="btn btn-tg" type="button" id="btn-resa" ${b.libre && !S.apercu ? "" : "disabled"}>${EN ? `Book ${esc(nomBox(b))}` : `Réserver le ${esc(nomBox(b, true))}`}</button>
+      ${S.apercu ? `<p style="font-size:13px;color:var(--tg-fonce);margin:10px 0 0">${L("Aperçu hors ligne : réservation désactivée.", "Offline preview: booking disabled.")}</p>` : ""}
+      <button class="lien autre" type="button" id="btn-autre">${L("Choisir un autre box", "Choose another unit")}</button>`;
     $("#btn-resa").onclick = () => onReserver(S.choix);
     $("#btn-autre").onclick = () => { S.choix = null; recentrer(); peindre(); fiche(true); };
   } else {
     const n = V.mode === "etage" ? V.etage : null;
     const tete = n !== null
-      ? `<b>${NOMS[n]}</b>${libres(n, S.filtre)} boxes ${S.filtre ? (S.filtre === "C" ? "casiers " : LIBELLE[S.filtre] + " ") : ""}libres sur cet étage. Touchez un box vert pour le choisir.`
-      : `<b>${libresTotal(S.filtre)} boxes ${S.filtre ? "de " + LIBELLE[S.filtre] + " " : ""}libres.</b>Choisissez une taille, puis un étage.`;
-    f.innerHTML = `<div class="vide">${tete}</div>${listeTailles()}<button class="lien simu-lien" type="button" id="vers-simu">Je ne sais pas quelle taille choisir</button>`;
+      ? (EN ? `<b>${NOMS[n]}</b>${libres(n, S.filtre)} ${S.filtre ? LIBELLE[S.filtre] + " " : ""}units available on this floor. Tap a green unit to choose it.` : `<b>${NOMS[n]}</b>${libres(n, S.filtre)} boxes ${S.filtre ? (S.filtre === "C" ? "casiers " : LIBELLE[S.filtre] + " ") : ""}libres sur cet étage. Touchez un box vert pour le choisir.`)
+      : (EN ? `<b>${libresTotal(S.filtre)} ${S.filtre ? LIBELLE[S.filtre] + " " : ""}units available.</b>Choose a size, then a floor.` : `<b>${libresTotal(S.filtre)} boxes ${S.filtre ? "de " + LIBELLE[S.filtre] + " " : ""}libres.</b>Choisissez une taille, puis un étage.`);
+    f.innerHTML = `<div class="vide">${tete}</div>${listeTailles()}<button class="lien simu-lien" type="button" id="vers-simu">${L("Je ne sais pas quelle taille choisir", "Not sure which size to choose")}</button>`;
     lierTailles(f);
     $("#vers-simu").onclick = () => { const z = $("#tailles-bloc"); z && z.scrollIntoView({ behavior: reduit ? "auto" : "smooth" }); const s = $("#simu"); if (s && s.hidden) { const bt = document.querySelector("[aria-controls='simu'], #simu-ouvrir, .simu-ouvrir"); bt ? bt.click() : (s.hidden = false); } };
   }

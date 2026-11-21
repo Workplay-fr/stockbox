@@ -43,8 +43,11 @@ export async function onRequest({ request, env, next }) {
 }
 
 function page(suite, erreur, status) {
-  const html = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="robots" content="noindex, nofollow"><title>StockBox · Accès</title><link rel="icon" href="/favicon.svg">
+  const en = /^\/en(\/|$)/.test(String(suite || ""));
+  const T = (fr, an) => (en ? an : fr);
+  if (en && erreur) erreur = "Incorrect password.";
+  const html = `<!doctype html><html lang="${en ? "en" : "fr"}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow"><title>StockBox · ${T("Accès", "Access")}</title><link rel="icon" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
 <style>
@@ -66,8 +69,8 @@ button:hover{filter:brightness(1.06);transform:translateY(-1px)}
 @keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 </style></head><body><main><form class="carte" method="post" action="/connexion">
 <div class="logo">${LOGO}StockBox</div>
-<h1>Accès à la démo</h1><p>Ce site de démonstration est accessible sur invitation. Saisissez le mot de passe qui vous a été communiqué.</p>
-<div class="champ"><input name="mot_de_passe" type="password" placeholder="Mot de passe" autocomplete="current-password" required autofocus aria-label="Mot de passe"><button type="submit">Entrer</button></div>
+<h1>${T("Accès à la démo", "Demo access")}</h1><p>${T("Ce site de démonstration est accessible sur invitation. Saisissez le mot de passe qui vous a été communiqué.", "This demo website is invitation only. Enter the password you were given.")}</p>
+<div class="champ"><input name="mot_de_passe" type="password" placeholder="${T("Mot de passe", "Password")}" autocomplete="current-password" required autofocus aria-label="${T("Mot de passe", "Password")}"><button type="submit">${T("Entrer", "Enter")}</button></div>
 <input type="hidden" name="suite" value="${sur(suite)}"><p class="err" role="alert">${sur(erreur)}</p>
 <div class="note"><b>Un lieu imaginaire.</b> StockBox est un centre de self-stockage fictif. Disponibilités, réservations et contrats fonctionnent avec <b>Nexudus</b>, la plateforme de gestion utilisée par plus de 4 000 espaces dans 90 pays. <a href="https://nexudus.com" target="_blank" rel="noopener">Découvrir Nexudus</a></div>
 </form></main></body></html>`;

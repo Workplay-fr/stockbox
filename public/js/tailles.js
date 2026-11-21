@@ -1,7 +1,13 @@
 // Comparateur de tailles : le box en 3D à l'échelle, une silhouette de 1,75 m, des cartons dedans ; les infos viennent de Nexudus.
-import { $, el, G, eur, S, TAILLES, LIBELLE, EMPRISE, libresTotal, prix, volumeTaille, reduit } from "./commun.js?v=20261121090725";
+import { $, el, G, eur, S, L, EN, TAILLES, LIBELLE, EMPRISE, libresTotal, prix, volumeTaille, reduit } from "./commun.js?v=20261121091606";
 
-const DEDANS = {
+const DEDANS = EN ? {
+  C: ["Two suitcases", "6 to 8 boxes", "Ski or camping gear"],
+  2: ["The contents of a cellar", "About twenty boxes", "A bike and a few small pieces of furniture"],
+  5: ["A studio flat or one bedroom", "Bed, sofa, table and appliances", "About thirty boxes"],
+  10: ["A furnished one-bedroom flat", "Or a shop's stock", "Direct access via the goods lift"],
+  20: ["A two or three-bedroom home", "A whole house move", "On the ground floor, next to the loading bay"],
+} : {
   C: ["Deux valises", "6 à 8 cartons", "Le matériel de ski ou de camping"],
   2: ["Le contenu d'une cave", "Une vingtaine de cartons", "Un vélo et quelques petits meubles"],
   5: ["Un studio ou une chambre", "Lit, canapé, table et électroménager", "Une trentaine de cartons"],
@@ -26,12 +32,14 @@ const I = { // icônes au trait (viewBox 40)
   tv: '<rect x="5" y="9" width="30" height="18" rx="2"/><path d="M14 33h12M20 27v6"/>',
   velo: '<circle cx="10" cy="26" r="6"/><circle cx="30" cy="26" r="6"/><path d="M10 26l6-11h9l5 11M16 15l4 11h-10M23 11h5"/>',
 };
+const NOM_EN = { carton: "Box", valise: "Suitcase", litd: "Double bed", lits: "Single bed", canape: "Sofa", fauteuil: "Armchair", table: "Table", chaise: "Chair", armoire: "Wardrobe", commode: "Chest of drawers", biblio: "Bookcase", bureau: "Desk", frigo: "Fridge", lavelinge: "Washing machine", tv: "TV", velo: "Bike" };
 const OBJETS = [
   ["carton", "Carton", .08, 5], ["valise", "Valise", .12, 1], ["litd", "Lit double", 2, 1], ["lits", "Lit simple", 1.1, 1],
   ["canape", "Canapé", 2, 1], ["fauteuil", "Fauteuil", .8, 1], ["table", "Table", .9, 1], ["chaise", "Chaise", .25, 1],
   ["armoire", "Armoire", 1.5, 1], ["commode", "Commode", .7, 1], ["biblio", "Bibliothèque", .8, 1], ["bureau", "Bureau", .8, 1],
   ["frigo", "Réfrigérateur", .8, 1], ["lavelinge", "Lave-linge", .5, 1], ["tv", "Écran", .2, 1], ["velo", "Vélo", .6, 1],
 ];
+const RACC_EN = { "Quelques cartons": "A few boxes", "Un studio": "A studio flat", "Un 2 pièces": "A one-bedroom flat", "Un 3 pièces": "Two bedrooms" };
 const RACC = {
   "Quelques cartons": { carton: 10, valise: 2 },
   "Un studio": { carton: 20, valise: 2, lits: 1, table: 1, chaise: 2, canape: 1, commode: 1, frigo: 1, tv: 1, biblio: 1 },
@@ -77,17 +85,18 @@ function dessiner() {
 }
 const nbCartons = t => { const [w, d, h] = EMPRISE[t]; return Math.round(Math.floor(w / .5 || 1) * Math.floor(d / .5) * Math.floor(h * .72 / .5) * .55); };
 
+const vol = v => EN ? v.toFixed(1).replace(".0", "") : v.toFixed(1).replace(".", ",").replace(",0", "");
 function info(t, anime) {
   const n = libresTotal(t), [w, d, h] = EMPRISE[t];
   const z = $("#comp-info"); z.classList.remove("anime"); if (anime && !reduit) { void z.offsetWidth; z.classList.add("anime"); }
-  z.innerHTML = `<p class="nom">${t === "C" ? "Casier" : "Box de " + LIBELLE[t]}</p>
-    <div class="px"><b>${eur(prix(t))}</b><span>par mois, sans engagement</span></div>
-    <span class="dispo"><span class="point" aria-hidden="true"></span>${n ? `${n} libres en ce moment` : "Complet pour l'instant"}</span>
-    ${volume() ? `<p class="mon-vol">Vos affaires : <b>${volume().toFixed(1).replace(".", ",").replace(",0", "")} m³</b>, ${volume() * 1.15 > volumeTaille("20") ? "prévoyez deux boxes" : `rempli à ${Math.min(100, Math.round(volume() / volumeTaille(t) * 100))} %`}</p>` : ""}
-    <div><h4>Y rentre</h4><ul>${DEDANS[t].map(x => `<li>${x}</li>`).join("")}</ul></div>
-    <button class="cta cta-petit" type="button" id="comp-choisir" ${n ? "" : "disabled"}><span class="cta-txt">Choisir ce ${t === "C" ? "casier" : "box"}</span><span class="cta-rond" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>`;
+  z.innerHTML = `<p class="nom">${t === "C" ? LIBELLE.C : EN ? LIBELLE[t] + " unit" : "Box de " + LIBELLE[t]}</p>
+    <div class="px"><b>${eur(prix(t))}</b><span>${L("par mois, sans engagement", "a month, no commitment")}</span></div>
+    <span class="dispo"><span class="point" aria-hidden="true"></span>${n ? L(`${n} libres en ce moment`, `${n} available right now`) : L("Complet pour l'instant", "Full for now")}</span>
+    ${volume() ? `<p class="mon-vol">${L("Vos affaires", "Your belongings")}${L(" : ", ": ")}<b>${vol(volume())} m³</b>, ${volume() * 1.15 > volumeTaille("20") ? L("prévoyez deux boxes", "plan for two units") : L(`rempli à ${Math.min(100, Math.round(volume() / volumeTaille(t) * 100))} %`, `${Math.min(100, Math.round(volume() / volumeTaille(t) * 100))}% full`)}</p>` : ""}
+    <div><h4>${L("Y rentre", "Fits in")}</h4><ul>${DEDANS[t].map(x => `<li>${x}</li>`).join("")}</ul></div>
+    <button class="cta cta-petit" type="button" id="comp-choisir" ${n ? "" : "disabled"}><span class="cta-txt">${EN ? `Choose this ${t === "C" ? "locker" : "unit"}` : `Choisir ce ${t === "C" ? "casier" : "box"}`}</span><span class="cta-rond" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>`;
   $("#comp-choisir").onclick = () => surChoix(t);
-  $("#comp-dim").textContent = `${String(w).replace(".", ",")} × ${String(d).replace(".", ",")} m, ${String(h).replace(".", ",")} m de haut, ${volumeTaille(t)} m³`;
+  $("#comp-dim").textContent = EN ? `${w} × ${d} m, ${h} m high, ${volumeTaille(t)} m³` : `${String(w).replace(".", ",")} × ${String(d).replace(".", ",")} m, ${String(h).replace(".", ",")} m de haut, ${volumeTaille(t)} m³`;
 }
 
 export function choisirOnglet(t, anime = true) {
@@ -105,7 +114,7 @@ export function initTailles(onChoix) {
   surChoix = onChoix;
   const o = $("#onglets"); o.innerHTML = "";
   for (const t of TAILLES) {
-    const b = el("button", { class: "onglet", type: "button", role: "tab", "data-t": t, "aria-selected": "false" }, t === "C" ? "Casier" : LIBELLE[t]);
+    const b = el("button", { class: "onglet", type: "button", role: "tab", "data-t": t, "aria-selected": "false" }, LIBELLE[t]);
     b.onclick = () => choisirOnglet(t);
     o.append(b);
   }
@@ -118,16 +127,17 @@ export const majTailles = () => info(actuelle, false);
 // ---------- Simulateur de volume, dans la carte ----------
 export function initSimu() {
   const bt = $("#simu-ouvrir"), pan = $("#simu");
-  bt.onclick = () => { const o = pan.hidden; pan.hidden = !o; bt.setAttribute("aria-expanded", String(o)); bt.textContent = o ? "Fermer l'estimation" : "Je ne connais pas ma taille : estimer mon volume"; if (o) G.fromTo(pan, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: .45, ease: "power3.out" }); };
+  bt.onclick = () => { const o = pan.hidden; pan.hidden = !o; bt.setAttribute("aria-expanded", String(o)); bt.textContent = o ? L("Fermer l'estimation", "Close the estimate") : L("Je ne connais pas ma taille : estimer mon volume", "Not sure of the size? Estimate my volume"); if (o) G.fromTo(pan, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: .45, ease: "power3.out" }); };
   const r = $("#simu-racc");
   for (const nom of Object.keys(RACC)) {
-    const b = el("button", { type: "button", "aria-pressed": "false" }, nom);
+    const b = el("button", { type: "button", "aria-pressed": "false" }, EN ? RACC_EN[nom] : nom);
     b.onclick = () => { for (const k in Q) Q[k] = RACC[nom][k] || 0; r.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); maj(); };
     r.append(b);
   }
   const g = $("#simu-objets");
-  for (const [id, nom, , pas] of OBJETS) {
-    const d = el("div", { class: "s-obj", "data-id": id }, `<svg viewBox="0 0 40 40" aria-hidden="true">${I[id]}</svg><span>${nom}</span><div class="s-pas"><button type="button" aria-label="Retirer : ${nom}">−</button><output>0</output><button type="button" aria-label="Ajouter : ${nom}">+</button></div>`);
+  for (const [id, nomFr, , pas] of OBJETS) {
+    const nom = EN ? NOM_EN[id] : nomFr;
+    const d = el("div", { class: "s-obj", "data-id": id }, `<svg viewBox="0 0 40 40" aria-hidden="true">${I[id]}</svg><span>${nom}</span><div class="s-pas"><button type="button" aria-label="${L("Retirer", "Remove")}${L(" : ", ": ")}${nom}">−</button><output>0</output><button type="button" aria-label="${L("Ajouter", "Add")}${L(" : ", ": ")}${nom}">+</button></div>`);
     const [m, p] = d.querySelectorAll("button");
     m.onclick = () => { Q[id] = Math.max(0, Q[id] - pas); maj(); };
     p.onclick = () => { Q[id] += pas; maj(); r.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", "false")); };
@@ -138,6 +148,6 @@ export function initSimu() {
 function maj() {
   for (const d of document.querySelectorAll(".s-obj")) { const q = Q[d.dataset.id]; d.querySelector("output").textContent = q; d.classList.toggle("a", q > 0); }
   const v = volume();
-  $("#simu-total").innerHTML = v ? `<b>${v.toFixed(1).replace(".", ",").replace(",0", "")} m³</b> : il vous faut ${conseillee(v) === "C" ? "un casier" : "un box de " + LIBELLE[conseillee(v)]}.` : "Ajoutez vos affaires ou choisissez la taille de votre logement.";
+  $("#simu-total").innerHTML = v ? (EN ? `<b>${vol(v)} m³</b>: you need ${conseillee(v) === "C" ? "a locker" : "a " + LIBELLE[conseillee(v)] + " unit"}.` : `<b>${vol(v)} m³</b> : il vous faut ${conseillee(v) === "C" ? "un casier" : "un box de " + LIBELLE[conseillee(v)]}.`) : L("Ajoutez vos affaires ou choisissez la taille de votre logement.", "Add your belongings or pick the size of your home.");
   choisirOnglet(v ? conseillee(v) : actuelle, true);
 }

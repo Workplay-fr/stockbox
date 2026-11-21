@@ -10,7 +10,7 @@ export async function onRequestPost({ request, env }) {
   if (!h.length) return json(400, { ok: false, erreur: "Message vide." });
   if (h.filter(m => m.role === "user").length > 30) return json(429, { ok: false, erreur: "Cette conversation est longue : rechargez la page pour en commencer une nouvelle." });
   const m0 = d.memo && typeof d.memo === "object" ? d.memo : {};
-  const memo = { devis: m0.devis && m0.devis.reference ? m0.devis : null, peutCreer: () => !limite(request, "devis", 3, 60 * 60e3) };
+  const memo = { langue: d.langue === "en" ? "en" : "fr", devis: m0.devis && m0.devis.reference ? m0.devis : null, peutCreer: () => !limite(request, "devis", 3, 60 * 60e3) };
   try {
     const r = await repondre(env, h.slice(-16), memo);
     return json(200, { ok: true, ...r });
