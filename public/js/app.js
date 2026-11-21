@@ -1,8 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, L, EN, LOC, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, boxes, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261121094908";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir, ouvrir as ouvrirEtage } from "./immeuble.js?v=20261121094908";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261121094908";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261121094908";
+import { $, $$, L, EN, LOC, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, boxes, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261121095426";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir, ouvrir as ouvrirEtage } from "./immeuble.js?v=20261121095426";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261121095426";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261121095426";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: L("14 passage des Malles, Les Puces", "14 passage des Malles, flea market"), ouvert: true },
@@ -323,7 +323,7 @@ $$(".faq details").forEach(d => {
 });
 
 // ---------------------------------------------------------------- Accueil : une semaine dans la vie d'un centre StockBox avec Nexudus
-// Cinq écrans animés, une fois par visite (relançable depuis le pied de page). Textes en français et en anglais.
+// Cinq écrans animés, à chaque arrivée sur le site (relançables depuis le pied de page). Textes en français et en anglais.
 {
   const d = $("#demo-pop");
   const MAIL = `mailto:matthias@nexudus.com?subject=${encodeURIComponent(L("Démo StockBox", "StockBox demo"))}`;
@@ -387,7 +387,6 @@ $$(".faq details").forEach(d => {
   }
   const fermer = () => {
     if (!d.open || d.classList.contains("sort")) return;
-    try { sessionStorage.setItem("sb-demo", "1"); } catch {}
     d.classList.add("sort"); setTimeout(() => { d.close(); d.classList.remove("sort"); inn.style.transform = ""; }, reduit ? 0 : 260);
   };
   const ouvrirAccueil = () => { if (d.open) return; montrer(0); d.showModal(); };
@@ -408,6 +407,6 @@ $$(".faq details").forEach(d => {
     inn.style.transform = "";
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) montrer(i + (dx < 0 ? 1 : -1));
   });
-  let vu = false; try { vu = sessionStorage.getItem("sb-demo") === "1"; } catch {}
-  if (d.showModal && !vu) setTimeout(ouvrirAccueil, 600);
+  // À chaque arrivée sur le site (rechargement compris).
+  if (d.showModal) setTimeout(ouvrirAccueil, 600);
 }
