@@ -1,8 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, L, EN, LOC, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, boxes, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261121155843";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir, ouvrir as ouvrirEtage } from "./immeuble.js?v=20261121155843";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261121155843";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261121155843";
+import { $, $$, L, EN, LOC, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, boxes, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261124094454";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir, ouvrir as ouvrirEtage } from "./immeuble.js?v=20261124094454";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261124094454";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261124094454";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: L("14 passage des Malles, Les Puces", "14 passage des Malles, flea market"), ouvert: true },
@@ -224,6 +224,16 @@ function ouvrirAgent() {
 }
 abtn.onclick = ouvrirAgent;
 $$("[data-atlas]").forEach(b => (b.onclick = ouvrirAgent));
+// Vidéo « côté exploitant » : s'ouvre dans une fenêtre, s'arrête à la fermeture
+{
+  const dlg = $("#video-dlg"), vid = $("#video-exploitant");
+  if (dlg && vid) {
+    $$("[data-video]").forEach(b => (b.onclick = () => { dlg.showModal(); vid.play().catch(() => {}); }));
+    $$("[data-video-fermer]").forEach(b => (b.onclick = () => dlg.close()));
+    dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener("close", () => vid.pause());
+  }
+}
 $("#ab-ouvrir").onclick = ouvrirAgent;
 $("#ab-fermer").onclick = () => { $("#agent-bulle").hidden = true; try { sessionStorage.setItem("sb-bulle", "1"); } catch {} };
 $("#agent-fermer").onclick = () => { agent.classList.add("ferme"); agent.setAttribute("aria-hidden", "true"); abtn.classList.remove("cache"); };

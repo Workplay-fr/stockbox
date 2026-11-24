@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
 <link rel="preload" as="image" href="/img/facade.webp" fetchpriority="high">
-<link rel="stylesheet" href="/css/site.css?v=20261121155843">
+<link rel="stylesheet" href="/css/site.css?v=20261124094454">
 </head>
 <body>
 
@@ -43,6 +43,7 @@
       <span class="cta-rond" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
     </button>
     <p class="reassure"><span>Sans engagement</span><i class="sep" aria-hidden="true">·</i><span>Paiement sécurisé</span><i class="sep sep-atlas" aria-hidden="true">·</i><button class="hero-atlas" type="button" data-atlas><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 4.6 2.4 6.9 7.5 7.6v.8c-5.1.7-6.9 3-7.5 7.6h-.8c-.6-4.6-2.4-6.9-7.5-7.6v-.8C8.8 8.9 10.6 6.6 11.2 2Z" fill="currentColor"/></svg><span>Une question ? <u>Atlas</u></span></button></p>
+    <p class="hero-video-l"><button class="hero-atlas hero-video" type="button" data-video><svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5Z" fill="currentColor"/></svg><span>Côté exploitant : <u>la gestion dans Nexudus</u> (2 min)</span></button></p>
     <div class="tarifs-bas"><ul class="tarifs" id="tarifs" aria-label="Prix par mois"></ul></div>
     <div class="barre" aria-label="Avis et réservations">
       <div class="b-note"><span class="b-chiffre">4,8</span><span><span class="etoiles" aria-label="4,8 sur 5">★★★★★</span><small>Note moyenne, avis d'exemple</small></span></div>
@@ -193,7 +194,11 @@
 </section>
 
 <dialog class="demo-pop" id="demo-pop" aria-labelledby="dp-titre-0"></dialog>
-<script src="/js/gsap.min.js?v=20261121155843"></script>
-<script type="module" src="/js/app.js?v=20261121155843"></script>
+<dialog class="video-dlg" id="video-dlg" aria-label="Vidéo : la gestion du centre dans Nexudus">
+  <button class="video-fermer" type="button" data-video-fermer aria-label="Fermer la vidéo">×</button>
+  <video id="video-exploitant" controls playsinline preload="none" poster="/video/exploitant.jpg" src="/video/exploitant.mp4"></video>
+</dialog>
+<script src="/js/gsap.min.js?v=20261124094454"></script>
+<script type="module" src="/js/app.js?v=20261124094454"></script>
 </body>
 </html>

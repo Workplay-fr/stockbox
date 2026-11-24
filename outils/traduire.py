@@ -140,6 +140,11 @@ T = [
      '<button type="button">I\'m moving out of a one-bedroom flat</button><button type="button">I want a quote for my business</button><button type="button">What can I store?</button><button type="button">Can I come on Sundays?</button>'),
     ('placeholder="Demandez à Atlas…" aria-label="Votre question" maxlength="600"><button class="btn btn-em" type="submit">Envoyer</button>',
      'placeholder="Ask Atlas…" aria-label="Your question" maxlength="600"><button class="btn btn-em" type="submit">Send</button>'),
+    # Vidéo « côté exploitant » (la vidéo elle-même est en français)
+    ("<span>Côté exploitant : <u>la gestion dans Nexudus</u> (2 min)</span>",
+     "<span>Operator side: <u>how it runs in Nexudus</u> (2 min, in French)</span>"),
+    ('aria-label="Vidéo : la gestion du centre dans Nexudus"', 'aria-label="Video: how the centre runs in Nexudus"'),
+    ('aria-label="Fermer la vidéo"', 'aria-label="Close the video"'),
 ]
 
 en = fr

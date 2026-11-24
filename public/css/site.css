@@ -988,3 +988,13 @@ dialog.fen::backdrop{background:rgba(5,22,17,.45);backdrop-filter:blur(8px)}
 }
 @media (prefers-reduced-motion:reduce){.dp-ecran{transition:none}.dv-chat p,.dv-loyers li,.dv-acces .badges span,.dv-acces .tel{opacity:1;transform:none;animation:none!important}}
 .dv-loyers{padding:12px 14px}.dv-loyers .ligne b{font-size:22px}.dv-loyers .dv-jauge{margin:6px 0 8px}
+
+/* Vidéo « côté exploitant » : lien discret sous le bouton principal, lecture dans une fenêtre */
+.hero-video-l{margin:0}
+.hero-video{margin-top:2px;font-size:14px;color:rgba(255,255,255,.78);animation-delay:1s}
+.video-dlg{width:min(1100px,94vw);padding:0;border:0;border-radius:18px;background:#0c1a16;box-shadow:0 30px 80px rgba(0,0,0,.45);overflow:visible}
+.video-dlg::backdrop{background:rgba(6,18,14,.72);backdrop-filter:blur(4px)}
+.video-dlg video{display:block;width:100%;aspect-ratio:16/9;border-radius:18px;background:#0c1a16}
+.video-fermer{position:absolute;top:-14px;right:-14px;width:36px;height:36px;border-radius:50%;border:0;background:#fff;color:#0f2a22;font:500 22px/1 var(--f);cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.3);z-index:2}
+.video-fermer:focus-visible{outline:2px solid var(--tg);outline-offset:2px}
+@media (max-width:700px){.hero-video{font-size:13px}.video-fermer{top:-44px;right:0}}
