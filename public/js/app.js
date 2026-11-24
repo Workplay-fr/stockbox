@@ -1,8 +1,8 @@
 // StockBox : accueil, petite fenêtre (centre puis taille), immeuble et réservation dans la page, assistant.
-import { $, $$, L, EN, LOC, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, boxes, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261124102301";
-import { initImmeuble, entrer as entrerImmeuble, rafraichir, ouvrir as ouvrirEtage } from "./immeuble.js?v=20261124102301";
-import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261124102301";
-import { initResa, entrerResa, finale } from "./resa.js?v=20261124102301";
+import { $, $$, L, EN, LOC, el, G, esc, eur, S, TAILLES, LIBELLE, EMPRISE, IDEAL, libresTotal, compteurs, boxes, nomBox, prix, preavis, ilYa, charger, actualiser, boxParId, reduit } from "./commun.js?v=20261124102544";
+import { initImmeuble, entrer as entrerImmeuble, rafraichir, ouvrir as ouvrirEtage } from "./immeuble.js?v=20261124102544";
+import { initTailles, majTailles, initSimu } from "./tailles.js?v=20261124102544";
+import { initResa, entrerResa, finale } from "./resa.js?v=20261124102544";
 
 const CENTRES = [
   { nom: "Saint-Ouen", sous: L("14 passage des Malles, Les Puces", "14 passage des Malles, flea market"), ouvert: true },
@@ -232,6 +232,34 @@ $$("[data-atlas]").forEach(b => (b.onclick = ouvrirAgent));
     $$("[data-video-fermer]").forEach(b => (b.onclick = () => dlg.close()));
     dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
     dlg.addEventListener("close", () => vid.pause());
+  }
+  // Notification : quelques secondes après l'arrivée (une fois l'accueil de démo fermé), puis onglet sur le côté.
+  const notif = $("#vnotif"), onglet = $("#vonglet");
+  if (notif && onglet) {
+    let dejaVue = false; try { dejaVue = !!sessionStorage.getItem("sb-vnotif"); } catch {}
+    const libre = () => !$("#demo-pop")?.open && !$("#choix")?.open && !dlg?.open && $("#reserver").hidden;
+    const montrerOnglet = () => { onglet.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => onglet.classList.add("vu"))); };
+    let minuteur = null;
+    const reduire = () => {
+      clearTimeout(minuteur);
+      if (notif.hidden) return;
+      notif.classList.remove("vu");
+      setTimeout(() => { notif.hidden = true; montrerOnglet(); }, reduit ? 0 : 600);
+    };
+    const montrer = () => {
+      try { sessionStorage.setItem("sb-vnotif", "1"); } catch {}
+      notif.hidden = false;
+      requestAnimationFrame(() => requestAnimationFrame(() => notif.classList.add("vu")));
+      minuteur = setTimeout(reduire, 14000);
+    };
+    $("#vn-x").onclick = reduire;
+    notif.querySelector("[data-video]").addEventListener("click", reduire);
+    // attend que la page soit libre (accueil de démo fermé, pas de réservation en cours), puis 4 s
+    let calme = 0;
+    const guet = setInterval(() => {
+      calme = libre() ? calme + 1 : 0;
+      if (calme >= (dejaVue ? 2 : 4)) { clearInterval(guet); dejaVue ? montrerOnglet() : montrer(); }
+    }, 1000);
   }
 }
 $("#ab-ouvrir").onclick = ouvrirAgent;

@@ -989,9 +989,31 @@ dialog.fen::backdrop{background:rgba(5,22,17,.45);backdrop-filter:blur(8px)}
 @media (prefers-reduced-motion:reduce){.dp-ecran{transition:none}.dv-chat p,.dv-loyers li,.dv-acces .badges span,.dv-acces .tel{opacity:1;transform:none;animation:none!important}}
 .dv-loyers{padding:12px 14px}.dv-loyers .ligne b{font-size:22px}.dv-loyers .dv-jauge{margin:6px 0 8px}
 
-/* Vidéo « côté exploitant » : lien discret sous le bouton principal, lecture dans une fenêtre */
-.hero-video-l{margin:0}
-.hero-video{margin-top:2px;font-size:14px;color:rgba(255,255,255,.78);animation-delay:1s}
+/* Vidéo « côté exploitant » : notification qui glisse en bas à gauche, puis onglet discret sur le côté */
+.vnotif{position:fixed;z-index:32;left:18px;bottom:18px;width:min(360px,calc(100vw - 36px));transform:translateX(calc(-100% - 30px));opacity:0;transition:transform .7s var(--ease),opacity .5s}
+.vnotif.vu{transform:none;opacity:1}
+.vn-carte{display:flex;gap:14px;align-items:center;width:100%;padding:10px 40px 10px 10px;border:0;border-radius:18px;background:rgba(255,255,255,.97);color:var(--encre);text-align:left;cursor:pointer;box-shadow:0 20px 50px rgba(7,42,33,.28);font:inherit;backdrop-filter:blur(12px)}
+.vn-carte:hover .vn-play{transform:translate(-50%,-50%) scale(1.08)}
+.vn-vignette{position:relative;flex:none;width:128px;height:72px;border-radius:12px;overflow:hidden;background:var(--em-abysse)}
+.vn-vignette img{display:block;width:100%;height:100%;object-fit:cover}
+.vn-play{position:absolute;left:50%;top:50%;width:34px;height:34px;border-radius:50%;background:var(--tg);color:#fff;display:grid;place-items:center;transform:translate(-50%,-50%);transition:transform .3s var(--ease);box-shadow:0 6px 16px rgba(0,0,0,.3)}
+.vn-play svg{margin-left:2px}
+.vn-duree{position:absolute;right:6px;bottom:5px;padding:1px 6px;border-radius:6px;background:rgba(7,42,33,.8);color:#fff;font:600 11px/1.4 var(--f)}
+.vn-txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.vn-txt small{font:600 11px/1.2 var(--f);letter-spacing:.08em;text-transform:uppercase;color:var(--tg-fonce)}
+.vn-txt b{font:600 16px/1.2 var(--t)}
+.vn-txt span{font-size:13px;color:var(--gris)}
+.vn-x{position:absolute;top:8px;right:8px;width:28px;height:28px;border:0;border-radius:50%;background:var(--beton);color:var(--encre);font:500 18px/1 var(--f);cursor:pointer}
+.vn-x:hover{background:var(--beton-2)}
+.vonglet{position:fixed;z-index:29;left:0;top:62%;display:flex;align-items:center;gap:0;padding:12px 12px 12px 14px;border:0;border-radius:0 999px 999px 0;background:var(--em);color:#fff;font:600 13px/1 var(--f);cursor:pointer;box-shadow:0 10px 30px rgba(7,42,33,.3);transform:translateX(-110%);transition:transform .6s var(--ease),padding .4s var(--ease),background .3s}
+.vonglet.vu{transform:none}
+.vonglet svg{flex:none;color:var(--tg-clair)}
+.vonglet span{max-width:0;overflow:hidden;white-space:nowrap;transition:max-width .45s var(--ease),margin .45s var(--ease)}
+.vonglet:hover,.vonglet:focus-visible{background:var(--em-nuit)}
+.vonglet:hover span,.vonglet:focus-visible span{max-width:200px;margin-left:10px}
+.vn-carte:focus-visible,.vn-x:focus-visible,.vonglet:focus-visible{outline:2px solid var(--tg);outline-offset:3px}
+@media (max-width:700px){.vnotif{bottom:86px}.vn-vignette{width:96px;height:54px}.vn-txt b{font-size:15px}.vonglet{top:auto;bottom:150px}}
+@media (prefers-reduced-motion:reduce){.vnotif,.vonglet{transition:none}}
 .video-dlg{width:min(1100px,94vw);padding:0;border:0;border-radius:18px;background:#0c1a16;box-shadow:0 30px 80px rgba(0,0,0,.45);overflow:visible}
 .video-dlg::backdrop{background:rgba(6,18,14,.72);backdrop-filter:blur(4px)}
 .video-dlg video{display:block;width:100%;aspect-ratio:16/9;border-radius:18px;background:#0c1a16}

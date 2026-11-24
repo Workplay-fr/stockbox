@@ -1,6 +1,6 @@
 // Réservation dans la page : une question par écran, un toucher pour répondre, le ticket se remplit à gauche.
 // Paiement simulé ; client, contrat, box, assurance et frais sont créés pour de vrai dans Nexudus (/api/reserver).
-import { $, $$, el, G, esc, eur, S, L, EN, LOC, NOMS, LIBELLE, prix, preavis, reduit, nomBox } from "./commun.js?v=20261124102301";
+import { $, $$, el, G, esc, eur, S, L, EN, LOC, NOMS, LIBELLE, prix, preavis, reduit, nomBox } from "./commun.js?v=20261124102544";
 
 const PORTAIL = "https://stockbox.nexudus.site/stockbox/login?redirectTo=%252Fstockbox%252Fuser%252Fdashboard%252Fpersonal";
 const PROMO = L("Code promo", "Promo code");

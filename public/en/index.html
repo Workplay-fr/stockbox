@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap">
 <link rel="preload" as="image" href="/img/facade.webp" fetchpriority="high">
-<link rel="stylesheet" href="/css/site.css?v=20261124102301">
+<link rel="stylesheet" href="/css/site.css?v=20261124102544">
 </head>
 <body>
 
@@ -44,7 +44,6 @@
       <span class="cta-rond" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
     </button>
     <p class="reassure"><span>No commitment</span><i class="sep" aria-hidden="true">·</i><span>Secure payment</span><i class="sep sep-atlas" aria-hidden="true">·</i><button class="hero-atlas" type="button" data-atlas><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 4.6 2.4 6.9 7.5 7.6v.8c-5.1.7-6.9 3-7.5 7.6h-.8c-.6-4.6-2.4-6.9-7.5-7.6v-.8C8.8 8.9 10.6 6.6 11.2 2Z" fill="currentColor"/></svg><span>Any questions? <u>Ask Atlas</u></span></button></p>
-    <p class="hero-video-l"><button class="hero-atlas hero-video" type="button" data-video><svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5Z" fill="currentColor"/></svg><span>Operator side: <u>how it runs in Nexudus</u> (2 min, in French)</span></button></p>
     <div class="tarifs-bas"><ul class="tarifs" id="tarifs" aria-label="Prices per month"></ul></div>
     <div class="barre" aria-label="Reviews and location">
       <div class="b-note"><span class="b-chiffre">4.8</span><span><span class="etoiles" aria-label="4.8 out of 5">★★★★★</span><small>Average rating, sample reviews</small></span></div>
@@ -195,11 +194,16 @@
 </section>
 
 <dialog class="demo-pop" id="demo-pop" aria-labelledby="dp-titre-0"></dialog>
+<aside class="vnotif" id="vnotif" hidden aria-label="Video: the operator side">
+  <button class="vn-carte" type="button" data-video><span class="vn-vignette"><img src="/video/exploitant.jpg?v=8" alt="" width="128" height="72"><span class="vn-play" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5Z" fill="currentColor"/></svg></span><span class="vn-duree">2:11</span></span><span class="vn-txt"><small>Operator side</small><b>What happens in Nexudus</b><span>A day at the centre, on video (in French)</span></span></button>
+  <button class="vn-x" type="button" id="vn-x" aria-label="Minimise">×</button>
+</aside>
+<button class="vonglet" id="vonglet" type="button" data-video hidden aria-label="Watch the video: the operator side"><svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5Z" fill="currentColor"/></svg><span>Operator video</span></button>
 <dialog class="video-dlg" id="video-dlg" aria-label="Video: how the centre runs in Nexudus">
   <button class="video-fermer" type="button" data-video-fermer aria-label="Close the video">×</button>
   <video id="video-exploitant" controls playsinline preload="none" poster="/video/exploitant.jpg?v=8" src="/video/exploitant.mp4?v=8"></video>
 </dialog>
-<script src="/js/gsap.min.js?v=20261124102301"></script>
-<script type="module" src="/js/app.js?v=20261124102301"></script>
+<script src="/js/gsap.min.js?v=20261124102544"></script>
+<script type="module" src="/js/app.js?v=20261124102544"></script>
 </body>
 </html>
