@@ -16,7 +16,9 @@ export async function onRequestPost({ request, env }) {
     return json(200, { ok: true, ...r });
   } catch (e) {
     console.error("agent", String(e.message).slice(0, 200));
-    return json(502, { ok: false, erreur: "L'assistant est momentanément indisponible. Réessayez dans un instant." });
+    // Statut 200 : un 502 renvoyé ici est remplacé par la page d'erreur HTML de Cloudflare, et le navigateur ne lit plus le message.
+    const code = e.ia ? `ia_${e.status}` : "interne";
+    return json(200, { ok: false, code, detail: String(e.message).slice(0, 160), erreur: memo.langue === "en" ? "The assistant is briefly unavailable. Please try again in a moment." : "L'assistant est momentanément indisponible. Réessayez dans un instant." });
   }
 }
 export const onRequest = () => json(405, { ok: false, erreur: "Méthode non autorisée." });
